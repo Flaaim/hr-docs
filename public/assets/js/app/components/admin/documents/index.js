@@ -1,0 +1,28 @@
+import { DocumentManager } from './DocumentManager.js';
+
+$(document).ready(async function () {
+  if ($(".dashboard-content").data('page') !== 'documents-admin-page') {
+    return;
+  }
+
+  // Инициализация popup
+  $(".edit-btn").magnificPopup({
+    items: {
+      src: '#small-dialog-edit-document',
+      type: 'inline',
+    }
+  });
+
+  try {
+    const documentManager = new DocumentManager();
+    documentManager.init();
+  } catch (error) {
+    handleError(error);
+  }
+
+  function handleError(error) {
+    console.error(error);
+    const message = error.responseJSON?.message || "Произошла ошибка при загрузке документов";
+    window.FlashMessage.error(message);
+  }
+});
