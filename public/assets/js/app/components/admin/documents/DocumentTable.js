@@ -14,7 +14,7 @@ export class DocumentTable {
       sort: true,
       pagination: { enabled: true, limit: 20 }
     })
-    
+
     this.grid.render(this.container)
   }
 

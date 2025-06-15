@@ -1,11 +1,13 @@
 import { DocumentTable } from './DocumentTable.js';
 import { DocumentFilters } from './DocumentFilters.js';
 import { DocumentEditor } from './DocumentEditor.js';
+import { DocumentUpload } from './DocumentUpload.js';
 
 export class DocumentManager {
   constructor() {
     this.table = new DocumentTable("documents_table");
     this.filters = new DocumentFilters();
+    this.upload = new DocumentUpload();
     this.editor = new DocumentEditor();
     this.documents = [];
   }
@@ -35,6 +37,18 @@ export class DocumentManager {
     document.getElementById("typeFilter").addEventListener("change", () => this.applyFilters());
     document.getElementById("resetFilter").addEventListener('click', () => this.resetFilters());
 
+    /* Загрузка документа */
+    document.getElementById("upload-document-btn").addEventListener('click', async (e)=> {
+        await this.handleUpload(e);
+    })
+    document.getElementById("directionUploadFilter").addEventListener('change', async (e) => {
+      await this.upload.loadSections(e.target.value);
+    })
+
+    document.getElementById("sectionUploadFilter").addEventListener('change', async (e) => {
+      await this.upload.loadTypes(e.target.value);
+    })
+
     // Делегирование событий
     document.getElementById("documents_table").addEventListener("click", async (e) => {
       if (e.target.closest(".delete-btn")) {
@@ -60,7 +74,6 @@ export class DocumentManager {
       }
     }
   }
-
   async handleEdit(e) {
     const button = e.target.closest(".edit-btn");
     const { id: documentId, directionId, sectionId, typeId } = button.dataset;
@@ -81,6 +94,22 @@ export class DocumentManager {
       }
     });
   }
+
+  async handleUpload(){
+    try {
+      await this.upload.loadDirections();
+      $.magnificPopup.open({
+        items: {
+          src: '#small-dialog-upload-document',
+          type: 'inline'
+        }
+      });
+    } catch (error) {
+      console.error('Ошибка при открытии попапа загрузки:', error);
+      window.FlashMessage.error('Не удалось загрузить данные для формы');
+    }
+  }
+
   applyFilters() {
     const { sectionId, typeId } = this.filters.getFilters();
     const filtered = this.documents.filter(row => {

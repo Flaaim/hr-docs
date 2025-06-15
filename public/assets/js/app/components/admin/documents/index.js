@@ -5,17 +5,24 @@ $(document).ready(async function () {
     return;
   }
 
-  // Инициализация popup
+  // Инициализация popup EDIT
   $(".edit-btn").magnificPopup({
     items: {
       src: '#small-dialog-edit-document',
       type: 'inline',
     }
   });
+  // Инициализация popup UPLOAD
+  $('.upload-btn').magnificPopup({
+    items: {
+      src: '#small-dialog-upload-document',
+      type: 'inline',
+    }
+  })
 
   try {
     const documentManager = new DocumentManager();
-    documentManager.init();
+    await documentManager.init();
   } catch (error) {
     handleError(error);
   }

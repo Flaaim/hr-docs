@@ -108,7 +108,7 @@ hr.h-color{
 #small-dialog-login,
 #small-dialog-register,
 #small-dialog-reset,
-#small-dialog-upload,
+#small-dialog-upload-document,
 #small-dialog-subscription,
 #small-dialog-edit-document {
     background: white;
@@ -120,7 +120,7 @@ hr.h-color{
     border: 1px solid #ced4da;
     border-radius: 7px;
 }
-#small-dialog-upload,
+#small-dialog-upload-document,
 #small-dialog-subscription,
 #small-dialog-edit-document {
 	max-width: 600px!important;
