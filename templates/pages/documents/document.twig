@@ -1,0 +1,87 @@
+{% extends 'layouts/base.twig' %}
+
+{% block title %}
+    {{ document.title }}
+{% endblock %}
+{% block description %}
+    Документ: {{ document.title }}, формат: {{ document.mime_type }}, обновлен {{ document.updated|date('d.m.Y') }}
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-content document-dashboard px-3 pt-4 col-md-12">
+        <div class="document-header mb-4">
+            <h1 class="document-title fs-3 mb-3">{{ document.title }}</h1>
+            <div class="document-meta d-flex flex-wrap gap-4 text-muted">
+                <div class="document-type">
+                    <i class="fas fa-file-alt me-2"></i>
+                    <span>Тип:
+                        {% if  document.mime_type is same as('docx') or document.mime_type is same as('doc') %}
+                            Документ Word
+                        {% else %}
+                            Неизвестный тип
+                        {% endif %}
+                </div>
+                <div class="document-size">
+                    <i class="fas fa-file-download me-2"></i>
+                    <span>Размер: {{ (document.size / 1024)|number_format(2, ',', ' ') }} KB</span>
+                </div>
+                <div class="document-updated">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    <span>Обновлен: {{ document.updated|date('d.m.Y') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-actions mb-4">
+            <button class="btn btn-primary me-2" id="doDownload"
+                    data-id="{{ document.id }} ">
+                <i class="fas fa-download me-2"></i>Скачать
+            </button>
+{#            <button class="btn btn-outline-secondary me-2" id="doPrint">#}
+{#                <i class="fas fa-print me-2"></i>Печать#}
+{#            </button>#}
+        </div>
+
+        <div class="document-preview card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-eye me-2"></i>Предпросмотр документа</h5>
+            </div>
+            <div class="card-body">
+                <div class="document-placeholder text-center py-5" id="previewContainer">
+                    <i class="fas fa-file-word text-primary mb-3" style="font-size: 3rem;"></i>
+                    <p class="text-muted">
+                        <a href="#" id="doPreview" data-id="{{ document.id }}">Предпросмотр документа. Нажмите чтобы посмотреть</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 px-3 pt-4">
+        <h3>Новые шаблоны</h3>
+        <div class="d-flex flex-wrap">
+            {% for document in documents %}
+                <div class="card m-2 shadow-sm" style="width: 20rem; border-radius: 8px; transition: transform 0.2s;">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <a href="/document/{{ document.id }}" class="text-decoration-none text-dark font-weight-bold">
+                                {{ document.title }}
+                            </a>
+                        </h6>
+                        <span class="badge bg-light text-dark mb-2" style="font-size: 0.8rem;">
+                        {{ document.section_name }}
+                        </span>
+                        <span class="badge bg-light text-dark mb-2" style="font-size: 0.8rem;">
+                        {{ document.type_name }}
+                        </span>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <a href="/document/{{ document.id }}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                            <small class="text-muted">{{ document.size }} kb</small>
+                            <small class="text-muted">{{ document.mime_type }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

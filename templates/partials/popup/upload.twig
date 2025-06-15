@@ -1,0 +1,32 @@
+<div id="small-dialog-upload" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Загрузить документы</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/documents/upload" method="POST" id="admin-upload-form" data-form-type="upload-document" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <select class="form-select directions" aria-label="Document_directions" name="directions">
+                            <option  selected disabled>Выберите значение</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select sections" aria-label="Document_sections" name="sections">
+                            <option  selected disabled>Выберите значение</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select types" aria-label="Document_types" disabled name="types">
+                            <option selected disabled>Тип</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" class="form-control" name="file[]" id="document" accept=".docx, .doc" multiple>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" id="doUpload" class="btn btn-primary mb-3">Загрузить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

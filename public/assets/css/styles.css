@@ -1,0 +1,161 @@
+/* Основные настройки (аналогичные Just the Docs) */
+:root {
+    --primary-color: #2563eb;       /* Синий (как в JTD) */
+    --secondary-color: #f3f4f6;     /* Светло-серый фон */
+    --text-color: #111827;          /* Основной текст */
+    --code-bg: #f3f4f6;             /* Фон для кода */
+    --border-color: #e5e7eb;        /* Цвет границ */
+}
+
+/* Общие стили */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Заголовки */
+h1, h2, h3, h4 {
+    color: var(--text-color);
+    margin-top: 1.5em;
+}
+
+h1 { font-size: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+
+/* Код */
+code {
+    background-color: var(--code-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+pre {
+    background-color: var(--code-bg);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+/* Таблицы */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+
+th {
+    background-color: var(--secondary-color);
+}
+
+
+#side_nav{
+    /*background: #000;*/
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.3s;
+    border-right: 1px solid #eeebee;
+}
+.navbar {
+    border: 1px solid #eeebee;
+}
+.content{
+    min-height: 100vh;
+    width: 100%;
+}
+hr.h-color{
+    background: #eee;
+}
+
+.sidebar li.active{
+    background: #eee;
+    border-radius: 8px;
+}
+
+.sidebar li.active a, .sidebar li.active a:hover {
+    color: #000;
+}
+.sidebar li a{
+    color: #fff;
+}
+
+@media(max-width: 767px){
+    #side_nav{
+        margin-left: -250px;
+        position: absolute;
+        min-height: 100vh;
+        z-index: 1;
+
+    }
+    #side_nav.active{
+        margin-left: 0;
+    }
+}
+.main-content{
+    margin: 2rem;
+}
+/* Styles for dialog window */
+#small-dialog-login,
+#small-dialog-register,
+#small-dialog-reset,
+#small-dialog-upload,
+#small-dialog-subscription,
+#small-dialog-edit-document {
+    background: white;
+    padding: 20px 30px;
+    text-align: left;
+    max-width: 400px;
+    margin: 40px auto;
+    position: relative;
+    border: 1px solid #ced4da;
+    border-radius: 7px;
+}
+#small-dialog-upload,
+#small-dialog-subscription,
+#small-dialog-edit-document {
+	max-width: 600px!important;
+}
+#small-dialog-subscription{
+	max-width: 800px!important;
+}
+.flash-container {
+    z-index: 9999!important; /* Должен быть выше, чем у модального окна */
+}
+.card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.active-plan {
+	border-color: green!important;
+}
+.current-badge{
+	color: green!important;
+}
+.document-placeholder {
+	max-width: inherit;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	pointer-events: auto; /* важно: оставить включённым клики внутри блока */
+}
+#docPreview {
+	max-width: inherit;
+}
+.document-preview {
+	max-width: 1000px;
+	width: 100%;
+}
+
+/*.mfp-bg {*/
+/*  opacity: 0.1 !important;*/
+/*}*/

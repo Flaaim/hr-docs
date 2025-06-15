@@ -1,0 +1,25 @@
+<div id="small-dialog-login" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Вход на сайт</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/auth/login" method="POST" data-form-type="login">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Адрес электронной почты</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Email адрес">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Пароль</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Пароль">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" id="doLogin" class="btn btn-primary mb-3">Войти</button>
+                    </div>
+                </form>
+                <p>
+                    <a class="auth-form-register" href="#">Зарегистрироваться</a> | <a class="auth-form-reset" href="#">Забыли пароль?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

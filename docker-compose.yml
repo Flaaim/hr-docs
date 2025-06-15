@@ -11,15 +11,53 @@ services:
 
   php-fpm:
     build:
-      context: docker/php-fpm
+      context: docker
+      dockerfile: php-fpm/Dockerfile
     volumes:
       - ./:/app
     environment:
       APP_DEBUG: 1
       APP_ENV: dev
+      PHP_IDE_CONFIG: serverName=docs
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   php-cli:
     build:
-      context: docker/php-cli
+      context: docker
+      dockerfile: php-cli/Dockerfile
     volumes:
       - ./:/app
+
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: slim_db
+      MYSQL_USER: slim_user       # Добавляем отдельного пользователя
+      MYSQL_PASSWORD: user_pass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=secret
+    ports:
+      - "8081:80"
+
+
+volumes:
+  mysql_data:

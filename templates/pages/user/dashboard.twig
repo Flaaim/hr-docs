@@ -1,0 +1,68 @@
+{% extends '/layouts/base.twig' %}
+
+{% block title %}
+    Профиль пользователя
+{% endblock %}
+{% block description %}
+    Личный кабинет пользователя сайта
+{% endblock %}
+{% block content %}
+    <div class="dashboard-content user-dashboard px-3 pt-4 col-md-12">
+        <div class="user-header">
+            <h1 class="fs-3 mb-3">Личный кабинет</h1>
+            <p class="text-muted">Добро пожаловать в ваш личный кабинет. Здесь вы можете управлять своей учетной записью и подпиской.</p>
+        </div>
+
+        <div class="user-info-card">
+            <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ user.email }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Дата регистрации:</span>
+                <span class="info-value">{{ user.created_at|date('d.m.Y') }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Пароль:</span>
+                <span class="info-value">Сбросить</span>
+            </div>
+        </div>
+
+        <div class="user-info-card subscription-card">
+            <h5 class="mb-3">Информация о подписке</h5>
+
+            <div class="info-row">
+                <span class="info-label">Текущий тариф:</span>
+                <span class="info-value">{{ plan.name }}</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Доступные скачивания:</span>
+                <span class="info-value">
+                    {% if plan.downloads_remaining is null %}
+                        <span class="unlimited-badge">Неограниченно</span>
+                    {% else %}
+                        {{ plan.downloads_remaining }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-row mb-0">
+                <span class="info-label">Окончание подписки:</span>
+                <span class="info-value">
+                    {% if plan.ends_at is null %}
+                        Бессрочно
+                    {% else %}
+                        {{ plan.ends_at|date('d.m.Y') }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <button class="btn btn-primary btn-change-plan subscription-form">
+                <i class="bi bi-arrow-repeat me-2"></i>Изменить подписку
+            </button>
+        </div>
+    </div>
+    {% include 'partials/popup/subscription.twig' %}
+{% endblock %}
+

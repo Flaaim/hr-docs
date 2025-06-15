@@ -1,0 +1,29 @@
+<div id="small-dialog-edit-document" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Изменить документ</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/documents/edit" method="POST" id="admin-edit-document-form" data-form-type="edit-document">
+                    <div class="mb-3">
+                        <label for="title-document">Название документа</label>
+                        <input type="text" id="title-document" class="form-control" name="title" value="">
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select" id="section-document" aria-label="Document_sections" name="section_id">
+                            <option  selected disabled>Выберите значение</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select" id="type-document" aria-label="Document_types" name="type_id">
+                            <option  selected disabled>Выберите значение</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="document_id" value="">
+                    <div class="col-auto">
+                        <button type="submit" id="doEdit" class="btn btn-primary mb-3">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+{% extends '/layouts/base.twig' %}
+
+{% block title %}
+    Шаблоны документов кадрового дела
+{% endblock %}
+{% block description %}
+    Сборник актуальных шаблонов документов для организации кадрового делопроизводства на предприятии
+{% endblock %}
+{% block content %}
+<div class="dashboard-content px-3 pt-4" data-page="home">
+    <h1 class="fs-3">Шаблоны документов по кадрам</h1>
+    <div class="col-md-10 px-3 pt-4">    <p>
+            <b>Добро пожаловать в базу шаблонов документов по кадровому делопроизводству!</b>
+        </p>
+        <p>
+            Здесь вы найдете готовые образцы приказов, трудовых договоров, должностных инструкций и других кадровых документов. Наша база регулярно обновляется и соответствует актуальным требованиям законодательства.
+        </p>
+        <p>
+            Экономьте время на оформлении документов — скачивайте проверенные шаблоны в несколько кликов!
+        </p>
+        <h4 class="fs-4">Быстрый поиск шаблона</h4>
+        <p>Введите ключевые слова (например, "трудовой договор" или "прием на работу"), и мы найдем подходящие документы. Вы также можете выбрать категорию для удобного просмотра.</p>
+        <form id="search-form" data-form-type="client-only">
+            <div class="input-group mt-3">
+                <label for="search-input"></label>
+                <input type="text" id="search-input" class="form-control" placeholder="Введите поисковый запрос">
+                <button type="submit" class="btn btn-primary">Искать</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-10 px-3 pt-4" id="search-result">
+
+    </div>
+    <div class="col-md-12 px-3 pt-4">
+        <h3>Новые шаблоны</h3>
+        <div class="d-flex flex-wrap">
+            {% for document in documents %}
+                <div class="card m-2 shadow-sm" style="width: 20rem; border-radius: 8px; transition: transform 0.2s;">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <a href="/document/{{ document.id }}" class="text-decoration-none text-dark font-weight-bold">
+                                {{ document.title }}
+                            </a>
+                        </h6>
+                        <span class="badge bg-light text-dark mb-2" style="font-size: 0.8rem;">
+                        {{ document.section_name }}
+                        </span>
+                        <span class="badge bg-light text-dark mb-2" style="font-size: 0.8rem;">
+                        {{ document.type_name }}
+                        </span>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <a href="/document/{{ document.id }}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                            <small class="text-muted">{{ document.size }} kb</small>
+                            <small class="text-muted">{{ document.mime_type }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

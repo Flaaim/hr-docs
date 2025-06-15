@@ -1,0 +1,23 @@
+<table class="table static-table">
+    <thead>
+    <th>Наименование</th>
+    <th>Раздел</th>
+    <th>Тип</th>
+    <th>Добавлен/обновлен</th>
+    </thead>
+    <tbody>
+    {% for document in documents %}
+        <tr>
+            <td><a href="/document/{{ document.id }}">{{ document.title }}</a></td>
+            <td> {{ document.section_name }}</td>
+            <td> {{ document.type_name }}</td>
+            <td> {{ document.updated| date('d.m.Y') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div id="dynamic-table-wrapper" style="display: none;">
+    <div id="dynamic-table"></div>
+    <a href="#" id="show-static" class="btn btn-primary">Показать простую версию</a>
+</div>

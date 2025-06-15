@@ -14,4 +14,3 @@ foreach ($commands as $command) {
     $cli->add($container->get($command));
 }
 $cli->run();
-

@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light ui-component">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between d-md-none d-block">
+                <button class="btn px-1 py-0 open-btn me-2"><i class="fa-solid fa-bars-staggered"></i></button>
+                <a href="/" class="d-flex align-items-center  mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <span class="fs-4">hr-docs.ru</span>
+                </a>
+
+            </div>
+            <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-start" id="navbarSupportedContent">
+                <div class="dropdown">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 user-panel">
+                        {% if session.get('user') %}
+                            <li class="nav-item"><a class="nav-link" href="/user/dashboard">Профиль</a></li>
+                            <li class="nav-item"><button class="btn btn-link nav-link" id="doLogout">Выход</button></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link auth-form-login" href="#"><i class="fa-solid fa-right-to-bracket"></i> Войти</a></li>
+                            <li class="nav-item"><a class="nav-link auth-form-register" href="#"><i class="fa-solid fa-user"></i> Зарегистрироваться</a> </li>
+                        {% endif %}
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </nav>

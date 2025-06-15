@@ -1,0 +1,27 @@
+<div id="small-dialog-register" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Регистрация</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/auth/register" method="POST" data-form-type="register">
+                    <div class="mb-3">
+                        <label for="register_email" class="form-label">Адрес электронной почты</label>
+                        <input type="email" name="email" class="form-control" id="register_email" placeholder="Email адрес">
+                    </div>
+                    <div class="mb-3">
+                        <label for="register_password" class="form-label">Пароль</label>
+                        <input type="password" name="password" class="form-control" id="register_password" placeholder="Пароль">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Подтвердите пароль</label>
+                        <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Подтвердите пароль">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" id="doRegister" class="btn btn-primary mb-3">Зарегистрироваться</button>
+                    </div>
+                </form>
+                <p><a class="auth-form-login" href="#">Войти</a></p>
+            </div>
+        </div>
+    </div>
+</div>

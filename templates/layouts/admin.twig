@@ -1,0 +1,23 @@
+{% set app = app %}
+{% set session = session %}
+
+{% include 'partials/head.twig' %}
+<body>
+
+<div class="main-container d-flex">
+
+    {% include 'partials/admin/sidebar.twig' %}
+    <div class="content">
+        {% include 'partials/header.twig' %}
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</div>
+
+{% include 'partials/popup/upload.twig' %}
+{% include 'partials/popup/edit.twig' %}
+{% include 'partials/admin/footer.twig' %}
+
+</body>
+</html>

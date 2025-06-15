@@ -1,0 +1,54 @@
+.user-header {
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #eee;
+}
+
+.user-info-card {
+	background: #f8f9fa;
+	border-radius: 8px;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.info-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.8rem;
+	padding-bottom: 0.8rem;
+	border-bottom: 1px solid #e9ecef;
+}
+
+.info-label {
+	font-weight: 500;
+	color: #495057;
+}
+
+.info-value {
+	font-weight: 400;
+	color: #212529;
+}
+
+.subscription-card {
+	background: #f0f8ff;
+	border-left: 4px solid #0d6efd;
+	position: relative;
+}
+
+.btn-change-plan {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}
+.user-dashboard{
+	margin: 0 auto;
+	background: white;
+	border-radius: 10px;
+}
+.unlimited-badge {
+	background-color: #198754;
+	color: white;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+	font-size: 0.8rem;
+}

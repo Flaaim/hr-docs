@@ -1,0 +1,37 @@
+{% extends '/layouts/admin.twig' %}
+
+{% block content %}
+
+
+    <div class="dashboard-content px-3 pt-4" data-page="documents-admin-page">
+        <h1 class="fs-3">Админ</h1>
+        <p class="mt-3"><button class="btn btn-primary upload-form" >Добавить документ</button></p>
+        <div class="mb-3">
+            <!-- Селект-фильтр -->
+            <label for="sectionFilter">Фильтр по секции:
+                <select id="sectionFilter" class="form-control">
+                    <option value="" selected>Все</option>
+                </select>
+            </label>
+            <!-- Селект-фильтр -->
+            <label for="typeFilter">Фильтр по типу:
+                <select id="typeFilter" class="form-control" >
+                    <option value="" selected>Все</option>
+                </select>
+            </label>
+            <button type="reset" id="resetFilter" class="btn btn-primary">Сбросить</button>
+        </div>
+        <div class="mb-3">
+
+        </div>
+
+
+        <div id="documents_table"></div>
+
+    </div>
+
+
+
+{% endblock %}
+
+
