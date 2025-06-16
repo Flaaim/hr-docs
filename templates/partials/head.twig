@@ -8,17 +8,17 @@
     <link rel="stylesheet" href="{{ app.path }}/assets/css/styles.css">
     <link rel="stylesheet" href="{{ app.path }}/assets/css/user-dashboard.css">
     <link rel="stylesheet" href="{{ app.path }}/assets/css/libs/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ app.path }}/assets/css/libs/font-awesome.min.css">
     <link rel="stylesheet" href="{{ app.path }}/assets/css/libs/magnific-popup.css">
     <link rel="stylesheet" href="{{ app.path }}/assets/css/libs/flash.min.css">
     <link rel="stylesheet" href="{{ app.path }}/assets/css/libs/mermaid.min.css">
-
     <script src="{{ app.path }}/assets/js/libs/jquery-3.7.1.min.js"></script>
     <script src="{{ app.path }}/assets/js/libs/gridjs.js"></script>
     <script src="{{ app.path }}/assets/js/libs/lunr.js"></script>
     <script src="{{ app.path }}/assets/js/libs/lunr.stemmer.support.js"></script>
     <script src="{{ app.path }}/assets/js/libs/lunr.ru.js"></script>
-
+    <svg style="display:none;">
+        {%  include 'partials/icons/icons.html' %}
+    </svg>
     <title>{{ title|default('Кадры - Образцы документов') }}</title>
     <meta name="description" content="{{ description|default('Образцы документов по кадровому делопроизводству') }}">
 </head>
