@@ -56,4 +56,18 @@ class SubscriptionServiceTest extends TestCase
         $this->subscriptionService->upgradeToMonthlyPlan(1, $slug);
     }
 
+    public function testNeedsPlanUpdate_True()
+    {
+        $this->mockSubscription->method('getCurrentPlan')->willReturn(['plan_id' => 1]);
+        $this->mockSubscriptionPlan->method('getPlanBySlug')->willReturn(['id' => 2]);
+        $this->assertTrue($this->subscriptionService->needsPlanUpdate(1, 'some_slug'));
+    }
+
+    public function testNeedsPlanUpdate_False()
+    {
+        $this->mockSubscription->method('getCurrentPlan')->willReturn(['plan_id' => 1]);
+        $this->mockSubscriptionPlan->method('getPlanBySlug')->willReturn(['id' => 1]);
+        $this->assertFalse($this->subscriptionService->needsPlanUpdate(1, 'some_slug'));
+    }
+
 }
