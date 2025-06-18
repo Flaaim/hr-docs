@@ -28,7 +28,7 @@ class SubscriptionPlan extends BaseModel
         $result = $this->database->fetchAllAssociative("SELECT * FROM " . self::TABLE_NAME);
         return $result ?: [];
     }
-    private function getPlanBySlug(string $slug): array
+    public function getPlanBySlug(string $slug): array
     {
         $plan = $this->database->fetchAssociative(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE slug = ? LIMIT 1",

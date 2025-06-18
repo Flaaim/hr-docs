@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Models;
+namespace App\Http\Users;
+
+use App\Http\Models\BaseModel;
 
 class User extends BaseModel
 {
@@ -8,7 +10,7 @@ class User extends BaseModel
     public function getAll(array $filters = []): array
     {
         $queryBuilder = $this->database->createQueryBuilder()
-            ->select('u.*, s.plan_id, s.downloads_remaining, s.ends_at, sp.name')
+            ->select('u.id, u.email, u.verified, u.created_at, s.plan_id,  s.downloads_remaining, s.ends_at, sp.name, sp.slug')
             ->from(self::TABLE_NAME, 'u')
             ->leftJoin('u', 'subscriptions', 's', 'u.id = s.user_id')
             ->leftJoin('s', 'subscription_plans', 'sp', 's.plan_id = sp.id')
@@ -27,8 +29,22 @@ class User extends BaseModel
         return $result ?: [];
     }
 
+    public function getById(int $id): array
+    {
+        return $this->database->createQueryBuilder()
+            ->select('u.id, u.email, u.verified, u.created_at, s.plan_id, s.downloads_remaining, s.ends_at, sp.name')
+            ->from(self::TABLE_NAME, 'u')
+            ->leftJoin('u', 'subscriptions', 's', 'u.id = s.user_id')
+            ->leftJoin('s', 'subscription_plans', 'sp', 's.plan_id = sp.id')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->executeQuery()
+            ->fetchAssociative() ?: [];
+    }
     public function confirmUser(int $user_id): int
     {
         return $this->database->update(self::TABLE_NAME, ['verified' => 1], ['id' => $user_id]);
     }
+
+
 }

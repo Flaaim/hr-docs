@@ -19,7 +19,14 @@ class SubscriptionService
         $this->subscription = $subscription;
         $this->plan = $plan;
     }
-    public function upgradePlan($user_id, $slug): void
+    public function needsPlanUpdate(int $user_id, string $slug): bool
+    {
+        $current_plan = $this->subscription->getCurrentPlan($user_id);
+        $newPlan = $this->plan->getPlanBySlug($slug);
+
+        return $current_plan['plan_id'] !== $newPlan['id'];
+    }
+    public function upgradePlan(int $user_id, string $slug): void
     {
         switch ($slug){
             case "monthly":
@@ -42,10 +49,6 @@ class SubscriptionService
             if(empty($plan)){
                 throw new SubscriptionPlanNotFoundException('Plan not found');
             }
-            $current_plan = $this->subscription->getCurrentPlan($user_id);
-            if($current_plan['plan_id'] === $plan['id']){
-                throw new SubscriptionPlanAlreadyUpgradedException('План уже обновлен');
-            }
             $this->subscription->updatePlan($user_id, $plan);
         }catch (\RuntimeException $e){
             throw new RuntimeException(
@@ -61,11 +64,6 @@ class SubscriptionService
             if(empty($plan)){
                 throw new SubscriptionPlanNotFoundException('Plan not found');
             }
-            $current_plan = $this->subscription->getCurrentPlan($user_id);
-            if($current_plan['plan_id'] === $plan['id']){
-                throw new SubscriptionPlanAlreadyUpgradedException('Plan already upgraded');
-            }
-
             $this->subscription->updatePlan($user_id, $plan);
         }catch (\RuntimeException $e){
             throw new RuntimeException(
@@ -88,5 +86,9 @@ class SubscriptionService
                 "Failed to downgrade user {$user_id} to free plan: " . $e->getMessage()
             );
         }
+    }
+    private function planAlreadyUpgraded(array $current_plan, array $plan): bool
+    {
+        return $current_plan['plan_id'] === $plan['id'];
     }
 }

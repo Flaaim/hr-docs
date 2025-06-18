@@ -1,0 +1,25 @@
+<div id="small-dialog-edit-user" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Изменить пользователя</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/users/edit" method="POST" id="admin-edit-user-form" data-form-type="edit-user">
+                    <div class="mb-3">
+                        <label for="email">Email пользователя</label>
+                        <input type="text" id="email" class="form-control" name="email" value="">
+                    </div>
+                    <div class="mb-3">
+                        <p>План подписки:</p>
+                        <select class="form-select" id="plan-user" aria-label="User-plan" name="plan_slug">
+                            <option selected disabled>Выберите значение</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="user_id" value="">
+                    <div class="col-auto">
+                        <button type="submit" id="doEdit" class="btn btn-primary mb-3">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

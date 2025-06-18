@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 
 use App\Http\Auth\AuthMiddleware;
-use App\Http\Controllers\UserController;
+use App\Http\Users\UserController;
 use Slim\Routing\RouteCollectorProxy;
 
 $app->group('/user', function (RouteCollectorProxy $group) {

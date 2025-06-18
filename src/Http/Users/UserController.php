@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Users;
 
 use App\Http\Auth\Auth;
+use App\Http\Exception\SubscriptionPlanAlreadyUpgradedException;
+use App\Http\Exception\SubscriptionPlanNotFoundException;
 use App\Http\JsonResponse;
-use App\Http\Models\User;
 use App\Http\Subscription\Subscription;
+use InvalidArgumentException;
 use Odan\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,17 +20,20 @@ class UserController
     private SessionInterface $session;
     private Subscription $subscription;
     private User $user;
+    private UserService $service;
     public function __construct(
         Auth $authModel,
         SessionInterface $session,
         Subscription $subscription,
-        User $user
+        User $user,
+        UserService $service
     )
     {
         $this->authModel = $authModel;
         $this->session = $session;
         $this->subscription = $subscription;
         $this->user = $user;
+        $this->service = $service;
     }
 
     public function dashboard(Request $request, Response $response, array $args): Response
@@ -62,6 +67,26 @@ class UserController
         }
     }
 
+    public function get(Request $request, Response $response, array $args): Response
+    {
+        $user_id = $request->getQueryParams()['user_id'] ?? null;
+        try{
+            if($user_id === null){
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'User Id is required'
+                ], 400);
+            }
+            $user = $this->user->getById($user_id);
+            return new JsonResponse($user);
+        }catch (\Exception $e){
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function confirm(Request $request, Response $response, array $args): Response
     {
         try{
@@ -82,6 +107,23 @@ class UserController
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function doEdit(Request $request, Response $response, array $args): Response
+    {
+        $data = $request->getParsedBody() ?? [];
+        try{
+            $this->service->editUser($data);
+            return new JsonResponse(['status' => 'success', 'message' => 'Данные пользователя изменнены'], 200);
+        }catch(SubscriptionPlanAlreadyUpgradedException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 409);
+        }catch(SubscriptionPlanNotFoundException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
+        }catch(InvalidArgumentException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
+        }catch (\Exception $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 }

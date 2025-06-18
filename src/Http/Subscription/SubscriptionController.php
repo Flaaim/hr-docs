@@ -39,7 +39,15 @@ class SubscriptionController
             ], 500);
         }
     }
-
+    public function all(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $plans = $this->plan->all();
+            return new JsonResponse($plans);
+        }catch (\Exception $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
     public function upgrade(Request $request, Response $response, array $args): Response
     {
         try{
@@ -51,7 +59,9 @@ class SubscriptionController
             if(empty($user)){
                 return $response->withHeader('Location', '/login')->withStatus(302);
             }
-            $this->service->upgradePlan($user['id'], $slug);
+            if($this->service->needsPlanUpdate($user['id'], $slug)){
+                $this->service->upgradePlan($user['id'], $slug);
+            }
             return new JsonResponse(['status' => 'success', 'message' => 'План успешно обновлен'],200);
         }catch (SubscriptionPlanNotFoundException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);

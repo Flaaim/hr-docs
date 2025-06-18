@@ -30,7 +30,6 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
     $group->get('/sections', [SectionController::class, 'sections']);
     $group->get('/section', [SectionController::class, 'section']);
 
-
     $group->get('/types', [TypeController::class, 'types']);
 
 

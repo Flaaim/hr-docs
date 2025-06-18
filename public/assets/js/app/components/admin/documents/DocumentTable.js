@@ -47,9 +47,15 @@ export class DocumentTable {
           return gridjs.html(
             `<button class="btn btn-secondary edit-btn" data-type-id="${typeId}"
                data-section-id="${sectionId}" data-direction-id="${directionId}" data-id="${documentId}">
-               <i class="fas fa-edit"></i>
+               <svg width="18" height="18" fill="currentColor">
+                    <use xlink:href="#icon-edit"></use>
+                </svg>
              </button>
-             <button class="btn btn-danger delete-btn" data-id="${documentId}">X</button>`
+             <button class="btn btn-danger delete-btn" data-id="${documentId}">
+                 <svg width="18" height="18" fill="currentColor">
+                    <use xlink:href="#icon-trash"></use>
+                </svg>
+             </button>`
           );
         }
       }

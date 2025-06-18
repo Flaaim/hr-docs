@@ -38,7 +38,15 @@
                   setTimeout(() => {
                     window.location.reload();
                   }, 1100);
+                }
+                return;
+              case 'edit-user':
+                if (res.status === 'success') {
 
+                  window.FlashMessage.success(res.message , {progress: true, timeout: 1000});
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1100);
                 }
                 return;
             }
