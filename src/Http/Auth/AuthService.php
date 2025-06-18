@@ -6,17 +6,21 @@ use App\Http\Exception\UserAlreadyExistsException;
 use App\Http\Exception\UserNotFoundException;
 use App\Http\Services\Mail\Mail;
 use DateTimeImmutable;
+use InvalidArgumentException;
+use Odan\Session\SessionInterface;
 use RuntimeException;
 
 class AuthService
 {
     private Auth $userModel;
     private Mail $mailer;
+    private SessionInterface $session;
 
-    public function __construct(Auth $userModel, Mail $mailer)
+    public function __construct(Auth $userModel, Mail $mailer, SessionInterface $session)
     {
         $this->userModel = $userModel;
         $this->mailer = $mailer;
+        $this->session = $session;
     }
 
     public function register(string $email, string $password): void
@@ -42,16 +46,21 @@ class AuthService
             ->send();
     }
 
-    public function login(string $email, string $password): array|false
+    public function login(string $email, string $password): void
     {
         $user = $this->userModel->findByEmail($email);
         if(empty($user)){
             throw new UserNotFoundException('Пользователь не найден');
         }
         if(!password_verify($password, $user['password_hash'])){
-            return false;
+            throw new InvalidArgumentException('Неверный пароль');
         }
-        return $user;
+        $this->session->set('user', [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'role' => $user['role'],
+            'created_at' => $user['created_at'],
+        ]);
     }
 
     public function verifiedUser(?string $token): void

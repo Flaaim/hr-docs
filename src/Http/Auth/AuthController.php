@@ -7,6 +7,7 @@ use App\Http\Exception\UserNotFoundException;
 use App\Http\Interface\MailInterface;
 use App\Http\JsonResponse;
 use App\Http\Services\Mail\Mail;
+use InvalidArgumentException;
 use Odan\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,44 +21,41 @@ class AuthController
     private MailInterface $mail;
     private AuthService $authService;
 
-    public function __construct(Auth $userModel, SessionInterface $session, Mail $mail)
+    public function __construct(Auth $userModel, SessionInterface $session, Mail $mail, AuthService $authService)
     {
         $this->userModel = $userModel;
         $this->session = $session;
         $this->mail = $mail;
-        $this->authService = new AuthService($this->userModel, $this->mail);
+        $this->authService = $authService;
 
     }
 
     public function doLogin(Request $request, Response $response, array $args): Response
     {
         try{
-            $email = $request->getParsedBody()['email'];
-            $password = $request->getParsedBody()['password'];
-            if($user = $this->authService->login($email, $password)){
-                $this->session->set('user', [
-                    'id' => $user['id'],
-                    'email' => $user['email'],
-                    'role' => $user['role'],
-                    'created_at' => $user['created_at'],
-                ]);
-                return new JsonResponse(['status' => 'success', 'message' => '🔓 Вы успешно вошли в систему!'], 200);
-            }
-            return new JsonResponse(['status' => 'error', 'message' => 'Ошибка авторизации']);
+            $data = $request->getParsedBody();
+            $this->authService->login($data['email'], $data['password']);
+            return new JsonResponse(['status' => 'success', 'message' => '🔓 Вы успешно вошли в систему!'], 200);
+        }catch (InvalidArgumentException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 401);
         }catch (UserNotFoundException $e){
-            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
         }catch (\Exception){
-            return new JsonResponse([ 'status' => 'error' , 'errors' => 'Неверный email или пароль'], 401);
+            return new JsonResponse([ 'status' => 'error' , 'errors' => 'Ошибка авторизации'], 500);
         }
     }
 
     public function doRegister(Request $request, Response $response, array $args): Response
     {
-        $email = $request->getParsedBody()['email'];
-        $password = $request->getParsedBody()['password'];
+        $data = $request->getParsedBody();
         try {
-            $this->authService->register($email, $password);
+            if ($data['password'] !== $data['confirm_password']) {
+                throw new InvalidArgumentException('Пароли не совпадают');
+            }
+            $this->authService->register($data['email'], $data['password']);
             return new JsonResponse(['status' => 'success', 'message' => 'Регистрация завершена. На ваш email направлено письмо с подтверждением.']);
+        }catch (InvalidArgumentException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 401);
         } catch (UserAlreadyExistsException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         } catch (\Exception $e) {
