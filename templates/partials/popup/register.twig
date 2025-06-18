@@ -16,6 +16,7 @@
                         <label for="confirm_password" class="form-label">Подтвердите пароль</label>
                         <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Подтвердите пароль">
                     </div>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="col-auto">
                         <button type="submit" id="doRegister" class="btn btn-primary mb-3">Зарегистрироваться</button>
                     </div>

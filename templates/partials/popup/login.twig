@@ -12,6 +12,7 @@
                         <label for="password" class="form-label">Пароль</label>
                         <input type="password" name="password" class="form-control" id="password" placeholder="Пароль">
                     </div>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="col-auto">
                         <button type="submit" id="doLogin" class="btn btn-primary mb-3">Войти</button>
                     </div>

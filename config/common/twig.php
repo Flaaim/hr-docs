@@ -20,10 +20,12 @@ return [
         if (getenv('APP_ENV') !== 'prod') {
             $twig->addExtension(new \Twig\Extension\DebugExtension());
         }
+
         // Добавление глобальных переменных (опционально)
         $twig->getEnvironment()->addGlobal('app', $container->get('config'));
         $twig->getEnvironment()->addGlobal('session', $container->get(SessionInterface::class));
-        //$twig->getEnvironment()->addGlobal('flash', $container->get(Messages::class));
+        $twig->getEnvironment()->addGlobal('csrf_token', $container->get(SessionInterface::class)->get('csrf_token')
+        );
         return $twig;
     },
     Environment::class => function () {
