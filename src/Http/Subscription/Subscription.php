@@ -9,19 +9,14 @@ class Subscription extends BaseModel
 {
     const TABLE_NAME = 'subscriptions';
     const UNLIMITED_DOWNLOADS = null;
-    public function __construct(Connection $database)
-    {
-        parent::__construct($database);
-    }
-
+    const DOWNLOAD_LIMIT = 3;
+    const FREE_PLAN_ID = 1;
     public function setFreePlan(int $user_id): void
     {
-        $free_plan = $this->plans->getFreePlan();
-
         $this->database->insert(self::TABLE_NAME, [
             'user_id' => $user_id,
-            'plan_id' => $free_plan['id'],
-            'downloads_remaining' => $free_plan['downloads_limit'],
+            'plan_id' => self::FREE_PLAN_ID,
+            'downloads_remaining' => self::DOWNLOAD_LIMIT,
             'starts_at' => date('Y-m-d H:i:s'),
             'ends_at' => null
         ]);

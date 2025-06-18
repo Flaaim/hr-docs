@@ -15,6 +15,7 @@ use App\Http\Documents\Edit\EditDocumentController;
 use App\Http\Documents\Preview\DocumentPreviewController;
 use App\Http\Documents\Upload\UploadDocumentController;
 use App\Http\Documents\Upload\UploadDocumentMiddleware;
+use App\Http\Middleware\CheckSubscriptionMiddleware;
 use Odan\Session\SessionInterface;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -43,6 +44,7 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
     $group->post('/upload', [UploadDocumentController::class, 'doUpload'])->add(UploadDocumentMiddleware::class);
 
     $group->post('/get-document', [DownloadDocumentController::class, 'getDocument'])
+        ->add(CheckSubscriptionMiddleware::class)
         ->add(new AuthMiddleware(
             $app->getContainer()->get(SessionInterface::class),
             true

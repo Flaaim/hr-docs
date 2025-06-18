@@ -87,8 +87,17 @@ class SubscriptionService
             );
         }
     }
-    private function planAlreadyUpgraded(array $current_plan, array $plan): bool
+
+    public function checkAndUpdateSubscription(int $user_id): void
     {
-        return $current_plan['plan_id'] === $plan['id'];
+        $current_plan = $this->subscription->getCurrentPlan($user_id);
+        if(!empty($current_plan) && $this->isSubscriptionExpired($current_plan)){
+            $this->downgradeToFreePlan($user_id);
+        }
+    }
+
+    public function isSubscriptionExpired(array $current_plan): bool
+    {
+        return $current_plan['ends_at'] && new \DateTime($current_plan['ends_at']) < new \DateTime();
     }
 }

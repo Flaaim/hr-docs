@@ -27,6 +27,7 @@ class AuthMiddleware implements MiddlewareInterface
         if (!$user) {
             return $this->handleUnauthorized($request);
         }
+
         return $handler->handle($request->withAttribute('user', $user));
     }
 

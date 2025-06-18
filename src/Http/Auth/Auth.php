@@ -4,6 +4,7 @@ namespace App\Http\Auth;
 
 use App\Http\Models\BaseModel;
 use App\Http\Subscription\Subscription;
+use App\Http\Subscription\SubscriptionService;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 
@@ -14,6 +15,7 @@ class Auth extends BaseModel
     {
         parent::__construct($database);
         $this->subscription = $subscription;
+
     }
     public function findByEmail(string $email): array
     {

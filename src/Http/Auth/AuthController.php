@@ -43,14 +43,12 @@ class AuthController
                 ]);
                 return new JsonResponse(['status' => 'success', 'message' => '🔓 Вы успешно вошли в систему!'], 200);
             }
+            return new JsonResponse(['status' => 'error', 'message' => 'Ошибка авторизации']);
         }catch (UserNotFoundException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception){
             return new JsonResponse([ 'status' => 'error' , 'errors' => 'Неверный email или пароль'], 401);
         }
-
-
-
     }
 
     public function doRegister(Request $request, Response $response, array $args): Response
