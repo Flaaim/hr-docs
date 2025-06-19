@@ -1,4 +1,18 @@
 $(document).ready(function () {
+  async function getCsrfToken(){
+    try{
+      const response = await API.get('csrf/get');
+
+    }catch (error){
+      const message = error.responseJSON?.message || "Ошибка загрузки CSRF-токена";
+      window.FlashMessage.error(message);
+    }
+  }
+  getCsrfToken().then(response => {
+    document.querySelectorAll('input[name="csrf_token"]').forEach(input => {
+      input.value = response.token;
+    });
+  })
 
     $('.auth-form-login').magnificPopup({
         items: {
