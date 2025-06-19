@@ -2,25 +2,30 @@
 
 namespace App\Http\Auth;
 
+use App\Http\Exception\InvalidCredentialsException;
 use App\Http\Exception\UserAlreadyExistsException;
 use App\Http\Exception\UserNotFoundException;
+use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
 use DateTimeImmutable;
-use InvalidArgumentException;
 use Odan\Session\SessionInterface;
 use RuntimeException;
+
+
 
 class AuthService
 {
     private Auth $userModel;
     private Mail $mailer;
     private SessionInterface $session;
+    private CookieManager $cookieManager;
 
-    public function __construct(Auth $userModel, Mail $mailer, SessionInterface $session)
+    public function __construct(Auth $userModel, Mail $mailer, SessionInterface $session, CookieManager $cookieManager)
     {
         $this->userModel = $userModel;
         $this->mailer = $mailer;
         $this->session = $session;
+        $this->cookieManager = $cookieManager;
     }
 
     public function register(string $email, string $password): void
@@ -46,14 +51,14 @@ class AuthService
             ->send();
     }
 
-    public function login(string $email, string $password): void
+    public function login(string $email, string $password, bool $remember_me = false): void
     {
         $user = $this->userModel->findByEmail($email);
         if(empty($user)){
             throw new UserNotFoundException('Пользователь не найден');
         }
         if(!password_verify($password, $user['password_hash'])){
-            throw new InvalidArgumentException('Неверный пароль');
+            throw new InvalidCredentialsException('Неверный email или пароль');
         }
         $this->session->set('user', [
             'id' => $user['id'],
@@ -61,6 +66,10 @@ class AuthService
             'role' => $user['role'],
             'created_at' => $user['created_at'],
         ]);
+
+        if($remember_me){
+            $this->createRememberToken($user['id']);
+        }
     }
 
     public function verifiedUser(?string $token): void
@@ -95,5 +104,27 @@ class AuthService
                 ['link' => 'https://hr-docs.ru/auth/reset?token='.$token]
             )
             ->send();
+    }
+
+    public function logOut(): void
+    {
+        $this->session->remove('user');
+        $token = $this->cookieManager->get('remember_token');
+        if ($token !== null) {
+            $this->userModel->deleteRememberToken($token);
+            $this->cookieManager->delete('remember_token');
+        }
+    }
+    public function createRememberToken(int $user_id): void
+    {
+        $token = bin2hex(random_bytes(32));
+        $date = new DateTimeImmutable('+30 days');
+        $this->userModel->saveRememberToken($user_id, $token, $date);
+        $this->cookieManager->set(
+            'remember_token',
+            $token,
+            $date->getTimestamp()
+        );
+
     }
 }
