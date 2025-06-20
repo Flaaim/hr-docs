@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Auth\AuthController;
+use App\Http\Auth\SocialAuthController;
 use App\Http\Middleware\ValidationMiddlewareFactory;
 use App\Http\Middleware\VerifyCsrfTokenMiddleware;
 use Respect\Validation\Validator as v;
@@ -43,9 +44,14 @@ $app->group('/api/auth', function (RouteCollectorProxy $group) {
         ->add(VerifyCsrfTokenMiddleware::class);
 
     $group->post('/logout', [AuthController::class, 'doLogout']);
+
+
 });
 
 $app->group('/auth', function (RouteCollectorProxy $group) {
     $group->get('/verify', [AuthController::class, 'doVerify']);
     $group->get('/reset', [AuthController::class, 'doResetPassword']);
+
+    $group->get('/{provider}', [SocialAuthController::class, 'redirectToProvider']);
+    $group->get('/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
 });

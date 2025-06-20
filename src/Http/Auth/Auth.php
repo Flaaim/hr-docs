@@ -9,7 +9,14 @@ use Doctrine\DBAL\Connection;
 
 class Auth extends BaseModel
 {
-    const TABLE_NAME = 'users';
+    private const TABLE_NAME = 'users';
+    private const SOCIAL_ACCOUNTS_TABLE = 'social_accounts';
+    private const USERS_CONFIRMATION_TABLE = 'users_confirmations';
+    private const USERS_RESETS_TABLE = 'users_resets';
+    private const REMEMBER_TOKENS_TABLE = 'remember_tokens';
+
+    private const VERIFIED_USER = 1;
+
     private Subscription $subscription;
     public function __construct(Connection $database, Subscription $subscription)
     {
@@ -24,10 +31,17 @@ class Auth extends BaseModel
         );
         return $result ?: [];
     }
+    public function findById(int $id): array
+    {
+        $result = $this->database->fetchAssociative(
+            "SELECT id, email, role, password_hash, created_at FROM ". self::TABLE_NAME. " WHERE id = :id", ['id' => $id]
+        );
+        return $result ?: [];
+    }
     public function findVerifyToken($token): array|false
     {
         return $this->database->fetchAssociative(
-            "SELECT id, user_id, token, expires FROM users_confirmations WHERE token = ? AND expires >= UNIX_TIMESTAMP()",
+            "SELECT id, user_id, token, expires FROM ". self::USERS_CONFIRMATION_TABLE ." WHERE token = ? AND expires >= UNIX_TIMESTAMP()",
             [$token]
         );
     }
@@ -51,10 +65,29 @@ class Auth extends BaseModel
             return false;
         }
     }
+    public function createUserBySocial(string $email): int
+    {
+        try{
+            $this->database->beginTransaction();
+            $this->database->insert(self::TABLE_NAME, [
+                'email' => $email,
+                'verified' => self::VERIFIED_USER,
+                'password_hash' => null
+            ]);
+            $userId = $this->database->lastInsertId();
+            $this->subscription->setFreePlan($userId);
+            $this->database->commit();
+            return $userId;
+        }catch (\Exception $e) {
+            $this->database->rollBack();
+            //Добавить тут логгирование
+            return false;
+        }
+    }
 
     private function createUserConfirmation(int $userId, string $token): void
     {
-        $this->database->insert('users_confirmations', [
+        $this->database->insert(self::USERS_CONFIRMATION_TABLE, [
             'user_id' => $userId,
             'token' => $token,
             'expires' => (new DateTimeImmutable())->modify('+1 day')->getTimestamp()
@@ -64,7 +97,7 @@ class Auth extends BaseModel
 
     public function createReset(int $userId, string $token, int $expires): int|string
     {
-        return $this->database->insert('users_resets', [
+        return $this->database->insert(self::USERS_RESETS_TABLE, [
             'user_id' => $userId,
             'token' => $token,
             'expires' => $expires
@@ -78,9 +111,9 @@ class Auth extends BaseModel
 
     public function saveRememberToken(int $user_id, string $token, DateTimeImmutable $date): void
     {
-        $this->database->delete('remember_tokens', ['user_id' => $user_id]);
+        $this->database->delete(self::REMEMBER_TOKENS_TABLE, ['user_id' => $user_id]);
 
-        $this->database->insert('remember_tokens', [
+        $this->database->insert(self::REMEMBER_TOKENS_TABLE, [
             'user_id' => $user_id,
             'token' => hash('sha256', $token),
             'expires_at' => $date->format('Y-m-d H:i:s')
@@ -92,7 +125,7 @@ class Auth extends BaseModel
         $hashed_token = hash('sha256', $token);
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
         $queryBuilder = $this->database->createQueryBuilder()->select("u.id, u.email, u.role, u.created_at, token, expires_at")
-            ->from('remember_tokens', 't')
+            ->from(self::REMEMBER_TOKENS_TABLE, 't')
             ->leftJoin("t", "users", "u", "t.user_id = u.id")
             ->where("t.token = :token")
             ->andwhere("t.expires_at > :now")
@@ -105,8 +138,29 @@ class Auth extends BaseModel
 
     public function deleteRememberToken(string $token): int
     {
-        return $this->database->delete('remember_tokens', [
+        return $this->database->delete(self::REMEMBER_TOKENS_TABLE, [
             'token' => hash('sha256', $token)
+        ]);
+    }
+
+    public function findBySocialId(string $provider, string $social_id): array
+    {
+        $queryBuilder = $this->database->createQueryBuilder()->select("u.*")->from(self::TABLE_NAME, 'u')
+            ->innerJoin('u', 'social_accounts', 'sa', 'u.id = sa.user_id')->where("sa.provider = :provider")
+            ->andWhere("sa.social_id = :social_id")
+            ->setParameter("provider", $provider)
+            ->setParameter("social_id", $social_id);
+
+        return $queryBuilder->fetchAssociative() ?: [];
+    }
+
+    public function addSocialAccount(int $user_id, string $provider, string $social_id): void
+    {
+        $this->database->insert(self::SOCIAL_ACCOUNTS_TABLE, [
+            'user_id' => $user_id,
+            'provider' => $provider,
+            'social_id' => $social_id,
+            'created_at' => (new DateTimeImmutable())->format('Y-m-d H:i:s')
         ]);
     }
 }

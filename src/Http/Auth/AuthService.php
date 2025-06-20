@@ -127,4 +127,24 @@ class AuthService
         );
 
     }
+
+    public function registerOrLoginSocialUser(string $provider, string $socialId, string $email): array
+    {
+        /* Login by social ID */
+        $user = $this->userModel->findBySocialId($provider, $socialId);
+        if($user){
+            return $user;
+        }
+        /* Login by Email and Merge Social account */
+        $user = $this->userModel->findByEmail($email);
+        if ($user) {
+            // Привязываем социальный аккаунт к существующему
+            $this->userModel->addSocialAccount($user['id'], $provider, $socialId);
+            return $user;
+        }
+        /* Create new user by social acc */
+        $user_id = $this->userModel->createUserBySocial($email);
+        $this->userModel->addSocialAccount($user_id, $provider, $socialId);
+        return $this->userModel->findById($user_id);
+    }
 }
