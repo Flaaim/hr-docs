@@ -4,7 +4,9 @@ namespace Auth;
 
 use App\Http\Auth\Auth;
 use App\Http\Auth\AuthService;
+use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
+use Odan\Session\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -20,7 +22,14 @@ class VerifyTest extends TestCase
         $this->token = 'some_token';
         $this->mockUser = $this->createMock(Auth::class);
         $this->mockMail = $this->createMock(Mail::class);
-        $this->authService = new AuthService($this->mockUser, $this->mockMail);
+        $this->sessionMock = $this->createMock(SessionInterface::class);
+        $this->mockCookieManager = $this->createMock(CookieManager::class);
+        $this->authService = new AuthService(
+            $this->mockUser,
+            $this->mockMail,
+            $this->sessionMock,
+            $this->mockCookieManager
+        );
     }
 
     public function testVerifyFailedTokenIsNull()

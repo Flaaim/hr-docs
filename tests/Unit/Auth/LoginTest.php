@@ -4,8 +4,11 @@ namespace Auth;
 
 use App\Http\Auth\Auth;
 use App\Http\Auth\AuthService;
+use App\Http\Exception\InvalidCredentialsException;
 use App\Http\Exception\UserNotFoundException;
+use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
+use Odan\Session\SessionInterface;
 use PHPUnit\Framework\TestCase;
 
 class LoginTest extends TestCase
@@ -20,7 +23,14 @@ class LoginTest extends TestCase
         $this->password = 'password';
         $this->mockUser = $this->createMock(Auth::class);
         $this->mockMail = $this->createMock(Mail::class);
-        $this->authService = new AuthService($this->mockUser, $this->mockMail);
+        $this->sessionMock = $this->createMock(SessionInterface::class);
+        $this->mockCookieManager = $this->createMock(CookieManager::class);
+        $this->authService = new AuthService(
+            $this->mockUser,
+            $this->mockMail,
+            $this->sessionMock,
+            $this->mockCookieManager
+        );
 
     }
 
@@ -37,15 +47,21 @@ class LoginTest extends TestCase
             'email' => $this->email,
             'password_hash' => password_hash('123456', PASSWORD_DEFAULT)
         ]);
-        $this->assertFalse($this->authService->login($this->email, $this->password));
+        $this->expectException(InvalidCredentialsException::class);
+        $this->authService->login($this->email, $this->password);
+
     }
 
     public function testLoginSuccess(): void
     {
         $this->mockUser->method('findByEmail')->willReturn([
             'email' => $this->email,
-            'password_hash' => password_hash($this->password, PASSWORD_DEFAULT)
+            'password_hash' => password_hash($this->password, PASSWORD_DEFAULT),
+            'role' => 'admin',
+            'created-at' => date('Y-m-d')
         ]);
-        $this->assertIsArray($this->authService->login($this->email, $this->password));
+        $this->sessionMock->expects($this->once())->method('set');
+        $this->authService->login($this->email, $this->password);
     }
+
 }
