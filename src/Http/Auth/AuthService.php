@@ -3,12 +3,14 @@
 namespace App\Http\Auth;
 
 use App\Http\Exception\Auth\InvalidCredentialsException;
+use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
 use DateTimeImmutable;
 use Odan\Session\SessionInterface;
+use PHPUnit\Event\InvalidArgumentException;
 use RuntimeException;
 
 
@@ -74,11 +76,11 @@ class AuthService
     public function verifiedUser(?string $token): void
     {
         if(!$token){
-            throw new RuntimeException('Токен подтверждения не предоставлен.');
+            throw new InvalidArgumentException('Токен подтверждения не предоставлен.');
         }
         $confirmation = $this->userModel->findVerifyToken($token);
         if(!$confirmation){
-            throw new RuntimeException('Токен подтверждения не найден');
+            throw new TokenNotFoundException('Токен подтверждения не найден');
         }
         $this->userModel->markUserAsVerified($confirmation['user_id']);
     }

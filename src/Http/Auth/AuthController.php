@@ -3,32 +3,25 @@
 namespace App\Http\Auth;
 
 use App\Http\Exception\Auth\InvalidCredentialsException;
+use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Exception\Auth\UserNotFoundException;
-use App\Http\Interface\MailInterface;
+use App\Http\Exception\Mail\MailNotSendException;
 use App\Http\JsonResponse;
-use App\Http\Services\Mail\Mail;
-use Odan\Session\SessionInterface;
+use PHPUnit\Event\InvalidArgumentException;
+use PHPUnit\Framework\Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Slim\Views\Twig;
 
 class AuthController
 {
-    private Auth $userModel;
-    private SessionInterface $session;
-    private MailInterface $mail;
-    private AuthService $authService;
-
-    public function __construct(Auth $userModel, SessionInterface $session, Mail $mail, AuthService $authService)
-    {
-        $this->userModel = $userModel;
-        $this->session = $session;
-        $this->mail = $mail;
-        $this->authService = $authService;
-
-    }
+    public function __construct(
+        private readonly AuthService $authService,
+        private readonly LoggerInterface $logger
+    ){}
 
     public function doLogin(Request $request, Response $response, array $args): Response
     {
@@ -55,6 +48,10 @@ class AuthController
             }
             $this->authService->register($data['email'], $data['password']);
             return new JsonResponse(['status' => 'success', 'message' => 'Регистрация завершена. На ваш email направлено письмо с подтверждением.']);
+        }
+        catch (MailNotSendException $e){
+            $this->logger->warning('Ошибка отправки почты', [$e->getMessage()]);
+            return new JsonResponse(['status' => 'error', 'message' => 'Не удалось отправить письмо. Попробуйте позже или обратитесь в поддержку.'], 500);
         }catch (RuntimeException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }catch (InvalidCredentialsException $e){
@@ -90,12 +87,17 @@ class AuthController
                 'title' => 'Подтверждение регистрации',
                 'message' => 'Ваш email успешно подтверждён! Теперь вы можете войти.',
             ]);
-        }catch (RuntimeException $e){
+        }catch (TokenNotFoundException $e){
+            throw new Exception($e->getMessage(), 401);
+        } catch (InvalidArgumentException $e){
             return $view->render($response, 'pages/auth/verify.twig', [
                 'title' => 'Подтверждение регистрации',
                 'message' => $e->getMessage(),
             ]);
         }catch (\Exception $e){
+            $this->logger->warning('Ошибка подтверждения пользователя', [
+                'error' => $e->getMessage()
+            ]);
             throw new \Exception($e->getMessage());
         }
 

@@ -6,7 +6,8 @@ use App\Http\Models\BaseModel;
 use App\Http\Subscription\Subscription;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
-use Slim\Logger;
+use Psr\Log\LoggerInterface;
+
 
 class Auth extends BaseModel
 {
@@ -19,7 +20,7 @@ class Auth extends BaseModel
     public function __construct(
         Connection $database,
         private readonly Subscription $subscription,
-        private readonly Logger $logger
+        private readonly LoggerInterface $logger
     )
     {
         parent::__construct($database);
@@ -62,7 +63,8 @@ class Auth extends BaseModel
         }catch (\Exception $e) {
             $this->database->rollBack();
             $this->logger->warning('Ошибка создания пользователя', [
-                'email' => $email
+                'email' => $email,
+                'error' => $e->getMessage()
             ]);
             return false;
         }
@@ -83,7 +85,8 @@ class Auth extends BaseModel
         }catch (\Exception $e) {
             $this->database->rollBack();
             $this->logger->warning('Ошибка создания пользователя через социальные сети', [
-                'email' => $email
+                'email' => $email,
+                'error' => $e->getMessage()
             ]);
             return false;
         }
