@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Mail;
 
+use App\Http\Exception\Mail\MailNotSendException;
 use App\Http\Interface\MailInterface;
 use App\Http\Interface\MailSenderInterface;
 use Twig\Environment;
@@ -51,6 +52,9 @@ class Mail implements MailInterface
      */
     public function setBodyFromTemplate(string $templateName, array $data): MailInterface
     {
+        if(empty($data)){
+            throw new MailNotSendException('Data для отправки email пуста');
+        }
         $this->body = $this->twig->render($templateName, $data);
         return $this;
     }
@@ -60,6 +64,15 @@ class Mail implements MailInterface
      */
     public function send(): bool
     {
+        if(empty($this->to)){
+            throw new MailNotSendException('Не указан получатель письма');
+        }
+        if(empty($this->subject)){
+            throw new MailNotSendException('Не указана тема письма');
+        }
+        if(empty($this->body)){
+            throw new MailNotSendException('Не указано содержимое письма');
+        }
         return $this->sender->send($this->to, $this->subject, $this->body);
     }
 }
