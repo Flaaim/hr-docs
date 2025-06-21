@@ -2,10 +2,8 @@
 
 namespace App\Http\Documents;
 
-use App\Http\Exception\DirectionNotFoundException;
-use App\Http\Exception\DocumentNotFoundException;
+use App\Http\Exception\Document\DirectionNotFoundException;
 use App\Http\Models\Direction;
-use http\Exception\RuntimeException;
 use InvalidArgumentException;
 
 class DocumentService

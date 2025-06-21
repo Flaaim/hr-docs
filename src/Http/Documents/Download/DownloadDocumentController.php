@@ -3,9 +3,9 @@
 namespace App\Http\Documents\Download;
 
 
-use App\Http\Exception\DocumentNotFoundException;
-use App\Http\Exception\DownloadLimitExceededException;
-use App\Http\Exception\FileNotFoundInStorageException;
+use App\Http\Exception\Document\DocumentNotFoundException;
+use App\Http\Exception\Document\DownloadLimitExceededException;
+use App\Http\Exception\Document\FileNotFoundInStorageException;
 use App\Http\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

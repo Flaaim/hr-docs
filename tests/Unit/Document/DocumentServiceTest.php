@@ -4,7 +4,7 @@ namespace Document;
 
 use App\Http\Documents\Document;
 use App\Http\Documents\DocumentService;
-use App\Http\Exception\DirectionNotFoundException;
+use App\Http\Exception\Document\DirectionNotFoundException;
 use App\Http\Models\Direction;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

@@ -3,19 +3,15 @@
 namespace Document\Download;
 
 use App\Http\Documents\Document;
-use App\Http\Documents\DocumentService;
 use App\Http\Documents\Download\DocumentValidationMiddleware;
 use App\Http\Documents\Download\DownloadDocumentService;
 use App\Http\Documents\FileSystemService;
-use App\Http\Exception\DocumentNotFoundException;
-use App\Http\Exception\FileNotFoundInStorageException;
+use App\Http\Exception\Document\DocumentNotFoundException;
+use App\Http\Exception\Document\FileNotFoundInStorageException;
 use App\Http\Subscription\Subscription;
 use Odan\Session\SessionInterface;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
 class DownloadDocumentTest extends TestCase

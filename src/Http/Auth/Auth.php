@@ -6,6 +6,7 @@ use App\Http\Models\BaseModel;
 use App\Http\Subscription\Subscription;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Slim\Logger;
 
 class Auth extends BaseModel
 {
@@ -14,15 +15,14 @@ class Auth extends BaseModel
     private const USERS_CONFIRMATION_TABLE = 'users_confirmations';
     private const USERS_RESETS_TABLE = 'users_resets';
     private const REMEMBER_TOKENS_TABLE = 'remember_tokens';
-
     private const VERIFIED_USER = 1;
-
-    private Subscription $subscription;
-    public function __construct(Connection $database, Subscription $subscription)
+    public function __construct(
+        Connection $database,
+        private readonly Subscription $subscription,
+        private readonly Logger $logger
+    )
     {
         parent::__construct($database);
-        $this->subscription = $subscription;
-
     }
     public function findByEmail(string $email): array
     {
@@ -61,7 +61,9 @@ class Auth extends BaseModel
             return true;
         }catch (\Exception $e) {
             $this->database->rollBack();
-            //Добавить тут логгирование
+            $this->logger->warning('Ошибка создания пользователя', [
+                'email' => $email
+            ]);
             return false;
         }
     }
@@ -80,7 +82,9 @@ class Auth extends BaseModel
             return $userId;
         }catch (\Exception $e) {
             $this->database->rollBack();
-            //Добавить тут логгирование
+            $this->logger->warning('Ошибка создания пользователя через социальные сети', [
+                'email' => $email
+            ]);
             return false;
         }
     }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Subscription;
 
-use App\Http\Exception\SubscriptionPlanAlreadyUpgradedException;
-use App\Http\Exception\SubscriptionPlanNotFoundException;
+use App\Http\Exception\Subcription\SubscriptionPlanAlreadyUpgradedException;
+use App\Http\Exception\Subcription\SubscriptionPlanNotFoundException;
 use App\Http\JsonResponse;
 use Odan\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface as Response;

@@ -2,10 +2,7 @@
 
 namespace App\Http\Users;
 
-use App\Http\Exception\SubscriptionPlanNotFoundException;
-use App\Http\Exception\UserNotFoundException;
 use App\Http\Subscription\Subscription;
-use App\Http\Subscription\SubscriptionPlan;
 use App\Http\Subscription\SubscriptionService;
 use InvalidArgumentException;
 

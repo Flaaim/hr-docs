@@ -121,6 +121,16 @@
       <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
       <path value="$PROJECT_DIR$/vendor/phpoffice/math" />
       <path value="$PROJECT_DIR$/vendor/phpoffice/phpword" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-client" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-google" />
+      <path value="$PROJECT_DIR$/vendor/aego/oauth2-yandex" />
+      <path value="$PROJECT_DIR$/vendor/php-ds/php-ds" />
+      <path value="$PROJECT_DIR$/vendor/yoomoney/yookassa-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/yoomoney/yookassa-sdk-validator" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

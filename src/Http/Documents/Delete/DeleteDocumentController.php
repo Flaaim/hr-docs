@@ -2,7 +2,7 @@
 
 namespace App\Http\Documents\Delete;
 
-use App\Http\Exception\DocumentNotFoundException;
+use App\Http\Exception\Document\DocumentNotFoundException;
 use App\Http\JsonResponse;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;

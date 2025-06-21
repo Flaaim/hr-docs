@@ -2,9 +2,9 @@
 
 namespace App\Http\Auth;
 
-use App\Http\Exception\InvalidCredentialsException;
-use App\Http\Exception\UserAlreadyExistsException;
-use App\Http\Exception\UserNotFoundException;
+use App\Http\Exception\Auth\InvalidCredentialsException;
+use App\Http\Exception\Auth\UserAlreadyExistsException;
+use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Interface\MailInterface;
 use App\Http\JsonResponse;
 use App\Http\Services\Mail\Mail;

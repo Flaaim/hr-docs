@@ -4,9 +4,9 @@ namespace App\Http\Documents\Download;
 
 use App\Http\Documents\Document;
 use App\Http\Documents\FileSystemService;
-use App\Http\Exception\DocumentNotFoundException;
-use App\Http\Exception\DownloadLimitExceededException;
-use App\Http\Exception\FileNotFoundInStorageException;
+use App\Http\Exception\Document\DocumentNotFoundException;
+use App\Http\Exception\Document\DownloadLimitExceededException;
+use App\Http\Exception\Document\FileNotFoundInStorageException;
 use App\Http\Subscription\Subscription;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Exception;
+namespace App\Http\Exception\Auth;
+
+use App\Http\Exception\Throwable;
 
 class TokenNotFoundException extends \LogicException
 {

@@ -5,8 +5,7 @@ namespace Document\Delete;
 use App\Http\Documents\Delete\DeleteDocumentService;
 use App\Http\Documents\Document;
 use App\Http\Documents\FileSystemService;
-use App\Http\Exception\DocumentNotFoundException;
-use PHPUnit\Event\InvalidArgumentException;
+use App\Http\Exception\Document\DocumentNotFoundException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 

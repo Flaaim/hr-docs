@@ -4,7 +4,7 @@ namespace App\Http\Documents\Delete;
 
 use App\Http\Documents\Document;
 use App\Http\Documents\FileSystemService;
-use App\Http\Exception\DocumentNotFoundException;
+use App\Http\Exception\Document\DocumentNotFoundException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

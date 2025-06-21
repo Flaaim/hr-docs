@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Psr\Http\Message\ResponseFactoryInterface;
-use Slim\Flash\Messages;
 use Slim\Psr7\Factory\ResponseFactory;
 
 return [

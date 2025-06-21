@@ -3,10 +3,8 @@
 namespace App\Http\Documents\Preview;
 
 
-use App\Http\Documents\Document;
-use App\Http\Documents\FileSystemService;
-use App\Http\Exception\DocumentNotFoundException;
-use App\Http\Exception\DocumentWrongTypeException;
+use App\Http\Exception\Document\DocumentNotFoundException;
+use App\Http\Exception\Document\DocumentWrongTypeException;
 use App\Http\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;

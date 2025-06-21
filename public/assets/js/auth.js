@@ -2,17 +2,17 @@ $(document).ready(function () {
   async function getCsrfToken(){
     try{
       const response = await API.get('csrf/get');
-
+      document.querySelectorAll('input[name="csrf_token"]').forEach(input => {
+        input.value = response.token;
+      });
     }catch (error){
       const message = error.responseJSON?.message || "Ошибка загрузки CSRF-токена";
       window.FlashMessage.error(message);
     }
   }
-  getCsrfToken().then(response => {
-    document.querySelectorAll('input[name="csrf_token"]').forEach(input => {
-      input.value = response.token;
+    getCsrfToken().then(r => {
+
     });
-  })
 
     $('.auth-form-login').magnificPopup({
         items: {

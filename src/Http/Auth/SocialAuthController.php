@@ -2,11 +2,9 @@
 
 namespace App\Http\Auth;
 
-use App\Http\Exception\SocialProviderNotFoundException;
+use App\Http\Exception\Auth\SocialProviderNotFoundException;
 use App\Http\JsonResponse;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\ServerRequest;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Odan\Session\SessionInterface;
 use PHPUnit\Event\RuntimeException;
 use Slim\Psr7\Response;

@@ -3,8 +3,8 @@
 namespace App\Http\Documents\Edit;
 
 use App\Http\Documents\Document;
-use App\Http\Exception\SectionNotFoundException;
-use App\Http\Exception\TypeNotFoundException;
+use App\Http\Exception\Document\SectionNotFoundException;
+use App\Http\Exception\Document\TypeNotFoundException;
 use App\Http\Models\Section;
 use App\Http\Models\Type;
 use InvalidArgumentException;

@@ -3,8 +3,8 @@
 namespace App\Http\Users;
 
 use App\Http\Auth\Auth;
-use App\Http\Exception\SubscriptionPlanAlreadyUpgradedException;
-use App\Http\Exception\SubscriptionPlanNotFoundException;
+use App\Http\Exception\Subcription\SubscriptionPlanAlreadyUpgradedException;
+use App\Http\Exception\Subcription\SubscriptionPlanNotFoundException;
 use App\Http\JsonResponse;
 use App\Http\Subscription\Subscription;
 use InvalidArgumentException;

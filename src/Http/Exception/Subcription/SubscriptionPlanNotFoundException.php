@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Exception;
+namespace App\Http\Exception\Subcription;
+
+use App\Http\Exception\Throwable;
 
 class SubscriptionPlanNotFoundException extends \LogicException
 {

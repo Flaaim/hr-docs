@@ -12,7 +12,7 @@ $(document).ready(async function (){
 
   async function getUsers(){
     const response = await API.get('users/all');
-    console.log(response)
+
     if (!Array.isArray(response)) {
       throw new Error('Некорректный формат ответа от сервера');
     }

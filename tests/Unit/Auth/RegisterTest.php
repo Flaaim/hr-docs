@@ -4,7 +4,7 @@ namespace Auth;
 
 use App\Http\Auth\Auth;
 use App\Http\Auth\AuthService;
-use App\Http\Exception\UserAlreadyExistsException;
+use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
 use Odan\Session\SessionInterface;

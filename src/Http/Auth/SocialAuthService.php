@@ -3,8 +3,9 @@
 namespace App\Http\Auth;
 
 use Aego\OAuth2\Client\Provider\Yandex;
-use App\Http\Exception\SocialAuthException;
-use App\Http\Exception\SocialProviderNotFoundException;
+use App\Http\Exception\Auth\SocialAuthException;
+use App\Http\Exception\Auth\SocialProviderNotFoundException;
+use Couchbase\InvalidStateException;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
@@ -88,10 +89,5 @@ class SocialAuthService
             $this->session->remove('oauth2state');
             throw new InvalidStateException('Невалидный state-параметр');
         }
-    }
-
-    private function loginSocialUser(array $user)
-    {
-
     }
 }

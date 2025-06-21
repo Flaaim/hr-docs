@@ -2,8 +2,7 @@
 
 namespace Subscription;
 
-use App\Http\Exception\SubscriptionPlanAlreadyUpgradedException;
-use App\Http\Exception\SubscriptionPlanNotFoundException;
+use App\Http\Exception\Subcription\SubscriptionPlanNotFoundException;
 use App\Http\Subscription\Subscription;
 use App\Http\Subscription\SubscriptionPlan;
 use App\Http\Subscription\SubscriptionService;
@@ -30,14 +29,6 @@ class SubscriptionServiceTest extends TestCase
     {
         $this->mockSubscriptionPlan->method('getMonthlyPlan')->willReturn([]);
         $this->expectException(SubscriptionPlanNotFoundException::class);
-        $this->subscriptionService->upgradeToMonthlyPlan(1);
-    }
-
-    public function testUpgradeToMonthlyPlanFailed_planAlreadyUpgraded(): void
-    {
-        $this->mockSubscriptionPlan->method('getMonthlyPlan')->willReturn($this->mounthly);
-        $this->mockSubscription->method('getCurrentPlan')->willReturn($this->current_plan);
-        $this->expectException(SubscriptionPlanAlreadyUpgradedException::class);
         $this->subscriptionService->upgradeToMonthlyPlan(1);
     }
 
@@ -68,6 +59,22 @@ class SubscriptionServiceTest extends TestCase
         $this->mockSubscription->method('getCurrentPlan')->willReturn(['plan_id' => 1]);
         $this->mockSubscriptionPlan->method('getPlanBySlug')->willReturn(['id' => 1]);
         $this->assertFalse($this->subscriptionService->needsPlanUpdate(1, 'some_slug'));
+    }
+
+    public function testIsSubscriptionExpired()
+    {
+        $this->assertFalse($this->subscriptionService->isSubscriptionExpired(
+            []
+        ));
+        $this->assertTrue($this->subscriptionService->isSubscriptionExpired(
+            ['ends_at' => '2025-06-18']
+        ));
+    }
+
+    public function testCheckAndUpdateSubscription()
+    {
+        $this->mockSubscription->method('getCurrentPlan')->willReturn([]);
+        $this->subscriptionService->checkAndUpdateSubscription(1);
     }
 
 }

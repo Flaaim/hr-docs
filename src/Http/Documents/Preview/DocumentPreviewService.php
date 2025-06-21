@@ -5,8 +5,8 @@ namespace App\Http\Documents\Preview;
 use App\Http\Documents\Document;
 use App\Http\Documents\Download\DownloadDocumentService;
 use App\Http\Documents\FileSystemService;
-use App\Http\Exception\DocumentNotFoundException;
-use App\Http\Exception\DocumentWrongTypeException;
+use App\Http\Exception\Document\DocumentNotFoundException;
+use App\Http\Exception\Document\DocumentWrongTypeException;
 use PhpOffice\PhpWord\IOFactory;
 
 class DocumentPreviewService

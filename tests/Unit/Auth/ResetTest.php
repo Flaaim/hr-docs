@@ -4,7 +4,7 @@ namespace Auth;
 
 use App\Http\Auth\Auth;
 use App\Http\Auth\AuthService;
-use App\Http\Exception\UserNotFoundException;
+use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
 use Odan\Session\SessionInterface;

@@ -2,11 +2,8 @@
 
 namespace App\Http\Subscription;
 
-use App\Http\Exception\SubscriptionPlanAlreadyUpgradedException;
+use App\Http\Exception\Subcription\SubscriptionPlanNotFoundException;
 use App\Http\Exception\SubscriptionPlanExistsException;
-use App\Http\Exception\SubscriptionPlanNotFoundException;
-use InvalidArgumentException;
-use PHPUnit\Framework\Exception;
 use RuntimeException;
 
 class SubscriptionService
@@ -98,6 +95,7 @@ class SubscriptionService
 
     public function isSubscriptionExpired(array $current_plan): bool
     {
-        return $current_plan['ends_at'] && new \DateTime($current_plan['ends_at']) < new \DateTime();
+        return isset($current_plan['ends_at']) &&
+            new \DateTimeImmutable($current_plan['ends_at']) < new \DateTimeImmutable();
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Exception;
+namespace App\Http\Exception\Document;
+
+use App\Http\Exception\Throwable;
 
 class DownloadLimitExceededException extends \LogicException
 {

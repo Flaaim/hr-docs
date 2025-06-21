@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Auth\Auth;
 use App\Http\Auth\AuthService;
-use App\Http\Exception\TokenNotFoundException;
+use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Services\CookieManager;
 use Odan\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
