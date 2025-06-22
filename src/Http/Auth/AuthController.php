@@ -76,22 +76,20 @@ class AuthController
 
     }
 
-
     public function doVerify(Request $request, Response $response, array $args): Response
     {
         $token = $request->getQueryParams()['token'] ?? null;
         $view = Twig::fromRequest($request);
         try{
             $this->authService->verifiedUser($token);
-            return $view->render($response, 'pages/auth/verify.twig', [
+            $view->render($response, 'pages/auth/verify.twig', [
                 'title' => 'Подтверждение регистрации',
                 'message' => 'Ваш email успешно подтверждён! Теперь вы можете войти.',
             ]);
         }catch (TokenNotFoundException $e){
-            throw new Exception($e->getMessage(), 401);
-        } catch (InvalidArgumentException $e){
+            throw new TokenNotFoundException($e->getMessage(), 401);
+        }catch (InvalidArgumentException $e){
             return $view->render($response, 'pages/auth/verify.twig', [
-                'title' => 'Подтверждение регистрации',
                 'message' => $e->getMessage(),
             ]);
         }catch (\Exception $e){
@@ -100,19 +98,54 @@ class AuthController
             ]);
             throw new \Exception($e->getMessage());
         }
-
     }
 
-    public function doReset(Request $request, Response $response, array $args): Response
+    public function requestResetPassword(Request $request, Response $response, array $args): Response
     {
         $email = $request->getParsedBody()['email'];
         try{
             $this->authService->reset($email);
             return new JsonResponse(['status' => 'success', 'message' => 'На ваш email направлено письмо с инструкциями по сбросу пароля.']);
+        }catch (MailNotSendException $e){
+            $this->logger->warning('Ошибка отправки почты', [$e->getMessage()]);
+            return new JsonResponse(['status' => 'error', 'message' => 'Не удалось отправить письмо. Попробуйте позже или обратитесь в поддержку.'], 500);
         }catch (UserNotFoundException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception $e){
+            $this->logger->warning('Ошибка сброса пароля', [$e->getMessage()]);
             return new JsonResponse(['status' => 'error', 'message' => 'Ошибка сброса пароля']);
+        }
+    }
+
+    public function resetPassword(Request $request, Response $response, array $args): Response
+    {
+        $token = $request->getQueryParams()['token'] ?? null;
+        $view = Twig::fromRequest($request);
+        try{
+            return $view->render($response, 'pages/auth/reset_password.twig', ['token' => $token]);
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+    }
+    public function doUpdatePassword(Request $request, Response $response, array $args): Response
+    {
+        $data = $request->getParsedBody();
+        $token = $data['token'] ?? null;
+        $newPassword = $data['newPassword'];
+        $confirmNewPassword = $data['confirmNewPassword'];
+        try{
+            if ($newPassword !== $confirmNewPassword) {
+                throw new InvalidCredentialsException('Пароли не совпадают');
+            }
+            $this->authService->updatePassword($token, $newPassword);
+            return new JsonResponse(['status' => 'success', 'message' => 'Пароль успешно изменен'], 200);
+        } catch(InvalidCredentialsException|InvalidArgumentException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
+        } catch (TokenNotFoundException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
+        }catch (\Exception $e){
+            $this->logger->warning('Ошибка при смене пароля', [$e->getMessage()]);
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 }

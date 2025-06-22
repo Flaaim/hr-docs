@@ -45,6 +45,13 @@
                               $.magnificPopup.close();
                               window.FlashMessage.success(res.message, {progress: true});
                             }
+                          case 'updatePassword':
+                            if(res.status === 'success'){
+                              window.FlashMessage.success(res.message, {progress: true, timeout: 1000});
+                              setTimeout(() => {
+                                window.location.href = '/';
+                              }, 1100);
+                            }
                         }
                     },
                     complete: function () {

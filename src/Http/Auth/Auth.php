@@ -39,12 +39,25 @@ class Auth extends BaseModel
         );
         return $result ?: [];
     }
-    public function findVerifyToken($token): array|false
+    public function findVerifyToken(string $token): array
     {
-        return $this->database->fetchAssociative(
+        $result = $this->database->fetchAssociative(
             "SELECT id, user_id, token, expires FROM ". self::USERS_CONFIRMATION_TABLE ." WHERE token = ? AND expires >= UNIX_TIMESTAMP()",
             [$token]
         );
+        return $result ?: [];
+    }
+    public function findResetToken(string $token): array
+    {
+        $result = $this->database->fetchAssociative(
+            "SELECT id, user_id, token, expires FROM ". self::USERS_RESETS_TABLE ." WHERE token = ? AND expires >= UNIX_TIMESTAMP()",
+            [$token]
+        );
+        return $result ?: [];
+    }
+    public function updateUserPassword($user_id, $password): void
+    {
+        $this->database->update(self::TABLE_NAME, ['password_hash' => $password], ['id' => $user_id]);
     }
     public function createUser(string $email, string $password, string $token): bool
     {
@@ -102,7 +115,7 @@ class Auth extends BaseModel
         ]);
     }
 
-    public function createReset(int $userId, string $token, int $expires): int|string
+    public function createReset(int $userId, string $token, int $expires): int
     {
         return $this->database->insert(self::USERS_RESETS_TABLE, [
             'user_id' => $userId,

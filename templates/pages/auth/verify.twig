@@ -1,9 +1,16 @@
 {% extends '/layouts/base.twig' %}
 
+{% block title  %}
+    Завершение регистрации
+{% endblock %}
+{% block description %}
+    Завершите регистрацию на сайте hr-docs.ru.
+{% endblock %}
 {% block content %}
     <div class="dashboard-content px-3 pt-4">
         <h1 class="fs-3">Подтверждение регистрации</h1>
         <p>{{ message }}</p>
+        <p>Вернутся на <a href="/">главную страницу</a></p>
     </div>
 
 {% endblock %}

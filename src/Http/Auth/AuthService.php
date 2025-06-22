@@ -79,12 +79,31 @@ class AuthService
             throw new InvalidArgumentException('Токен подтверждения не предоставлен.');
         }
         $confirmation = $this->userModel->findVerifyToken($token);
-        if(!$confirmation){
+        if(empty($confirmation)){
             throw new TokenNotFoundException('Токен подтверждения не найден');
+        }
+        if (time() > $confirmation['expires']) {
+            $this->userModel->deleteVerifyToken($token); // Удаляем просроченный токен
+            throw new TokenNotFoundException('Срок действия токена истек');
         }
         $this->userModel->markUserAsVerified($confirmation['user_id']);
     }
-
+    public function updatePassword(?string $token, string $password): void
+    {
+        if(!$token){
+            throw new InvalidArgumentException('Токен подтверждения не предоставлен.');
+        }
+        $reset = $this->userModel->findResetToken($token);
+        if(empty($reset)){
+            throw new TokenNotFoundException('Токен сброса пароля не найден');
+        }
+        if (time() > $reset['expires']) {
+            $this->userModel->deleteResetToken($token); // Удаляем просроченный токен
+            throw new TokenNotFoundException('Срок действия токена истек');
+        }
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $this->userModel->updateUserPassword($reset['user_id'], $password);
+    }
     public function reset($email): void
     {
         $user = $this->userModel->findByEmail($email);
@@ -94,14 +113,14 @@ class AuthService
         $token = bin2hex(random_bytes(32));
         $expires = (new DateTimeImmutable())->modify('+1 hour')->getTimestamp();
         $created = $this->userModel->createReset($user['id'], $token, $expires);
-        if(!$created){
+        if($created === 0){
             throw new RuntimeException('Ошибка сброса пароля');
         }
 
         $this->mailer->setTo($email)
             ->setSubject('Сброс пароля')
             ->setBodyFromTemplate(
-                'emails/reset.twig',
+                'emails/reset.html.twig',
                 ['link' => 'https://hr-docs.ru/auth/reset?token='.$token]
             )
             ->send();

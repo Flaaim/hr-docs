@@ -3,14 +3,14 @@
         <h4 >Восстановление пароля</h4>
         <div class="col-md-12">
             <div class="dashboard-content px-3 pt-4">
-                <form action="/api/auth/reset" method="POST" data-form-type="reset">
+                <form action="/api/auth/requestReset" method="POST" data-form-type="reset">
                     <div class="mb-3">
                         <label for="email" class="form-label">Адрес электронной почты</label>
                         <input type="email" name="email" class="form-control" id="email-reset" placeholder="Email адрес">
                     </div>
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="col-auto">
-                        <button type="submit" id="doReset" class="btn btn-primary mb-3">Войти</button>
+                        <button type="submit" id="doRequestReset" class="btn btn-primary mb-3">Войти</button>
                     </div>
                 </form>
             </div>
