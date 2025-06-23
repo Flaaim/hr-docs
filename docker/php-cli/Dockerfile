@@ -7,6 +7,8 @@ RUN apk add --no-cache autoconf g++ make \
 
 RUN apk add --no-cache unzip
 
+RUN docker-php-ext-install pdo pdo_mysql
+
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 COPY ./php/conf.d /usr/local/etc/php/conf.d

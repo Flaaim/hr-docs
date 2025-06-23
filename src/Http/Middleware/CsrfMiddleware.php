@@ -19,7 +19,9 @@ class CsrfMiddleware implements MiddlewareInterface
     {
         if(!$this->session->has('csrf_token')) {
             $this->session->set('csrf_token', bin2hex(random_bytes(32)));
+
         }
-       return $handler->handle($request->withAttribute('csrf_token', $this->session->get('csrf_token')));
+        $request  = $request->withAttribute('csrf_token', $this->session->get('csrf_token'));
+        return $handler->handle($request);
     }
 }

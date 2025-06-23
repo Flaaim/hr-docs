@@ -16,7 +16,10 @@ return [
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
-        $session->start();
+        if(session_status() !== PHP_SESSION_ACTIVE){
+            $session->start();
+        }
+
         return $session;
     }
 ];

@@ -14,7 +14,6 @@ class HomeController
     private Auth $userModel;
     private Document $document;
 
-    // Автоматическое внедрение Auth!
     public function __construct(Auth $userModel, Document $document)
     {
         $this->userModel = $userModel;
@@ -28,7 +27,7 @@ class HomeController
                 ['documents' => $documents])
                 ->withHeader('Content-Type', 'text/html');
         }catch (\Throwable $e){
-            throw new HttpInternalServerErrorException($request, 'Server error');
+            throw new HttpInternalServerErrorException($request, $e->getMessage());
         }
     }
 }

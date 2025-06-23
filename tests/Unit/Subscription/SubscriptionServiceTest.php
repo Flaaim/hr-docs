@@ -1,6 +1,6 @@
 <?php
 
-namespace Subscription;
+namespace Tests\Unit\Subscription;
 
 use App\Http\Exception\Subcription\SubscriptionPlanNotFoundException;
 use App\Http\Subscription\Subscription;

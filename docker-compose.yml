@@ -26,6 +26,8 @@ services:
     build:
       context: docker
       dockerfile: php-cli/Dockerfile
+    environment:
+      APP_ENV: dev
     volumes:
       - ./:/app
 

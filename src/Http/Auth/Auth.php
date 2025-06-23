@@ -183,4 +183,9 @@ class Auth extends BaseModel
             'created_at' => (new DateTimeImmutable())->format('Y-m-d H:i:s')
         ]);
     }
+
+    public function deleteResetToken(string $token): void
+    {
+
+    }
 }

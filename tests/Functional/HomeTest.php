@@ -2,22 +2,44 @@
 
 namespace Tests\Functional;
 
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Slim\App;
-use Slim\Psr7\Factory\ServerRequestFactory;
-use Slim\Psr7\Request;
+use Doctrine\DBAL\Connection;
 
 class HomeTest extends WebTestCase
 {
+    private Connection $database;
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->database = $this->app()->getContainer()->get('Doctrine\DBAL\Connection');
+        $this->testDbConnection();
+        $this->database->beginTransaction();
+    }
+    /**
+     * @runInSeparateProcess
+     */
     public function testSuccess()
     {
-        $this->markTestSkipped('Временно отключен для рефакторинга');
+
         $response = $this->app()->handle(self::html('GET', '/'));
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('text/html', $response->getHeaderLine('Content-Type'));
     }
-
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDbConnection()
+    {
+        try {
+            $result = $this->database->executeQuery('SELECT 1')->fetchOne();
+            $this->assertEquals(1, $result, 'Database connection failed');
+        } catch (\Exception $e) {
+            $this->fail("DB connection error: " . $e->getMessage());
+        }
+    }
+    public function tearDown(): void
+    {
+        $this->database->rollBack();
+    }
 }

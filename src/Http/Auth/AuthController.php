@@ -27,7 +27,6 @@ class AuthController
     {
         try{
             $data = $request->getParsedBody();
-
             $this->authService->login($data['email'], $data['password'], $data['remember_me'] ?? false);
             return new JsonResponse(['status' => 'success', 'message' => '🔓 Вы успешно вошли в систему!'], 200);
         }catch (InvalidCredentialsException $e){
