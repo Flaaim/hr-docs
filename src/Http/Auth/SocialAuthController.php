@@ -4,9 +4,9 @@ namespace App\Http\Auth;
 
 use App\Http\Exception\Auth\SocialProviderNotFoundException;
 use App\Http\JsonResponse;
-use GuzzleHttp\Psr7\ServerRequest;
 use Odan\Session\SessionInterface;
 use PHPUnit\Event\RuntimeException;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
 
 
@@ -14,14 +14,16 @@ class SocialAuthController
 {
     public function __construct(
         private readonly SocialAuthService $socialService,
-        private readonly SessionInterface  $session
+        private readonly SessionInterface  $session,
+        private readonly SocialProvider $socialProvider,
     ) {}
 
-    public function redirectToProvider(ServerRequest $request, Response $response, array $args): Response
+    public function redirectToProvider(Request $request, Response $response, array $args): Response
     {
         try{
             $providerName = $args['provider'] ?? null;
-            $provider = $this->service->getProvider($providerName);
+            $provider = $this->socialProvider->getProvider($providerName);
+
             $authUrl = $provider->getAuthorizationUrl();
             $this->session->set('oauth2state', $provider->getState());
 
@@ -32,7 +34,7 @@ class SocialAuthController
         }
     }
 
-    public function handleProviderCallback(ServerRequest $request, Response $response, array $args): Response
+    public function handleProviderCallback(Request $request, Response $response, array $args): Response
     {
         $providerName = $args['provider'] ?? null;
         $queryParams = $request->getQueryParams();

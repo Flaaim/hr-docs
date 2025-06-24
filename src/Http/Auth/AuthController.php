@@ -9,7 +9,6 @@ use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Exception\Mail\MailNotSendException;
 use App\Http\JsonResponse;
 use PHPUnit\Event\InvalidArgumentException;
-use PHPUnit\Framework\Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;

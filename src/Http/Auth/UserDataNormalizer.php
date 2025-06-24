@@ -24,8 +24,8 @@ class UserDataNormalizer
     private function normalizeYandexData(array $userData): array
     {
         return [
-            'id' => $userData['sub'],
-            'email' => $userData['email'],
+            'id' => $userData['id'],
+            'email' => $userData['default_email'],
         ];
     }
 }

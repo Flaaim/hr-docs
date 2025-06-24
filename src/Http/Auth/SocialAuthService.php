@@ -5,7 +5,7 @@ namespace App\Http\Auth;
 use Aego\OAuth2\Client\Provider\Yandex;
 use App\Http\Exception\Auth\SocialAuthException;
 use App\Http\Exception\Auth\SocialProviderNotFoundException;
-use Couchbase\InvalidStateException;
+use DI\Attribute\Inject;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
@@ -14,41 +14,24 @@ use Odan\Session\SessionInterface;
 
 class SocialAuthService
 {
-    private array $config;
+    private SocialProvider $socialProvider;
     private SessionInterface $session;
     private AuthService $authService;
     private UserDataNormalizer $normalizer;
-    public function __construct(array $oauthConfig,
+    public function __construct(SocialProvider $socialProvider,
                                 SessionInterface $session,
                                 AuthService $authService,
                                 UserDataNormalizer $normalizer){
-        $this->config = $oauthConfig;
+        $this->socialProvider = $socialProvider;
         $this->session = $session;
         $this->authService = $authService;
         $this->normalizer = $normalizer;
     }
 
-    public function getProvider(string $provider): AbstractProvider
-    {
-        return match ($provider){
-            'google' => new Google([
-                'clientId' => $this->config['google']['clientId'],
-                'clientSecret' => $this->config['google']['clientSecret'],
-                'redirectUri' => $this->config['google']['redirectUri'],
-            ]),
-            'yandex' => new Yandex([
-                'clientId' => $this->config['yandex']['clientId'],
-                'clientSecret' => $this->config['yandex']['clientSecret'],
-                'redirectUri' => $this->config['yandex']['redirectUri'],
-            ]),
-            default => throw new SocialProviderNotFoundException('Неизвестный провайдер'),
-        };
-    }
-
     public function handleSocialCallback(array $queryParams, string $providerName): void
     {
         $this->validateState($queryParams['state'] ?? '');
-        $provider = $this->getProvider($providerName);
+        $provider = $this->socialProvider->getProvider($providerName);
         $token = $this->getAccessToken($provider, $queryParams['code'] ?? '');
         $socialUser = $provider->getResourceOwner($token);
         $userData = $this->normalizeUserData($providerName, $socialUser->toArray());

@@ -21,7 +21,7 @@
         "phpoffice/phpword": "^1.3",
         "league/oauth2-client": "^2.8",
         "league/oauth2-google": "^4.0",
-        "aego/oauth2-yandex": "*",
+        "aego/oauth2-yandex": "^0.2.2",
         "yoomoney/yookassa-sdk-php": "^3.8"
     },
     "autoload": {
