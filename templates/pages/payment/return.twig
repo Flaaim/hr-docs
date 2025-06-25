@@ -1,0 +1,64 @@
+{% extends '/layouts/base.twig' %}
+
+{% block title  %}
+    Завершение оплаты
+{% endblock %}
+{% block description %}
+    Завершение оплаты подписки на сайте
+{% endblock %}
+{% block content %}
+    <div class="payment-result-container">
+        <div class="payment-result-card {{ is_error|default(false) ? 'error' : '' }}">
+            {# Иконка статуса #}
+            <div class="payment-icon">
+                {% if icon == 'success' %}
+                    <svg><!-- Иконка успеха --></svg>
+                {% elseif icon == 'pending' %}
+                    <svg><!-- Иконка ожидания --></svg>
+                {% else %}
+                    <svg><!-- Иконка ошибки --></svg>
+                {% endif %}
+            </div>
+
+            {# Основное сообщение #}
+            <h1 class="payment-title">
+                {% if is_success|default(false) %}
+                    Оплата прошла успешно!
+                {% elseif is_error|default(false) %}
+                    Возникла проблема
+                {% else %}
+                    Статус платежа
+                {% endif %}
+            </h1>
+
+            <p class="payment-message">{{ message }}</p>
+
+            {# Дополнительная информация #}
+            <div class="payment-details">
+                {% if payment_id %}
+                    <p>Номер платежа: <code>{{ payment_id }}</code></p>
+                {% endif %}
+
+                {% if error_code %}
+                    <p>Код ошибки: <code>{{ error_code }}</code></p>
+                {% endif %}
+            </div>
+
+            {# Кнопки действий #}
+            <div class="payment-actions">
+                {% if is_success|default(false) %}
+                    <a href="/user/dashboard" class="btn btn-primary">Перейти в кабинет</a>
+                {% elseif status == 'pending' %}
+                    <button class="btn btn-secondary" onclick="window.location.reload()">
+                        Проверить снова
+                    </button>
+                {% endif %}
+
+                <a href="/support" class="btn btn-link">Связаться с поддержкой</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

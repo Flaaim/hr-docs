@@ -11,19 +11,18 @@ $(document).ready(function () {
       }
     })
 
-  $(".subscription-content").on('click', '[id^="do"]', function (){
-    const button = $(this);
-    button.prop('disabled', true);
+    $(".subscription-content").on('click', '[id^="do"]', function (){
+      const button = $(this);
+      button.prop('disabled', true);
 
-    API.post('subscriptions/upgrade', {slug: $(this).data('slug')})
-      .then(response => {
-        if(response.status === 'success'){
-          window.FlashMessage.success(response.message)
-        }
-      }).catch(error => {
-
-        window.FlashMessage.error(error.responseJSON?.message)
-    })
+      API.post('payment/create', {slug: $(this).data('slug')})
+        .then(response => {
+          if(response.status === 'success'){
+            window.location.href = response.redirect_url
+          }
+        }).catch(error => {
+          window.FlashMessage.error(error.responseJSON?.message)
+      })
 
   })
 
@@ -46,7 +45,7 @@ $(document).ready(function () {
               item.slug === "annual" ? `${item.price} рублей в год` :
                 `${item.price} рублей`;
 
-          let buttonHtml = item.slug === "efree" ? '' :
+          let buttonHtml = item.slug === "free" ? '' :
             `<div class="d-flex justify-content-between align-items-center mt-3">
                   <button id="doUpgrade" data-slug="${item.slug}" class="btn btn-sm btn-outline-primary ${item.id === current_plan?.plan_id ? 'disabled' : ''}">Приобрести</button></div>`;
 

@@ -16,4 +16,5 @@ return static function (App $app): void {
         require dirname(__DIR__, 2) . '/src/Http/Documents/routes.php';
         require dirname(__DIR__, 2) . '/src/Http/Subscription/routes.php';
         require dirname(__DIR__, 2) . '/src/Http/Users/routes.php';
+        require dirname(__DIR__, 2) . '/src/Http/Payment/routes.php';
 };

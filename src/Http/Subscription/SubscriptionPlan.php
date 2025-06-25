@@ -30,11 +30,11 @@ class SubscriptionPlan extends BaseModel
     }
     public function getPlanBySlug(string $slug): array
     {
-        $plan = $this->database->fetchAssociative(
-            "SELECT * FROM " . self::TABLE_NAME . " WHERE slug = ? LIMIT 1",
+        $result = $this->database->fetchAssociative(
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE slug = ?",
             [$slug]
         );
-        return $plan ?: [];
+        return $result ?: [];
     }
 
 
