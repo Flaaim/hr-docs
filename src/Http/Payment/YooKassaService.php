@@ -5,10 +5,10 @@ namespace App\Http\Payment;
 use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Exception\Payment\PaymentCreateFailedException;
 use App\Http\Exception\Payment\PaymentEventException;
-use App\Http\Exception\Payment\PaymentInfoException;
 use App\Http\Exception\Payment\PaymentNotFoundException;
 use App\Http\Exception\Payment\PaymentWebhookException;
 use App\Http\Exception\Subcription\SubscriptionPlanAlreadyUpgradedException;
+use App\Http\Services\Mail\Mail;
 use App\Http\Subscription\SubscriptionService;
 
 use JsonException;
@@ -37,6 +37,7 @@ class YooKassaService
         private readonly Payment $payment,
         private readonly SubscriptionService $subscriptionService,
         private readonly SessionInterface $session,
+        private readonly Mail $mail
     )
     {}
     public function createPayment(array $plan): PaymentInterface
@@ -53,6 +54,7 @@ class YooKassaService
             'payment_id' => uniqid(),
             'user_id' => $user['id'],
             'plan_slug' => $plan['slug'],
+            'email' => $user['email']
         ];
         $payment = $this->createPaymentDetails($plan, $user, $metadata);
 
@@ -84,7 +86,7 @@ class YooKassaService
                 ->setMetadata($metadata);
             $builder->setConfirmation([
                 'type' => ConfirmationType::REDIRECT,
-                'returnUrl' => $_ENV['APP_PATH'].'/payment/return?' . $metadata['payment_id']
+                'returnUrl' => $_ENV['APP_PATH'].'/payment/return?payment_id=' . $metadata['payment_id']
             ]);
             $builder->setReceiptEmail($user['email']);
             $request = $builder->build();
@@ -184,7 +186,7 @@ class YooKassaService
         }
         $metadata = $payment->getMetadata();
 
-        if (empty($metadata['user_id']) || empty($metadata['plan_slug'])) {
+        if (empty($metadata['user_id']) || empty($metadata['plan_slug']) || empty($metadata['email'])) {
             $this->logger->error('Missing required metadata', [
                 'payment_id' => $payment->getId(),
                 'metadata' => $metadata
@@ -199,6 +201,18 @@ class YooKassaService
             $this->payment->updatePaymentStatus($payment->getId(),
                 self::PAYMENT_STATUS_SUCCESS
             );
+
+            $this->mail
+                ->setTo($metadata['email'])
+                ->setSubject('Оплата подписки')
+                ->setBodyFromTemplate('emails/payment.html.twig',
+                    [
+                        'amount' => $payment->getAmount()->getValue(),
+                        'slug' => $metadata['plan_slug'],
+                    ])
+                ->send();
+
+
             $this->logger->info('Subscription upgraded successfully', [
                 'payment_id' => $payment->getId(),
                 'user_id' => $metadata['user_id'],
