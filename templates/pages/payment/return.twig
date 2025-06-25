@@ -12,11 +12,15 @@
             {# Иконка статуса #}
             <div class="payment-icon">
                 {% if icon == 'success' %}
-                    <svg><!-- Иконка успеха --></svg>
+                    <svg><use xlink:href="#icon-success"></use></svg>
                 {% elseif icon == 'pending' %}
-                    <svg><!-- Иконка ожидания --></svg>
+                     <svg fill="#6c757d">
+                         <use xlink:href="#icon-pending"></use>
+                     </svg>
                 {% else %}
-                    <svg><!-- Иконка ошибки --></svg>
+                    <svg fill="#e74c3c">
+                        <use xlink:href="#icon-error"></use>
+                    </svg>
                 {% endif %}
             </div>
 

@@ -12,7 +12,6 @@ class Payment extends BaseModel
     {
         return $this->database->insert(self::TABLE_NAME, $paymentData);
     }
-
     public function updatePaymentStatus(string $payment_id, string $status): int
     {
         return $this->database->update(self::TABLE_NAME, ['status' => $status], ['yookassa_id' => $payment_id]);

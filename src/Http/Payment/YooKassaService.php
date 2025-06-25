@@ -10,7 +10,6 @@ use App\Http\Exception\Payment\PaymentWebhookException;
 use App\Http\Exception\Subcription\SubscriptionPlanAlreadyUpgradedException;
 use App\Http\Services\Mail\Mail;
 use App\Http\Subscription\SubscriptionService;
-
 use JsonException;
 use Odan\Session\SessionInterface;
 use Psr\Log\LoggerInterface;
@@ -71,6 +70,7 @@ class YooKassaService
         ];
 
         $paymentId  = $this->payment->savePayment($paymentData);
+
         if(!$paymentId){
             throw new PaymentCreateFailedException('Ошибка создания платежа');
         }
