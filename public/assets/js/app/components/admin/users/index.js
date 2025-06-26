@@ -1,4 +1,5 @@
 import { UserManager } from "./UserManager.js";
+import { Helper } from '../../../utils/Helper.js'
 
 $(document).ready(async function (){
   if($(".dashboard-content").data('page') !== 'users-admin-page'){
@@ -17,12 +18,7 @@ $(document).ready(async function (){
     const userManager = new UserManager();
     await userManager.init();
   } catch (error) {
-    handleError(error);
+    Helper.handleError(error);
   }
 
-  function handleError(error) {
-    console.error(error);
-    const message = error.responseJSON?.message || "Произошла ошибка при загрузке пользователей";
-    window.FlashMessage.error(message);
-  }
 })
