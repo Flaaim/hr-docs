@@ -16,6 +16,7 @@
         <p>
             <a href="#" id="show-dynamic" class="btn btn-primary" data-direction="{{ direction.id }}">Показать интерактивную таблицу</a>
         </p>
+
         {% include 'pages/documents/table.twig' %}
         <p>
             {% if paginator.getTotalPages() > 1 %}

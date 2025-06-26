@@ -1,13 +1,14 @@
-import { DocumentManager } from "./DocumentManger.js";
+import { DocumentManager } from "./DocumentManager.js";
 import { Helper } from '../../utils/Helper.js'
-$(document).ready(function (){
-  if($(".dashboard-content").data('page') !== 'documents-page'){
+$(document).ready(async function () {
+  if ($(".dashboard-content").data('page') !== 'documents-page') {
     return;
   }
 
-  try{
-
-  }catch (error){
+  try {
+    const DocumentManger = new DocumentManager();
+    await DocumentManger.init()
+  } catch (error) {
     Helper.handleError(error)
   }
 

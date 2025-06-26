@@ -1,17 +1,20 @@
-import {Select} from "../services/Select.js";
+import {UserEditFilters} from '../../../utils/filters/UserEditFilters.js'
+import {Helper} from "../../../utils/Helper.js";
 
 export class UserEditor {
   constructor() {
-    this.userEmailInput = $("#email");
-    this.planSelect = $("#plan-user");
-    this.select = new Select();
+    this.userEmailInput = document.getElementById("email");
+    this.planSelect = document.getElementById('plan-user');
+    this.filter = new UserEditFilters();
   }
 
    async loadUser(userId){
     try{
-      this.setLoading(this.userEmailInput, 'Загрузка')
+      Helper.setLoading(this.planSelect, 'Загрузка...')
       const response = await API.get('users/get', { user_id: userId });
-      this.userEmailInput.val(response.email).prop('disabled', true);
+      this.userEmailInput.value = response.email;
+      this.userEmailInput.disabled = true;
+
     }catch (error) {
       console.error('Ошибка загрузки документа:', error);
       this.userEmailInput.val(`Ошибка загрузки (${error.message})`);
@@ -19,18 +22,16 @@ export class UserEditor {
 
   }
 
-  async loadPlans(selectedPlanId = null){
+  async loadPlans(selectedPlanSlug = null){
     try{
-      this.setLoading(this.planSelect, 'Загрузка');
+      Helper.setLoading(this.planSelect, 'Загрузка...')
       const response = await API.get('subscriptions/all');
-      this.select.populateSelectBySlug(this.planSelect, response, selectedPlanId)
+      this.filter.populatePlanUser(response, selectedPlanSlug)
+      this.planSelect.disabled = false
     }catch (error){
       console.error('Ошибка загрузки планов подписки:', error);
       this.planSelect.html(`<option>Ошибка загрузки (${error.message})</option>`);
     }
   }
 
-  setLoading(element, text) {
-    element.prop('disabled', true).val(text || 'Загрузка...');
-  }
 }

@@ -54,7 +54,7 @@ export class UserManager {
   }
   async handleEdit(e) {
     const button = e.target.closest(".edit-btn");
-    const {id: userId, planId: planId} = button.dataset;
+    const {id: userId, planSlug: planSlug} = button.dataset;
 
     $("#admin-edit-user-form input[name=user_id]").val(userId);
     $.magnificPopup.open({
@@ -65,7 +65,7 @@ export class UserManager {
       callbacks: {
         open: async () => {
           await this.editor.loadUser(userId);
-          await this.editor.loadPlans(planId);
+          await this.editor.loadPlans(planSlug);
         }
       }
     })

@@ -1,5 +1,5 @@
 import { DocumentTable } from './DocumentTable.js';
-import { DocumentFilters } from './DocumentFilters.js';
+import { DocumentFilters } from '../../../utils/filters/DocumentFilters.js'
 import { DocumentEditor } from './DocumentEditor.js';
 import { DocumentUpload } from './DocumentUpload.js';
 
@@ -33,9 +33,9 @@ export class DocumentManager {
 
   initEventHandlers() {
     // Фильтры
-    document.getElementById("sectionFilter").addEventListener("change", () => this.applyFilters());
-    document.getElementById("typeFilter").addEventListener("change", () => this.applyFilters());
-    document.getElementById("resetFilter").addEventListener('click', () => this.resetFilters());
+    this.resetFilters("resetFilter")
+    this.changeFilter("sectionFilter")
+    this.changeFilter('typeFilter')
 
     /* Загрузка документа */
     document.getElementById("upload-document-btn").addEventListener('click', async (e)=> {
@@ -110,17 +110,15 @@ export class DocumentManager {
     }
   }
 
-  applyFilters() {
-    const { sectionId, typeId } = this.filters.getFilters();
-    const filtered = this.documents.filter(row => {
-      const matchesSection = !sectionId || String(row.section_id) === sectionId;
-      const matchesType = !typeId || String(row.type_id) === typeId;
-      return matchesSection && matchesType;
+  changeFilter(elementId){
+    document.getElementById(elementId).addEventListener("change", () => {
+      const filtered = this.filters.getFiltered(this.documents);
+      this.table.render(filtered)
     });
-    this.table.render(filtered);
   }
-  resetFilters() {
-    this.filters.reset();
-    this.table.render(this.documents);
+  resetFilters(elementId)
+  {
+    document.getElementById(elementId).addEventListener('click', () => this.filters.reset());
   }
+
 }

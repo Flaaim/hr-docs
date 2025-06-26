@@ -63,8 +63,9 @@ export class UserTable {
         formatter: (_, row) => {
           const userId = row._cells[0].data;
           const planId = row._cells[1].data;
+          const planSlug = row._cells[2].data;
           return gridjs.html(
-            `<button class="btn btn-secondary edit-btn" data-id="${userId}" data-plan-id="${planId}">
+            `<button class="btn btn-secondary edit-btn" data-id="${userId}" data-plan-id="${planId}" data-plan-slug="${planSlug}">
                <svg width="18" height="18" fill="currentColor">
                     <use xlink:href="#icon-edit"></use>
                 </svg>
