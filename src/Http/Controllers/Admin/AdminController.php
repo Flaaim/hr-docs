@@ -22,8 +22,12 @@ class AdminController
     public function users(Request $request, Response $response, array $args): Response
     {
         $view = Twig::fromRequest($request);
-        return $view->render($response, 'pages/admin/users.twig', [
-            'title' => 'Пользователи',
-        ]);
+        return $view->render($response, 'pages/admin/users.twig');
+    }
+
+    public function payments(Request $request, Response $response, array $args): Response
+    {
+        $view = Twig::fromRequest($request);
+        return $view->render($response, 'pages/admin/payments.twig');
     }
 }

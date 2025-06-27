@@ -21,14 +21,14 @@ class DeleteDocumentController
         $document = $request->getAttribute('document_data', []);
         try{
             $this->service->deleteDocument($document);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Delete document successfully'
+            ]);
         }catch (DocumentNotFoundException|InvalidArgumentException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], $e->getCode());
         } catch (\Exception $e){
             return new JsonResponse([ 'status' => 'error' , 'message' => $e->getMessage()], 500);
         }
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Delete document successfully'
-        ]);
     }
 }

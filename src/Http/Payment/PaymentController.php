@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Slim\Views\Twig;
 use Throwable;
 
@@ -21,6 +22,7 @@ class PaymentController
         private readonly YooKassaService $service,
         private readonly SubscriptionPlan $plan,
         private readonly LoggerInterface $logger,
+        private readonly Payment $payment,
     )
     {}
 
@@ -83,6 +85,39 @@ class PaymentController
                 'error_code' => 'SYSTEM_ERROR',
                 'is_error' => true
             ]);
+        }
+    }
+
+    public function all(Request $request, Response $response, array $args): Response
+    {
+        try{
+            $users = $this->payment->getAll();
+            return new JsonResponse($users, 200);
+        }catch(\Exception $e){
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function doDelete(Request $request, Response $response, array $args): Response
+    {
+        $payment_id = (int)($request->getParsedBody()['payment_id'] ?? 0);
+        try{
+            $deleted = $this->payment->deletePayment($payment_id);
+            if($deleted === 0){
+                throw new RuntimeException('Failed to delete payment from database');
+            }
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Delete payment successfully'
+            ]);
+        }catch(RuntimeException|\Exception $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }

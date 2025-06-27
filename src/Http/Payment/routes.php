@@ -7,11 +7,13 @@ declare(strict_types=1);
  */
 
 use App\Http\Auth\AuthMiddleware;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Payment\PaymentController;
 use Odan\Session\SessionInterface;
 use Slim\Routing\RouteCollectorProxy;
 
-$app->group('/api/payment', function (RouteCollectorProxy $group) use ($app){
+/* API */
+$app->group('/api/payments', function (RouteCollectorProxy $group) use ($app){
     $group->post('/create', [PaymentController::class, 'createPayment'])
         ->add(new AuthMiddleware(
             $app->getContainer()->get(SessionInterface::class),
@@ -19,8 +21,12 @@ $app->group('/api/payment', function (RouteCollectorProxy $group) use ($app){
         ));
 
     $group->post('/webhook', [PaymentController::class, 'handleWebhook']);
+
+    $group->get('/all', [PaymentController::class, 'all'])->add(AdminMiddleware::class);
+    $group->post('/delete', [PaymentController::class, 'doDelete'])->add(AdminMiddleware::class);
 });
 
+/* WEB */
 $app->group('/payment', function (RouteCollectorProxy $group) use ($app) {
     $group->get('/return', [PaymentController::class, 'paymentReturn'])
         ->add(new AuthMiddleware(
