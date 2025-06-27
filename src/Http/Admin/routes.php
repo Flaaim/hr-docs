@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var $app
+ */
+
+use App\Http\Admin\AdminController;
+use App\Http\Middleware\AdminMiddleware;
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/admin', function (RouteCollectorProxy $group) {
+    $group->get('[/]', [AdminController::class, 'index']);
+    $group->get('/users', [AdminController::class, 'users']);
+    $group->get('/payments', [AdminController::class, 'payments']);
+})->add(AdminMiddleware::class);

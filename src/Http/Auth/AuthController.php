@@ -111,7 +111,7 @@ class AuthController
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception $e){
             $this->logger->warning('Ошибка сброса пароля', [$e->getMessage()]);
-            return new JsonResponse(['status' => 'error', 'message' => 'Ошибка сброса пароля']);
+            return new JsonResponse(['status' => 'error', 'message' => 'Ошибка сброса пароля'], 500);
         }
     }
 

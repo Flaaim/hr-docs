@@ -23,6 +23,7 @@ use Slim\Routing\RouteCollectorProxy;
 /**
  * @var $app
  */
+/* API */
 $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
 
     $group->get('/directions', [DirectionController::class, 'directions']);
@@ -57,3 +58,8 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
     ));;
 
 });
+
+/* WEB */
+$app->get('/documents/{slug}', [DocumentController::class, 'documents']);
+$app->get('/document/{id}', [DocumentController::class, 'document']);
+$app->get('/document/download/{token}', [DownloadDocumentController::class, 'download']);

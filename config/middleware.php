@@ -11,6 +11,7 @@ use Odan\Session\Middleware\SessionMiddleware;
 use Odan\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Slim\App;
+use Slim\Middleware\BodyParsingMiddleware;
 use Slim\Views\TwigMiddleware;
 
 return static function (App $app, ContainerInterface $container): void {
