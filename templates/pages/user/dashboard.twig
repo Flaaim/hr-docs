@@ -7,7 +7,7 @@
     Личный кабинет пользователя сайта
 {% endblock %}
 {% block content %}
-    <div class="dashboard-content user-dashboard px-3 pt-4 col-md-12">
+    <div class="dashboard-content user-dashboard px-3 pt-4 col-md-12" data-page="users-dashboard">
         <div class="user-header">
             <h1 class="fs-3 mb-3">Личный кабинет</h1>
             <p class="text-muted">Добро пожаловать в ваш личный кабинет. Здесь вы можете управлять своей учетной записью и подпиской.</p>
@@ -58,7 +58,7 @@
                 </span>
             </div>
 
-            <button class="btn btn-primary btn-change-plan subscription-form">
+            <button class="btn btn-primary btn-change-plan subscription-form" id="change-plan-btn">
                 <i class="bi bi-arrow-repeat me-2"></i>Изменить подписку
             </button>
         </div>

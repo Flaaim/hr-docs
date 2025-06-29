@@ -1,4 +1,4 @@
-<table class="table static-table">
+<table class="table" id="static-table">
     <thead>
     <th>Наименование</th>
     <th>Раздел</th>
@@ -18,6 +18,21 @@
 </table>
 
 <div id="dynamic-table-wrapper" style="display: none;">
+    <div class="mb-3">
+        <!-- Селект-фильтр -->
+        <label for="sectionFilter">Фильтр по секции:
+            <select id="sectionFilter" class="form-control">
+                <option value="" selected>Все</option>
+            </select>
+        </label>
+        <!-- Селект-фильтр -->
+        <label for="typeFilter">Фильтр по типу:
+            <select id="typeFilter" class="form-control" >
+                <option value="" selected>Все</option>
+            </select>
+        </label>
+        <button type="reset" id="resetFilter" class="btn btn-primary">Сбросить</button>
+    </div>
     <div id="dynamic-table"></div>
     <a href="#" id="show-static" class="btn btn-primary">Показать простую версию</a>
 </div>

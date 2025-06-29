@@ -15,7 +15,7 @@ $(document).ready(function () {
       const button = $(this);
       button.prop('disabled', true);
 
-      API.post('payment/create', {slug: $(this).data('slug')})
+      API.post('payments/create', {slug: $(this).data('slug')})
         .then(response => {
           if(response.status === 'success'){
             window.location.href = response.redirect_url
