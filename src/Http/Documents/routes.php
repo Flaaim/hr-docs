@@ -15,6 +15,7 @@ use App\Http\Documents\Edit\EditDocumentController;
 use App\Http\Documents\Preview\DocumentPreviewController;
 use App\Http\Documents\Upload\UploadDocumentController;
 use App\Http\Documents\Upload\UploadDocumentMiddleware;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckSubscriptionMiddleware;
 use Odan\Session\SessionInterface;
 use Slim\Routing\RouteCollectorProxy;
@@ -40,9 +41,16 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
     $group->get('/get', [DocumentController::class, 'get']);
 
 
-    $group->post('/delete', [DeleteDocumentController::class, 'doDelete'])->add(DeleteDocumentMiddleware::class);
-    $group->post('/edit', [EditDocumentController::class, 'doEdit']);
-    $group->post('/upload', [UploadDocumentController::class, 'doUpload'])->add(UploadDocumentMiddleware::class);
+    $group->post('/delete', [DeleteDocumentController::class, 'doDelete'])
+        ->add(DeleteDocumentMiddleware::class)
+        ->add(AdminMiddleware::class);
+
+    $group->post('/edit', [EditDocumentController::class, 'doEdit'])
+        ->add(AdminMiddleware::class);
+
+    $group->post('/upload', [UploadDocumentController::class, 'doUpload'])
+        ->add(UploadDocumentMiddleware::class)
+        ->add(AdminMiddleware::class);
 
     $group->post('/get-document', [DownloadDocumentController::class, 'getDocument'])
         ->add(CheckSubscriptionMiddleware::class)
