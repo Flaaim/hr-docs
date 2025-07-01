@@ -13,10 +13,12 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use RuntimeException;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 class DocumentController
 {
@@ -132,4 +134,20 @@ class DocumentController
         }
     }
 
+    public function checkOrphanedFiles(Request $request, Response $response, array $args): Response
+    {
+        try{
+            $orphanedFiles = $this->service->findOrphanedFiles();
+            return new JsonResponse($orphanedFiles, 200);
+        }catch (DocumentNotFoundException|DirectoryNotFoundException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
+        }catch (RuntimeException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
+        }catch (\Exception $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+
+
+
+    }
 }

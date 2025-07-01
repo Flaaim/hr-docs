@@ -111,7 +111,8 @@ hr.h-color{
 #small-dialog-upload-document,
 #small-dialog-subscription,
 #small-dialog-edit-document,
-#small-dialog-edit-user {
+#small-dialog-edit-user,
+#small-dialog-orphaned-files{
     background: white;
     padding: 20px 30px;
     text-align: left;
@@ -127,7 +128,8 @@ hr.h-color{
 #small-dialog-edit-user {
 	max-width: 600px!important;
 }
-#small-dialog-subscription{
+#small-dialog-subscription,
+#small-dialog-orphaned-files{
 	max-width: 800px!important;
 }
 .flash-container {

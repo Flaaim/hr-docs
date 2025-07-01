@@ -119,4 +119,10 @@ class Document extends BaseModel
             'type_id' => $type_id,], ['id' => $id]
         );
     }
+
+    public function getDocumentsFileNames(): array
+    {
+        $result = $this->database->fetchFirstColumn('SELECT stored_name FROM ' . self::TABLE_NAME);
+        return $result ?: [];
+    }
 }

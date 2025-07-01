@@ -2,6 +2,7 @@ import { DocumentTable } from './DocumentTable.js';
 import { DocumentFilters } from '../../../utils/filters/DocumentFilters.js'
 import { DocumentEditor } from './DocumentEditor.js';
 import { DocumentUpload } from './DocumentUpload.js';
+import {Orphaned} from "./Orphaned.js";
 
 export class DocumentManager {
   constructor() {
@@ -9,6 +10,7 @@ export class DocumentManager {
     this.filters = new DocumentFilters();
     this.upload = new DocumentUpload();
     this.editor = new DocumentEditor();
+    this.orphaned = new Orphaned();
     this.documents = [];
   }
 
@@ -40,6 +42,10 @@ export class DocumentManager {
     /* Загрузка документа */
     document.getElementById("upload-document-btn").addEventListener('click', async (e)=> {
         await this.handleUpload(e);
+    })
+
+    document.getElementById("check-document-btn").addEventListener('click', async (e) => {
+      await this.checkOrphanedFiles(e)
     })
     document.getElementById("directionUploadFilter").addEventListener('change', async (e) => {
       await this.upload.loadSections(e.target.value);
@@ -105,6 +111,25 @@ export class DocumentManager {
         }
       });
     } catch (error) {
+      console.error('Ошибка при открытии попапа загрузки:', error);
+      window.FlashMessage.error('Не удалось загрузить данные для формы');
+    }
+  }
+
+  async checkOrphanedFiles(){
+    try {
+      $.magnificPopup.open({
+        items: {
+          src: '#small-dialog-orphaned-files',
+          type: 'inline'
+        },
+        callbacks: {
+          open: async () => {
+            await this.orphaned.findDocuments();
+          }
+        }
+      });
+    }catch (error){
       console.error('Ошибка при открытии попапа загрузки:', error);
       window.FlashMessage.error('Не удалось загрузить данные для формы');
     }
