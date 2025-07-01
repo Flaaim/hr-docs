@@ -25,13 +25,13 @@ class DocumentService
         }
         return $this->direction->getBySlug($slug);
     }
-    public function getDocumentsByDirectionSlug(string $slug, int $offset): array
+    public function getDocumentsByDirectionSlug(string $slug, int $limit, int $offset): array
     {
         $direction = $this->getDirectionBySlug($slug);
         if(empty($direction)){
             throw new DirectionNotFoundException('Directions not found');
         }
-        $documents = $this->document->getByDirection($direction['id'], $offset);
+        $documents = $this->document->getByDirection($direction['id'], $limit, $offset);
         return [
             'documents' => $documents,
             'direction' => $direction,

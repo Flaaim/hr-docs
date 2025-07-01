@@ -57,9 +57,9 @@ class Document extends BaseModel
         return $queryBuilder->fetchAllAssociative() ?: [];
 
     }
-    public function getByDirection(int $direction_id, int $offset = null): array
+    public function getByDirection(int $direction_id, int $limit = null, int $offset = null): array
     {
-        $result = $this->getAll(['direction_id' => $direction_id], null, $offset);
+        $result = $this->getAll(['direction_id' => $direction_id], $limit, $offset);
         return $result ?: [];
     }
     public function getBySection(int $section_id): array

@@ -107,13 +107,16 @@ class DocumentController
         $direction_slug = $args['slug'] ?? '';
         try {
             $page = $request->getQueryParams()['page'] ?? 1;
-            $itemsPerPage = 10;
+            $itemsPerPage = 25;
             $count = $this->service->getCountByDirectionSlug($direction_slug);
             $paginator = new Paginator($page, $count, $itemsPerPage);
+
             $result = $this->service->getDocumentsByDirectionSlug(
                 $direction_slug,
+                $paginator->getItemsPerPage(),
                 $paginator->getOffset()
             );
+
             return Twig::fromRequest($request)->render(
                 $response,
                 'pages/documents/documents.twig',
