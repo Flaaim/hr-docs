@@ -55,7 +55,8 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
     $group->post('/check-orphaned-files', [DocumentController::class, 'checkOrphanedFiles'])
         ->add(AdminMiddleware::class);
 
-    $group->post('delete-orphaned-files', [DeleteDocumentController::class, 'doDeleteOrphanedFiles']);
+    $group->post('/delete-orphaned-file', [DeleteDocumentController::class, 'doDeleteOrphanedFile'])
+        ->add(AdminMiddleware::class);
 
     $group->post('/get-document', [DownloadDocumentController::class, 'getDocument'])
         ->add(CheckSubscriptionMiddleware::class)

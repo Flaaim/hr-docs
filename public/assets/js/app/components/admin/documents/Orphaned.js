@@ -3,10 +3,6 @@ export class Orphaned {
     this.item = ''
     this.list = document.getElementById('listOrphanedFiles');
     this.manage = document.getElementById('manageOrphanedFiles');
-    this.deleteBtn = `<button class="btn btn-danger" id="doDeleteOrphaned">
-        <svg width="18" height="18" fill="currentColor">
-            <use xlink:href="#icon-trash"></use></svg>Удалить
-            </button>`
   }
 
   async findDocuments() {
@@ -26,18 +22,32 @@ export class Orphaned {
   showHtml(files){
 
     this.item = files.map(item => {
-       return `<li class="list-group-item">${item}</li>`
+       return `<li class="list-group-item">${item}<button class="btn btn-danger doDeleteOrphaned" data-filename="${item}"><svg width="12" height="12" fill="currentColor">
+            <use xlink:href="#icon-trash"></use></svg></button></li>`
     }).join('')
     if(!files.length) {
       this.item = 'Файлы не найдены...'
       this.list.innerHTML = this.item;
-      this.manage.innerHTML = '';
       return;
     }
 
     this.list.innerHTML = this.item;
-    this.manage.innerHTML = this.deleteBtn;
-
   }
 
+  async deleteOrphaned(filename){
+    try{
+      await API.post('documents/delete-orphaned-file', {filename:filename}).then(response => {
+        if(response.status === 'success'){
+          window.FlashMessage.success(response.message, {progress: true, timeout: 1000});
+          setTimeout(() => {
+            window.location.reload();
+          }, 1100);
+
+        }
+      })
+    }catch (error){
+      console.warn(error)
+      window.FlashMessage.error('Не удалось удалить файл');
+    }
+  }
 }

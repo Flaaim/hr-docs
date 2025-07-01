@@ -47,6 +47,7 @@ export class DocumentManager {
     document.getElementById("check-document-btn").addEventListener('click', async (e) => {
       await this.checkOrphanedFiles(e)
     })
+
     document.getElementById("directionUploadFilter").addEventListener('change', async (e) => {
       await this.upload.loadSections(e.target.value);
     })
@@ -63,6 +64,11 @@ export class DocumentManager {
         await this.handleEdit(e);
       }
     });
+
+    document.getElementById("small-dialog-orphaned-files").addEventListener('click', async (e) => {
+      const filename = e.target.closest('.doDeleteOrphaned').dataset.filename
+      await this.orphaned.deleteOrphaned(filename)
+    })
   }
 
   async handleDelete(e) {
