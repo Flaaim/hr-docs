@@ -147,9 +147,12 @@ export class DocumentManager {
       this.table.render(filtered)
     });
   }
-  resetFilters(elementId)
+  async resetFilters(elementId)
   {
-    document.getElementById(elementId).addEventListener('click', () => this.filters.reset());
+    document.getElementById(elementId).addEventListener('click', async (e) => {
+      this.filters.reset();
+      await this.loadData();
+    })
   }
 
 }
