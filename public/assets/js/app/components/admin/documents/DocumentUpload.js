@@ -3,15 +3,13 @@ export class DocumentUpload {
     this.directionsSelect = $(".directions");
     this.sectionsSelect = $(".sections");
     this.typesSelect = $(".types");
-    this.htmlDirectionOptions = `<option value="0" disabled selected>Выберите значение</option>`;
-    this.htmlSectionOptions = `<option value="0" disabled selected>Выберите значение</option>`;
-    this.htmlTypeOptions = `<option value="0" disabled selected>Выберите значение</option>`;
   }
 
   async loadDirections(){
     try{
       this.directionsSelect.prop('disabled', true);
       this.directionsSelect.html('<option value="">Загрузка...</option>');
+      this.htmlDirectionOptions = `<option value="0" disabled selected>Выберите значение</option>`;
 
       const response = await API.get('documents/directions');
 
@@ -40,6 +38,7 @@ export class DocumentUpload {
     try{
       this.sectionsSelect.prop('disabled', true);
       this.sectionsSelect.html('<option value="">Загрузка...</option>');
+      this.htmlSectionOptions = `<option value="0" disabled selected>Выберите значение</option>`;
 
       const response = await API.get('documents/sections', {"direction_id": optionValue});
 
@@ -68,6 +67,7 @@ export class DocumentUpload {
     try{
       this.typesSelect.prop('disabled', true);
       this.typesSelect.html('<option value="">Загрузка...</option>');
+      this.htmlTypeOptions = `<option value="0" disabled selected>Выберите значение</option>`;
 
       const response = await API.get('documents/types')
       if (!Array.isArray(response)) {
@@ -79,7 +79,7 @@ export class DocumentUpload {
       ).join('');
 
       if (!response.length) {
-        this.htmlTypeOptions += '<option value="">Нет доступных разделов</option>';
+        this.htmlTypeOptions = '<option value="">Нет доступных разделов</option>';
       }
 
       this.typesSelect.html(this.htmlTypeOptions);
