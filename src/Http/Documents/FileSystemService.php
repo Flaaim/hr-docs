@@ -11,7 +11,7 @@ class FileSystemService
     }
     public function getUpoadDir(): string
     {
-        return dirname(__DIR__, 3).'/public/uploads/';
+        return dirname(__DIR__, 3).'/public_html/uploads/';
     }
     public function fileExists($filePath): bool
     {
