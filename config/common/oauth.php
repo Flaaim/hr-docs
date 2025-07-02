@@ -11,12 +11,12 @@ return [
         'yandex' => [
             'clientId'     => $_ENV['YANDEX_CLIENT_ID'],
             'clientSecret' => $_ENV['YANDEX_CLIENT_SECRET'],
-            'redirectUri'  => $_ENV['YANDEX_REDIRECT_URI'],
+            'redirectUri'  => $_ENV['YANDEX_REDIRECT_URL'],
         ],
         'google' => [
             'clientId'     => $_ENV['GOOGLE_CLIENT_ID'],
             'clientSecret' => $_ENV['GOOGLE_CLIENT_SECRET'],
-            'redirectUri'  => $_ENV['GOOGLE_REDIRECT_URI'],
+            'redirectUri'  => $_ENV['GOOGLE_REDIRECT_URL'],
         ],
     ],
     Yandex::class => function (ContainerInterface $container) {
