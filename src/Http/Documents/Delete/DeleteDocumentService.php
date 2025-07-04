@@ -5,20 +5,18 @@ namespace App\Http\Documents\Delete;
 use App\Http\Documents\Document;
 use App\Http\Documents\FileSystemService;
 use App\Http\Exception\Document\DocumentNotFoundException;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 class DeleteDocumentService
 {
-    private Document $document;
-    private FileSystemService $fileSystemService;
-
-    public function __construct(Document $document, FileSystemService $fileSystemService)
-    {
-
-        $this->document = $document;
-        $this->fileSystemService = $fileSystemService;
-    }
+    public function __construct(
+        private readonly Document $document,
+        private readonly FileSystemService $fileSystemService,
+        private readonly LoggerInterface $logger
+    )
+    {}
 
     public function deleteDocument(array $document): int
     {
@@ -32,7 +30,7 @@ class DeleteDocumentService
         $file = $this->fileSystemService->generateUploadDir($document['stored_name'], $document['mime_type']);
 
         if(!$this->fileSystemService->unlink($file)){
-               //Логируем ошибку удаления файла.
+            $this->logger->warning('Ошибка удаления файла', ['Файл:' => $file]);
             throw new RuntimeException('Document deleted from DB but not from filesystem', 500);
         }
         return $rows;

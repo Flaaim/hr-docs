@@ -49,20 +49,9 @@ class DocumentService
 
     public function findOrphanedFiles(): array
     {
-        $documentsFileNames = $this->document->getDocumentsFileNames();
-        if (empty($documentsFileNames)) {
-            throw new DocumentNotFoundException('Documents filenames not found');
-        }
-        $uploadDir = $this->fileSystemService->getUpoadDir();
-        if(!is_dir($uploadDir)) {
-            throw new DirectoryNotFoundException('Directory "' . $uploadDir . '" not found');
-        }
-
-        $filesInDirectory = scandir($uploadDir);
-        if($filesInDirectory === false) {
-            throw new RuntimeException('Error reading directory "' . $uploadDir . '"');
-        }
-        $fsFiles = array_diff($filesInDirectory, ['.', '..']);
+        $fileLists = $this->getValidatedFileLists();
+        $fsFiles = $fileLists['fsFiles'];
+        $documentsFileNames = $fileLists['documentsFileNames'];
         $fileMap = [];
         foreach ($fsFiles as $fullName) {
             $nameWithoutExt = pathinfo($fullName, PATHINFO_FILENAME);
@@ -78,5 +67,41 @@ class DocumentService
             }
         }
         return $orphanedFiles;
+    }
+
+    public function findLostFilesNames(): array
+    {
+        $fileLists = $this->getValidatedFileLists();
+        $fsFiles = $fileLists['fsFiles'];
+        $documentsFileNames = $fileLists['documentsFileNames'];
+        $fsFileNames = [];
+        foreach ($fsFiles as $file) {
+            $fsFileNames[] = pathinfo($file, PATHINFO_FILENAME);
+        }
+
+        // Находим записи, которые есть в БД, но нет в ФС
+        return array_diff($documentsFileNames, $fsFileNames);
+    }
+
+    private function getValidatedFileLists(): array
+    {
+        $documentsFileNames = $this->document->getDocumentsFileNames();
+        if (empty($documentsFileNames)) {
+            throw new DocumentNotFoundException('Documents filenames not found');
+        }
+        $uploadDir = $this->fileSystemService->getUpoadDir();
+        if(!is_dir($uploadDir)) {
+            throw new DirectoryNotFoundException('Directory "' . $uploadDir . '" not found');
+        }
+
+        $filesInDirectory = scandir($uploadDir);
+        if($filesInDirectory === false) {
+            throw new RuntimeException('Error reading directory "' . $uploadDir . '"');
+        }
+        $fsFiles = array_diff($filesInDirectory, ['.', '..']);
+        return [
+            'fsFiles' => $fsFiles,
+            'documentsFileNames' => $documentsFileNames,
+        ];
     }
 }

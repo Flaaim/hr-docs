@@ -3,6 +3,7 @@
 namespace App\Http\Documents;
 
 use App\Http\Models\BaseModel;
+use Doctrine\DBAL\ArrayParameterType;
 
 class Document extends BaseModel
 {
@@ -31,7 +32,7 @@ class Document extends BaseModel
         return $this->database->executeStatement($sql, $values);
     }
 
-    public function getAll(array $filters = [], int $limit = null, int $offset = null): array
+    public function getAll(array $filters = [], int $limit = null, int $offset = null, array $in = []): array
     {
         $queryBuilder = $this->database->createQueryBuilder()
             ->select("d.*, s.name as section_name, s.id as section_id, t.name as type_name, t.id as type_id, dir.name as direction_name, dir.id as direction_id")
@@ -42,8 +43,22 @@ class Document extends BaseModel
         ->orderBy('updated', 'desc');
 
         foreach ($filters as $field => $value) {
+            if (!preg_match('/^[a-zA-Z0-9_\.]+$/', $field)) {
+                continue;
+            }
             $queryBuilder->andWhere("$field = :$field")
                 ->setParameter($field, $value);
+        }
+
+        foreach ($in as $field => $values) {
+            if (!preg_match('/^[a-zA-Z0-9_\.]+$/', $field)) {
+                continue;
+            }
+            if (!empty($values)) {
+                $paramName = 'in_' . str_replace('.', '_', $field);
+                $queryBuilder->andWhere($queryBuilder->expr()->in($field, ':' . $paramName))
+                    ->setParameter($paramName, $values, ArrayParameterType::STRING);
+            }
         }
 
         if ($limit) {
@@ -72,7 +87,14 @@ class Document extends BaseModel
         $result = $this->getAll(['d.type_id' => $type_id]);
         return $result ?: [];
     }
-
+    public function getByInValues(string $field, array $values): array
+    {
+        if (empty($values)) {
+            return [];
+        }
+        $result = $this->getAll([], null, null, [$field => $values]);
+        return $result ?: [];
+    }
     public function getCount(array $filters = []): int
     {
         $queryBuilder = $this->database->createQueryBuilder()

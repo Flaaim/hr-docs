@@ -1,0 +1,17 @@
+{% extends '/layouts/admin.twig' %}
+
+{% block content %}
+
+    <div class="dashboard-content px-3 pt-4" data-page="checkOrphaned-admin-page">
+        <button class="btn btn-primary check-btn" id="check-files-btn">Осиротевшие файлы</button>
+        <h1 class="fs-3">Проверка отсутвующих файлов/документов</h1>
+
+        <div id="orphaned_table"></div>
+
+    </div>
+
+
+
+{% endblock %}
+
+

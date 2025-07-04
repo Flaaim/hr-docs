@@ -12,6 +12,7 @@ use Slim\Routing\RouteCollectorProxy;
 
 $app->group('/admin', function (RouteCollectorProxy $group) {
     $group->get('[/]', [AdminController::class, 'index']);
+    $group->get('/check', [AdminController::class, 'check']);
     $group->get('/users', [AdminController::class, 'users']);
     $group->get('/payments', [AdminController::class, 'payments']);
 })->add(AdminMiddleware::class);

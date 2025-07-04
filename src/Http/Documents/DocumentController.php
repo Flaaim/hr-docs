@@ -137,20 +137,26 @@ class DocumentController
         }
     }
 
-    public function checkOrphanedFiles(Request $request, Response $response, array $args): Response
+    public function findOrphanedFiles(Request $request, Response $response, array $args): Response
     {
-        try{
+        try {
             $orphanedFiles = $this->service->findOrphanedFiles();
             return new JsonResponse($orphanedFiles, 200);
-        }catch (DocumentNotFoundException|DirectoryNotFoundException $e){
+        } catch (DocumentNotFoundException|DirectoryNotFoundException $e) {
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
-        }catch (RuntimeException $e){
+        } catch (RuntimeException $e) {
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
-
-
-
     }
+    public function findLostFiles(Request $request, Response $response, array $args): Response
+    {
+        $lostFilesNames = $this->service->findLostFilesNames();
+        $documents = $this->document->getByInValues('stored_name', $lostFilesNames);
+        return new JsonResponse($documents, 200);
+    }
+
+
+
 }

@@ -2,12 +2,11 @@ export class Orphaned {
   constructor() {
     this.item = ''
     this.list = document.getElementById('listOrphanedFiles');
-    this.manage = document.getElementById('manageOrphanedFiles');
   }
 
-  async findDocuments() {
+  async findFiles() {
     try {
-      const response = await API.post('documents/check-orphaned-files');
+      const response = await API.get('documents/find-orphaned-files');
       if (!Array.isArray(response)) {
         throw new Error('Некорректный формат ответа от сервера');
       }
@@ -18,7 +17,14 @@ export class Orphaned {
       window.FlashMessage.error('Не удалось загрузить данные');
     }
   }
-
+  async findDocuments(){
+    try{
+      const response = await API.get('documents/find-lost-files')
+    }catch (error){
+      console.warn(error)
+      window.FlashMessage.error('Не удалось загрузить данные');
+    }
+  }
   showHtml(files){
 
     this.item = files.map(item => {

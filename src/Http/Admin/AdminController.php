@@ -28,4 +28,10 @@ class AdminController
         $view = Twig::fromRequest($request);
         return $view->render($response, 'pages/admin/payments.twig');
     }
+
+    public function check(Request $request, Response $response, array $args): Response
+    {
+        $view = Twig::fromRequest($request);
+        return $view->render($response, 'pages/admin/check.twig');
+    }
 }

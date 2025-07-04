@@ -52,7 +52,10 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
         ->add(UploadDocumentMiddleware::class)
         ->add(AdminMiddleware::class);
 
-    $group->post('/check-orphaned-files', [DocumentController::class, 'checkOrphanedFiles'])
+    $group->get('/find-orphaned-files', [DocumentController::class, 'findOrphanedFiles'])
+        ->add(AdminMiddleware::class);
+
+    $group->get('/find-lost-files', [DocumentController::class, 'findLostFiles'])
         ->add(AdminMiddleware::class);
 
     $group->post('/delete-orphaned-file', [DeleteDocumentController::class, 'doDeleteOrphanedFile'])
