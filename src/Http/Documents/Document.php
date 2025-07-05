@@ -16,7 +16,7 @@ class Document extends BaseModel
          * @return int|string
          */
         $preparedData = array_map(
-            fn(HandleFileData $doc) => array_filter($doc->jsonSerialize(), fn($value) => $value !== null),
+            fn(HandleFileData $doc) => $doc->jsonSerialize(),
             $documents
         );
 
@@ -28,7 +28,7 @@ class Document extends BaseModel
         $updateParts = [];
         foreach ($columns as $column) {
             if ($column !== 'stored_name') {
-                $updateParts[] = "$column = VALUES($column)";
+                $updateParts[] = "$column = IF(VALUES($column) IS NOT NULL AND VALUES($column) != '', VALUES($column), $column)";
             }
         }
         $sql .= ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updateParts);
