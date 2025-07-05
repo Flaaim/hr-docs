@@ -88,6 +88,11 @@ export class CheckManager {
       items: {
         src: '#small-dialog-reload-document',
         type: 'inline'
+      },
+      callbacks: {
+        open: () => {
+          document.getElementById('storedName').value = storedName
+        }
       }
 
     })

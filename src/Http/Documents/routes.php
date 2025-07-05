@@ -9,12 +9,11 @@ use App\Http\Controllers\TypeController;
 use App\Http\Documents\Delete\DeleteDocumentController;
 use App\Http\Documents\Delete\DeleteDocumentMiddleware;
 use App\Http\Documents\DocumentController;
-use App\Http\Documents\Download\DocumentValidationMiddleware;
 use App\Http\Documents\Download\DownloadDocumentController;
 use App\Http\Documents\Edit\EditDocumentController;
+use App\Http\Documents\HandleFile\HandleFileController;
+use App\Http\Documents\HandleFile\HandleFileMiddleware;
 use App\Http\Documents\Preview\DocumentPreviewController;
-use App\Http\Documents\Upload\UploadDocumentController;
-use App\Http\Documents\Upload\UploadDocumentMiddleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckSubscriptionMiddleware;
 use Odan\Session\SessionInterface;
@@ -48,8 +47,12 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
     $group->post('/edit', [EditDocumentController::class, 'doEdit'])
         ->add(AdminMiddleware::class);
 
-    $group->post('/upload', [UploadDocumentController::class, 'doUpload'])
-        ->add(UploadDocumentMiddleware::class)
+    $group->post('/upload', [HandleFileController::class, 'doUpload'])
+        ->add(HandleFileMiddleware::class)
+        ->add(AdminMiddleware::class);
+
+    $group->post('/reload', [HandleFileController::class, 'doReload'])
+        ->add(HandleFileMiddleware::class)
         ->add(AdminMiddleware::class);
 
     $group->get('/find-orphaned-files', [DocumentController::class, 'findOrphanedFiles'])

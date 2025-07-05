@@ -109,6 +109,7 @@ hr.h-color{
 #small-dialog-register,
 #small-dialog-reset,
 #small-dialog-upload-document,
+#small-dialog-reload-document,
 #small-dialog-subscription,
 #small-dialog-edit-document,
 #small-dialog-edit-user,
@@ -122,7 +123,7 @@ hr.h-color{
     border: 1px solid #ced4da;
     border-radius: 7px;
 }
-#small-dialog-upload-document,
+#small-dialog-reload-document,
 #small-dialog-subscription,
 #small-dialog-edit-document,
 #small-dialog-edit-user {

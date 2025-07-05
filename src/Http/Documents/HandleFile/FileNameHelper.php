@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Documents\Upload;
+namespace App\Http\Documents\HandleFile;
 
-class Filename
+class FileNameHelper
 {
     public function  transliterate($textcyr = null, $textlat = null) {
         $cyr = array('а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т','у',

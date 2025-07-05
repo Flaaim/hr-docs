@@ -1,0 +1,22 @@
+<div id="small-dialog-reload-document" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Перезагрузить файл</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/documents/reload" method="POST" id="admin-reload-form" data-form-type="reload-document" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="storedName">Загружаемое название файла</label>
+                            <input type="text" class="form-control" id="storedName" name="stored_name">
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" class="form-control" name="file[]" id="document" accept=".docx, .doc">
+                    </div>
+                    <input type="hidden" name="action" value="reload">
+                    <div class="col-auto">
+                        <button type="submit" id="doReload" class="btn btn-primary mb-3">Загрузить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,32 +1,36 @@
 <?php
 
-namespace App\Http\Documents\Upload;
+namespace App\Http\Documents\HandleFile;
 
 use App\Http\Documents\FileSystemService;
 use App\Http\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface as Handler;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class UploadDocumentMiddleware implements MiddlewareInterface
+class HandleFileMiddleware implements MiddlewareInterface
 {
-    private Filename $filename;
-    private FileSystemService $fileSystemService;
-    public function __construct(Filename $filename, FileSystemService $fileSystemService)
-    {
-        $this->filename = $filename;
-        $this->fileSystemService = $fileSystemService;
-    }
-    public function process(Request $request, Handler $handler): ResponseInterface
-    {
-        $uploadedFiles = $request->getUploadedFiles();
-        $uploadedData = [];
+    const ACTION_UPLOAD = 'upload';
+    const ACTION_RELOAD = 'reload';
 
-        $files = $uploadedFiles['file'] ?? null;
+    public function __construct(
+        private readonly FileNameHelper $fileNameHelper,
+        private readonly HandleFileData $handleFileData,
+        private readonly FileSystemService $fileSystemService
+    )
+    {}
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $action = $request->getParsedBody()['action'] ?? null;
+        $files = $request->getUploadedFiles()['file'] ?? null;
 
-        if($files === NULL){
-            return $this->createErrorResponse(404, 'File not found');
+        if ($action === null) {
+            return $this->createErrorResponse(400, 'Action is required.');
+        }
+
+        if ($files === null) {
+            return $this->createErrorResponse(400, 'File not found');
         }
 
         if(!empty($files)){
@@ -43,17 +47,24 @@ class UploadDocumentMiddleware implements MiddlewareInterface
                             if($this->fileSystemService->fileExists($uploadDir)){
                                 unlink($uploadDir);
                             }
-                            $file->moveTo($uploadDir);
 
-                            $uploadedData[] = [
-                                'title' => $originalFilename,
-                                'mime_type' => $extension,
-                                'stored_name' => $filename,
-                                'section_id' => $request->getParsedBody()['sections'],
-                                'type_id' => $request->getParsedBody()['types'],
-                                'size' => $file->getSize(),
-                                'updated' => (new \DateTimeImmutable())->getTimestamp()
-                            ];
+                            $file->moveTo($uploadDir);
+                            $uploadedData[] = match ($action) {
+                                self::ACTION_UPLOAD =>  (clone $this->handleFileData)
+                                    ->setTitle($originalFilename)
+                                    ->setStoredName($filename)
+                                    ->setMimeType($extension)
+                                    ->setSectionId($request->getParsedBody()['sections'])
+                                    ->setTypeId($request->getParsedBody()['types'])
+                                    ->setSize($file->getSize())
+                                    ->setUpdated(),
+                                self::ACTION_RELOAD => $this->handleFileData
+                                    ->setStoredName($filename)
+                                    ->setMimeType($extension)
+                                    ->setSize($file->getSize())
+                                    ->setUpdated(),
+                                default =>  $this->createErrorResponse(400, "Unknown action '$action'")
+                            };
                         }catch (\Exception $e) {
                             return $this->createErrorResponse(500, $e->getMessage());
                         }
@@ -75,7 +86,6 @@ class UploadDocumentMiddleware implements MiddlewareInterface
 
                     case UPLOAD_ERR_EXTENSION:
                         return $this->createErrorResponse(500, 'File upload stopped by extension');
-
                     default:
                         return $this->createErrorResponse(500, 'Unknown upload error');
 
@@ -98,10 +108,9 @@ class UploadDocumentMiddleware implements MiddlewareInterface
             'message' => $message,
         ], $code);
     }
-
     private function generateFilename(string $originalFilename): string
     {
-        return $this->filename->filter_filename(strtolower($this->filename->transliterate($originalFilename)));
+        return $this->fileNameHelper->filter_filename(strtolower($this->fileNameHelper->transliterate($originalFilename)));
     }
 
     private function generateUploadDir(string $filename, string $extension): string

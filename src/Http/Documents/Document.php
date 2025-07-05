@@ -2,17 +2,27 @@
 
 namespace App\Http\Documents;
 
+use App\Http\Documents\HandleFile\HandleFileData;
 use App\Http\Models\BaseModel;
 use Doctrine\DBAL\ArrayParameterType;
 
 class Document extends BaseModel
 {
     CONST TABLE_NAME = 'documents';
-    public function insertDocuments(array $files): int|string
+    public function insertDocuments(array $documents): int|string
     {
-        $columns = array_keys($files[0]);
+        /**
+         * @param HandleFileData[] $documents Массив объектов DocumentData (даже с одним элементом)
+         * @return int|string
+         */
+        $preparedData = array_map(
+            fn(HandleFileData $doc) => array_filter($doc->jsonSerialize(), fn($value) => $value !== null),
+            $documents
+        );
+
+        $columns = array_keys($preparedData[0]);
         $placeholders = '(' . implode(', ', array_fill(0, count($columns), '?')) . ')';
-        $valuePlaceholders = implode(', ', array_fill(0, count($files), $placeholders));
+        $valuePlaceholders = implode(', ', array_fill(0, count($preparedData), $placeholders));
         $sql = 'INSERT INTO ' . self::TABLE_NAME . ' (' . implode(', ', $columns) . ') VALUES ' . $valuePlaceholders;
 
         $updateParts = [];
@@ -24,7 +34,7 @@ class Document extends BaseModel
         $sql .= ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updateParts);
 
         $values = [];
-        foreach ($files as $row) {
+        foreach ($preparedData as $row) {
             foreach ($columns as $column) {
                 $values[] = $row[$column];
             }

@@ -3,8 +3,6 @@
 namespace Document\Upload;
 
 use App\Http\Documents\FileSystemService;
-use App\Http\Documents\Upload\Filename;
-use App\Http\Documents\Upload\UploadDocumentMiddleware;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,7 +16,7 @@ class UploadDocumentTest extends TestCase
     private ServerRequestInterface $request;
     private ResponseInterface $response;
     private RequestHandlerInterface $handler;
-    private Filename $filename;
+    private FileNameHelper $filename;
 
     public function setUp(): void
     {
@@ -26,7 +24,7 @@ class UploadDocumentTest extends TestCase
         $this->request = $this->createMock(ServerRequestInterface::class);
         $this->response = $this->createMock(ResponseInterface::class);
         $this->handler = $this->createMock(RequestHandlerInterface::class);
-        $this->filename = $this->createMock(Filename::class);
+        $this->filename = $this->createMock(FileNameHelper::class);
         $this->fileSystemMock = $this->createMock(FileSystemService::class);
 
     }
