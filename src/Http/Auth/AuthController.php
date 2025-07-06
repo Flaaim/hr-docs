@@ -80,7 +80,7 @@ class AuthController
         $view = Twig::fromRequest($request);
         try{
             $this->authService->verifiedUser($token);
-            $view->render($response, 'pages/auth/verify.twig', [
+            return $view->render($response, 'pages/auth/verify.twig', [
                 'title' => 'Подтверждение регистрации',
                 'message' => 'Ваш email успешно подтверждён! Теперь вы можете войти.',
             ]);
