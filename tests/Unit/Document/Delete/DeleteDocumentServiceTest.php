@@ -7,6 +7,7 @@ use App\Http\Documents\Document;
 use App\Http\Documents\FileSystemService;
 use App\Http\Exception\Document\DocumentNotFoundException;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class DeleteDocumentServiceTest extends TestCase
@@ -22,7 +23,12 @@ class DeleteDocumentServiceTest extends TestCase
     {
         $this->mockDocument = $this->createMock(Document::class);
         $this->mockFileSystem = $this->createMock(FileSystemService::class);
-        $this->service = new DeleteDocumentService($this->mockDocument, $this->mockFileSystem);
+        $this->mockLogger = $this->createMock(LoggerInterface::class);
+        $this->service = new DeleteDocumentService(
+            $this->mockDocument,
+            $this->mockFileSystem,
+            $this->mockLogger
+        );
     }
     public function testDeleteDocumentFailed_document_not_found()
     {

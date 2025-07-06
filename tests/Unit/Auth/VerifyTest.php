@@ -4,9 +4,11 @@ namespace Auth;
 
 use App\Http\Auth\Auth;
 use App\Http\Auth\AuthService;
+use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
 use Odan\Session\SessionInterface;
+use PHPUnit\Event\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -34,19 +36,19 @@ class VerifyTest extends TestCase
 
     public function testVerifyFailedTokenIsNull()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->authService->verifiedUser(null);
     }
     public function testVerifyFailedTokenIsEmpty()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->authService->verifiedUser('');
     }
 
     public function testVerifyFailedTokenNotFound()
     {
-        $this->mockUser->method('findVerifyToken')->willReturn(false);
-        $this->expectException(RuntimeException::class);
+        $this->mockUser->method('findVerifyToken')->willReturn([]);
+        $this->expectException(TokenNotFoundException::class);
         $this->authService->verifiedUser($this->token);
     }
 }

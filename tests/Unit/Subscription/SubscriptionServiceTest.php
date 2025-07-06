@@ -19,10 +19,13 @@ class SubscriptionServiceTest extends TestCase
     {
         $this->mockSubscription =$this->createMock(Subscription::class);
         $this->mockSubscriptionPlan = $this->createMock(SubscriptionPlan::class);
-        $this->subscriptionService = new SubscriptionService(
-            $this->mockSubscription,
-            $this->mockSubscriptionPlan
-        );
+        $this->subscriptionService = $this->getMockBuilder(SubscriptionService::class)
+            ->setConstructorArgs([
+                $this->mockSubscription,
+                $this->mockSubscriptionPlan
+            ])
+            ->onlyMethods(['downgradeToFreePlan']) // Мокируем только этот метод
+            ->getMock();
     }
 
     public function testUpgradeToMonthlyPlanFailed_emptyPlan(): void
@@ -71,10 +74,23 @@ class SubscriptionServiceTest extends TestCase
         ));
     }
 
-    public function testCheckAndUpdateSubscription()
+    public function testCheckAndUpdateSubscriptionWithExpiredPlan()
     {
-        $this->mockSubscription->method('getCurrentPlan')->willReturn([]);
+        $this->mockSubscription->method('getCurrentPlan')->willReturn(['ends_at' => '2020-01-01']);
+
+        $this->subscriptionService->expects($this->once())
+            ->method('downgradeToFreePlan')
+            ->with(1);
+
+
         $this->subscriptionService->checkAndUpdateSubscription(1);
     }
 
+    public function testCheckAndUpdateSubscriptionWithActivePlan()
+    {
+        $this->mockSubscription->method('getCurrentPlan')->willReturn(['ends_at' => '2030-08-01']);
+        $this->subscriptionService->expects($this->never())->method('downgradeToFreePlan');
+
+        $this->subscriptionService->checkAndUpdateSubscription(1);
+    }
 }
