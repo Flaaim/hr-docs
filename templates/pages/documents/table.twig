@@ -1,11 +1,13 @@
-<table class="table" id="static-table">
-    <thead>
-    <th>Наименование</th>
-    <th>Раздел</th>
-    <th>Тип</th>
-    <th>Добавлен/обновлен</th>
+<table class="table table-striped table-bordered" id="static-table">
+    <thead class="table-light">
+    <tr>
+        <th scope="col">Наименование</th>
+        <th scope="col">Раздел</th>
+        <th scope="col">Тип</th>
+        <th scope="col">Добавлен/обновлен</th>
+    </tr>
     </thead>
-    <tbody>
+    <tbody >
     {% for document in documents %}
         <tr>
             <td><a href="/document/{{ document.id }}">{{ document.title }}</a></td>
