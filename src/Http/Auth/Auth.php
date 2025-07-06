@@ -186,6 +186,11 @@ class Auth extends BaseModel
 
     public function deleteResetToken(string $token): void
     {
+        $this->database->delete(self::USERS_RESETS_TABLE, ['token' => $token]);
+    }
 
+    public function deleteVerifyToken(string $token): void
+    {
+        $this->database->delete(self::USERS_CONFIRMATION_TABLE, ['token' => $token]);
     }
 }
