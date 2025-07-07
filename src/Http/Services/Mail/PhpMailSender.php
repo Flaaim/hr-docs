@@ -7,13 +7,17 @@ use App\Http\Interface\MailSenderInterface;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+use Psr\Log\LoggerInterface;
 
 class PhpMailSender implements MailSenderInterface
 {
     private PHPMailer $mail;
-    public function __construct(PHPMailer $mailer)
+    private LoggerInterface $logger;
+
+    public function __construct(PHPMailer $mailer, LoggerInterface $logger)
     {
         $this->mail = $mailer;
+        $this->logger = $logger;
 
         $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
         $this->mail->isSMTP();
