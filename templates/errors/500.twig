@@ -1,0 +1,16 @@
+{% extends 'layouts/base.twig' %}
+
+{% block title %}
+    Ошибка 500
+{% endblock %}
+{% block description %}
+    Ошибка сервера. Ошибка 500.
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-content error-container px-3 pt-4 col-md-12">
+        <h1>Ошибка сервера 500</h1>
+        <p>Произошла внутренняя ошибка сервера. Мы уже работаем над её устранением.</p>
+        <p><a href="/">Вернуться на главную</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'layouts/base.twig' %}
+
+{% block title %}
+    Ошибка 403
+{% endblock %}
+{% block description %}
+    Доступ запрещен. Ошибка 403.
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-content error-container px-3 pt-4 col-md-12">
+        <h1>Доступ запрещен 403</h1>
+        <p>У вас нет прав для доступа к этой странице.</p>
+        <p><a href="/">Вернуться на главную</a></p>
+    </div>
+{% endblock %}
