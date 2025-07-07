@@ -48,7 +48,6 @@ class AuthController
             return new JsonResponse(['status' => 'success', 'message' => 'Регистрация завершена. На ваш email направлено письмо с подтверждением.']);
         }
         catch (MailNotSendException $e){
-            $this->logger->warning('Ошибка отправки почты', [$e->getMessage()]);
             return new JsonResponse(['status' => 'error', 'message' => 'Не удалось отправить письмо. Попробуйте позже или обратитесь в поддержку.'], 500);
         }catch (RuntimeException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
@@ -57,6 +56,11 @@ class AuthController
         } catch (UserAlreadyExistsException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         } catch (\Exception $e) {
+            $this->logger->error('Ошибка при регистрации пользователя', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'message' => $e->getMessage(),
+            ]);
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
 
@@ -91,8 +95,10 @@ class AuthController
                 'message' => $e->getMessage(),
             ]);
         }catch (\Exception $e){
-            $this->logger->warning('Ошибка подтверждения пользователя', [
-                'error' => $e->getMessage()
+            $this->logger->error('Ошибка при подтверждении пользователя', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'message' => $e->getMessage(),
             ]);
             throw new \Exception($e->getMessage());
         }
@@ -105,12 +111,15 @@ class AuthController
             $this->authService->reset($email);
             return new JsonResponse(['status' => 'success', 'message' => 'На ваш email направлено письмо с инструкциями по сбросу пароля.']);
         }catch (MailNotSendException $e){
-            $this->logger->warning('Ошибка отправки почты', [$e->getMessage()]);
             return new JsonResponse(['status' => 'error', 'message' => 'Не удалось отправить письмо. Попробуйте позже или обратитесь в поддержку.'], 500);
         }catch (UserNotFoundException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception $e){
-            $this->logger->warning('Ошибка сброса пароля', [$e->getMessage()]);
+            $this->logger->error('Ошибка запроса сброса пароля', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'message' => $e->getMessage(),
+            ]);
             return new JsonResponse(['status' => 'error', 'message' => 'Ошибка сброса пароля'], 500);
         }
     }
@@ -122,6 +131,11 @@ class AuthController
         try{
             return $view->render($response, 'pages/auth/reset_password.twig', ['token' => $token]);
         }catch (\Exception $e){
+            $this->logger->error('Ошибка сброса пароля', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'message' => $e->getMessage(),
+            ]);
             throw new \Exception($e->getMessage());
         }
     }
@@ -142,7 +156,11 @@ class AuthController
         } catch (TokenNotFoundException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
         }catch (\Exception $e){
-            $this->logger->warning('Ошибка при смене пароля', [$e->getMessage()]);
+            $this->logger->error('Ошибка обновления пароля', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'message' => $e->getMessage(),
+            ]);
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }

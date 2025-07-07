@@ -8,20 +8,18 @@ use App\Http\JsonResponse;
 use Odan\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 
 class SubscriptionController
 {
-    private SubscriptionPlan $plan;
-    private SubscriptionService $service;
-    private SessionInterface $session;
-    private Subscription $subscription;
-    public function __construct(SubscriptionPlan $plan, SubscriptionService $service, SessionInterface $session, Subscription $subscription)
-    {
-        $this->plan = $plan;
-        $this->service = $service;
-        $this->session = $session;
-        $this->subscription = $subscription;
-    }
+    public function __construct(
+        private readonly SubscriptionPlan $plan,
+        private readonly SubscriptionService $service,
+        private readonly SessionInterface $session,
+        private readonly Subscription $subscription,
+        private readonly LoggerInterface $logger
+    )
+    {}
     public function allWithCurrent(Request $request, Response $response, array $args): Response
     {
         try{
@@ -70,6 +68,11 @@ class SubscriptionController
         }catch (\InvalidArgumentException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception $e){
+            $this->logger->warning('Ошибка обновления подписки', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'exception' => $e->getMessage()
+            ]);
             return new JsonResponse(['status' => 'error', 'message' => 'Внутренняя ошибка сервера'], 500);
         }
     }

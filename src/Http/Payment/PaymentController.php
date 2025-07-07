@@ -42,6 +42,11 @@ class PaymentController
         }catch(PaymentCreateFailedException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception $e){
+            $this->logger->warning('Ошибка создания платежа', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'exception' => $e->getMessage()
+            ]);
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
@@ -55,6 +60,11 @@ class PaymentController
         }catch (PaymentWebhookException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }catch (\Exception $e){
+            $this->logger->error('Ошибка обработки вебхука платежа', [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'exception' => $e->getMessage()
+            ]);
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
 

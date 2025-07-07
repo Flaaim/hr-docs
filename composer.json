@@ -23,7 +23,8 @@
         "league/oauth2-google": "^4.0",
         "aego/oauth2-yandex": "^0.2.2",
         "yoomoney/yookassa-sdk-php": "^3.8",
-        "symfony/cache": "^6.4"
+        "symfony/cache": "^6.4",
+        "telegram-bot/api": "^2.5"
     },
     "autoload": {
       "psr-4": {

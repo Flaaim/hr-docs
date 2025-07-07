@@ -17,7 +17,8 @@ class HttpInternalErrorHandler
             $response = new \Slim\Psr7\Response();
             $this->logger->error($exception->getMessage(), [
                 'url' => $request->getUri(),
-                'trace' => $exception->getTrace()
+                'line' => $exception->getLine(),
+                'file' => $exception->getFile(),
             ]);
             $twig = Twig::fromRequest($request);
             return $twig->render($response, 'errors/500.twig')->withStatus(500);

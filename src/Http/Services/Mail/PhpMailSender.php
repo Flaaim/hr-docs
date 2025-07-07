@@ -42,6 +42,11 @@ class PhpMailSender implements MailSenderInterface
             $this->mail->addAddress($email);
             return $this->mail->send();
         }  catch (PHPMailerException  $e) {
+            $this->logger->error('Ошибка отправки письма', [
+                'email' => $email,
+                'subject' => $subject,
+                'exception' => $e->getMessage()
+            ]);
             throw new MailNotSendException($e->getMessage());
         }
     }

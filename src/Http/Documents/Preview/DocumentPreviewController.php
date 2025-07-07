@@ -8,6 +8,7 @@ use App\Http\Exception\Document\DocumentWrongTypeException;
 use App\Http\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Slim\Psr7\Response;
 
 class DocumentPreviewController
@@ -45,7 +46,7 @@ class DocumentPreviewController
         catch (\Exception $e){
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Server error'
+                'message' => 'Внутреняя ошибка сервера'
             ], 500);
         }
 
