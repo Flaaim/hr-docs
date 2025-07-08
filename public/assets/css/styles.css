@@ -160,6 +160,23 @@ hr.h-color{
 	max-width: 1000px;
 	width: 100%;
 }
+
+.password-container .input-group {
+	position: relative;
+}
+.password-container .toggle-password {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	z-index: 5;
+}
+.password-container .form-control {
+	padding-right: 40px;
+}
+
 .payment-result-container {
 	max-width: 600px;
 	margin: 2rem auto;

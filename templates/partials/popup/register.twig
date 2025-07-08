@@ -8,13 +8,27 @@
                         <label for="register_email" class="form-label">Адрес электронной почты</label>
                         <input type="email" name="email" class="form-control" id="register_email" placeholder="Email адрес">
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 password-container">
                         <label for="register_password" class="form-label">Пароль</label>
-                        <input type="password" name="password" class="form-control" id="register_password" placeholder="Пароль">
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control" id="register_password" placeholder="Пароль">
+                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                <svg width="14" height="14">
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 password-container">
                         <label for="confirm_password" class="form-label">Подтвердите пароль</label>
-                        <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Подтвердите пароль">
+                        <div class="input-group">
+                            <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Подтвердите пароль">
+                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                <svg width="14" height="14">
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="col-auto">
