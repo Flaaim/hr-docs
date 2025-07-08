@@ -47,7 +47,7 @@ class AuthService
             ->setSubject('Регистрация на сайте')
             ->setBodyFromTemplate(
                 'emails/welcome.html.twig',
-                ['email' => $email, 'link' => 'https://hr-docs.ru/auth/verify?token='.$verifyToken]
+                ['email' => $email, 'link' => $_ENV['APP_PATH'].'/auth/verify?token='.$verifyToken]
             )
             ->send();
     }
@@ -121,7 +121,7 @@ class AuthService
             ->setSubject('Сброс пароля')
             ->setBodyFromTemplate(
                 'emails/reset.html.twig',
-                ['link' => 'https://hr-docs.ru/auth/reset?token='.$token]
+                ['link' => $_ENV['APP_PATH'].'/auth/reset?token='.$token]
             )
             ->send();
     }
