@@ -41,11 +41,6 @@ class DocumentPreviewService
         $htmlWriter->save('php://output');
         $htmlContent  = ob_get_clean();
         return <<<HTML
-            <script>
-                const container = document.querySelector('#previewContainer');
-                container.addEventListener("contextmenu", e => e.preventDefault());
-                container.addEventListener("copy", e => e.preventDefault());
-            </script>
             $htmlContent
         HTML;
     }

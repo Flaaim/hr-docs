@@ -71,11 +71,7 @@ $app->group('/api/documents', function (RouteCollectorProxy $group) use($app){
             true
         ));
 
-    $group->post('/preview', [DocumentPreviewController::class, 'doPreview'])
-        ->add(new AuthMiddleware(
-        $app->getContainer()->get(SessionInterface::class),
-        true
-    ));;
+    $group->post('/preview', [DocumentPreviewController::class, 'doPreview']);
 
 });
 
