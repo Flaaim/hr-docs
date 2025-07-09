@@ -1,4 +1,7 @@
 vendor
 composer.lock
+config/common/env
 public/uploads
 .idea
+.phpunit.cache
+
