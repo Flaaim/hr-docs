@@ -15,15 +15,5 @@ const API = {
             data: data,
             dataType: 'json'
         });
-    },
-
-    logout: () => {
-        return API.post('auth/logout')
-        .then(response => {
-            window.FlashMessage.success(response.message, {progress: true, timeout: 1000});
-            setTimeout(() => {
-                window.location.reload();
-            }, 1100);
-        })
     }
 }
