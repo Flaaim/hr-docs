@@ -53,4 +53,23 @@ class DeleteDocumentController
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function doDeleteFromDb(Request $request, Response $response, array $args): Response
+    {
+        $document_id = $request->getParsedBody()['document_id'] ?? null;
+        try{
+            if($document_id === null){
+                throw new InvalidArgumentException('Document ID is required');
+            }
+            if($this->service->deleteDocumentFromDb($document_id)){
+                return new JsonResponse(['status' => 'success',  'message' => 'Document delete from DB successfully']);
+            }
+            return new JsonResponse(['status' => 'error',  'message' => 'Document delete from DB failed']);
+        }catch (InvalidArgumentException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 401);
+        }catch (RuntimeException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+
+    }
 }

@@ -127,7 +127,7 @@ class Document extends BaseModel
     }
 
 
-    public function delete(int $document_id): int|string
+    public function delete(int $document_id): int
     {
         $sql = "DELETE FROM " . self::TABLE_NAME . " WHERE id = ?";
         return $this->database->executeStatement($sql, [$document_id]);

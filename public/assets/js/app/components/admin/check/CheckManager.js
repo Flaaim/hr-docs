@@ -71,7 +71,7 @@ export class CheckManager {
 
     if (confirm("Вы уверены, что хотите удалить документ?")) {
       try {
-        await API.post(`documents/delete`, { document_id: documentId });
+        await API.post(`documents/delete-from-db`, { document_id: documentId });
         window.FlashMessage.success("Документ успешно удален");
         await this.loadData();
       } catch (error) {

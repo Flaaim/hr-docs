@@ -35,7 +35,14 @@ class DeleteDocumentService
         }
         return $rows;
     }
-
+    public function deleteDocumentFromDb(int $document_id): int
+    {
+        $rows = $this->document->delete($document_id);
+        if($rows === 0){
+            throw new RuntimeException('Failed to delete document from database',500);
+        }
+        return $rows;
+    }
     public function deleteOrphanedDocument(string $filename): bool
     {
         $uploadDir = $this->fileSystemService->getUpoadDir();
