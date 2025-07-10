@@ -7,9 +7,9 @@ $(document).ready(async function (){
   }
 
   try{
-    const documentId = document.getElementById('doPreview').dataset.id;
-    if(documentId === undefined){
-      throw new Error('Ошибка предварительного просмотра')
+    const documentId = document.getElementById('doPreview')?.dataset.id;
+    if(!documentId?.trim()){
+      throw new Error('Ошибка: ID документа отсутствует или пустой')
     }
     const preview = new PreviewDocument(documentId);
     await preview.preview();
