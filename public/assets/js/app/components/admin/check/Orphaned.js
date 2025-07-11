@@ -17,14 +17,6 @@ export class Orphaned {
       window.FlashMessage.error('Не удалось загрузить данные');
     }
   }
-  async findDocuments(){
-    try{
-      const response = await API.get('documents/find-lost-files')
-    }catch (error){
-      console.warn(error)
-      window.FlashMessage.error('Не удалось загрузить данные');
-    }
-  }
   showHtml(files){
 
     this.item = files.map(item => {

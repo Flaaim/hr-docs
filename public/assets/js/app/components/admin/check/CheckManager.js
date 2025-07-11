@@ -44,6 +44,11 @@ export class CheckManager {
         await this.handleReload(e);
       }
     })
+
+    document.getElementById('small-dialog-orphaned-files').addEventListener('click', async (e) => {
+      const filename = e.target.closest(".doDeleteOrphaned").dataset.filename;
+      await this.orphaned.deleteOrphaned(filename)
+    })
   }
 
   async checkOrphanedFiles(){
