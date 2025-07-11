@@ -1,7 +1,12 @@
+import {Subscription} from "../../subscriptions/Subscription.js";
+import {Auth} from "../../auth/Auth.js";
+
 export class Download {
 
   constructor(documentId) {
     this.documentId = documentId;
+    this.subscrpition = new Subscription()
+    this.auth = new Auth();
   }
 
   async handleEvents() {
@@ -20,12 +25,10 @@ export class Download {
         window.location.href = response.download_url
       }).catch(error => {
         if(error.status === 401){
-          $.magnificPopup.open({
-            items: {
-              src: '#small-dialog-login',
-              type: 'inline',
-            }
-          })
+          this.auth.handleLogin();
+        }
+        if(error.status === 403){
+          this.subscrpition.handleSubscription()
         }
         const message = error.responseJSON?.message || 'Download failed';
         window.FlashMessage.error(message)

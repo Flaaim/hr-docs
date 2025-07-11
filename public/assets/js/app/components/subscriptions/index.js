@@ -6,23 +6,13 @@ $(document).ready(function(){
     return;
   }
 
-  /* Инициализация popup */
-  $('#change-plan-btn').magnificPopup({
-    items: {
-      src: '#small-dialog-subscription',
-      type: 'inline',
-    },callbacks: {
-      open: async function (){
-        try{
-          const subscription = new Subscription('subscription-content');
-          await subscription.loadPlans()
+  try{
+    const subscription = new Subscription();
+    subscription.initHandlers();
+  }catch (error){
+    Helper.handleError(error)
+  }
 
-        }catch (error){
-          Helper.handleError(error)
-        }
-      }
-    }
-  })
 
 
 })

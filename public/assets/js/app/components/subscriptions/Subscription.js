@@ -1,12 +1,31 @@
 import {SubscriptionCard} from './SubscriptionCard.js'
 export class Subscription {
 
-  constructor(containerId) {
-    this.containerId = containerId
+  constructor() {
     this.cards = new SubscriptionCard()
 
   }
-  
+  initHandlers(){
+    document.getElementById('change-plan-btn').addEventListener('click', (e) => {
+      this.handleSubscription();
+    })
+  }
+
+  handleSubscription(){
+    $.magnificPopup.open({
+      items: {
+        src: '#small-dialog-subscription',
+        type: 'inline',
+      },callbacks: {
+        open: async  () => {
+          await this.loadPlans()
+        }
+      }
+    })
+  }
+
+
+
   async loadPlans(){
     try{
       const {plans, current_plan} = await API.get('subscriptions/all-with-current')
@@ -17,8 +36,6 @@ export class Subscription {
     }catch (error){
       window.FlashMessage.error('Не удалось загрузить данные формы');
     }
-
-
   }
 
 
