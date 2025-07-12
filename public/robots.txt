@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kadr-doc.ru/sitemap.xml
