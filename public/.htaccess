@@ -1,4 +1,7 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^(.*)?wp-(.*)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} ^(.*)?wlwmanifest\.xml [NC,OR]
+RewriteCond %{REQUEST_URI} ^(.*)?xmlrpc\.php [NC]
 RewriteRule ^ index.php [QSA,L]
