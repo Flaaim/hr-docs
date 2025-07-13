@@ -75,4 +75,15 @@ class Mail implements MailInterface
         }
         return $this->sender->send($this->to, $this->subject, $this->body);
     }
+
+    public function sendVerificationEmail(array $data): void
+    {
+        $this->setTo($data['email'])
+            ->setSubject('Регистрация на сайте')
+            ->setBodyFromTemplate(
+                'emails/welcome.html.twig',
+                ['email' => $data['email'], 'link' => $_ENV['APP_PATH'].'/auth/verify?token='.$data['verifyToken']]
+            )
+            ->send();
+    }
 }

@@ -24,7 +24,9 @@
         "aego/oauth2-yandex": "^0.2.2",
         "yoomoney/yookassa-sdk-php": "^3.8",
         "symfony/cache": "^6.4",
-        "telegram-bot/api": "^2.5"
+        "telegram-bot/api": "^2.5",
+        "symfony/messenger": "^6.4",
+        "symfony/doctrine-messenger": "^6.4"
     },
     "autoload": {
       "psr-4": {

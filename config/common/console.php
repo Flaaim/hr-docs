@@ -8,7 +8,7 @@ return [
     'config' => [
         'console' => [
             'commands' => [
-                Console\HelloCommand::class
+                Console\HelloCommand::class,
             ]
         ]
     ]

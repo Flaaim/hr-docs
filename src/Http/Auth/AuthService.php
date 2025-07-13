@@ -6,12 +6,17 @@ use App\Http\Exception\Auth\InvalidCredentialsException;
 use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Exception\Auth\UserNotFoundException;
+use App\Http\Queue\Queue;
+use App\Http\Queue\Worker;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
+use App\Http\Services\Mail\EmailVerification\EmailVerificationMessage;
 use DateTimeImmutable;
 use Odan\Session\SessionInterface;
 use PHPUnit\Event\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Symfony\Component\Messenger\MessageBus;
 
 
 class AuthService
@@ -20,13 +25,17 @@ class AuthService
     private Mail $mailer;
     private SessionInterface $session;
     private CookieManager $cookieManager;
+    private MessageBus $messageBus;
+    private LoggerInterface $logger;
 
-    public function __construct(Auth $userModel, Mail $mailer, SessionInterface $session, CookieManager $cookieManager)
+    public function __construct(Auth $userModel, Mail $mailer, SessionInterface $session, CookieManager $cookieManager, MessageBus $messageBus, LoggerInterface $logger)
     {
         $this->userModel = $userModel;
         $this->mailer = $mailer;
         $this->session = $session;
         $this->cookieManager = $cookieManager;
+        $this->messageBus = $messageBus;
+        $this->logger = $logger;
     }
 
     public function register(string $email, string $password): void
@@ -42,14 +51,9 @@ class AuthService
         if(!$created){
             throw new RuntimeException('Ошибка при создании пользователя');
         }
-
-        $this->mailer->setTo($email)
-            ->setSubject('Регистрация на сайте')
-            ->setBodyFromTemplate(
-                'emails/welcome.html.twig',
-                ['email' => $email, 'link' => $_ENV['APP_PATH'].'/auth/verify?token='.$verifyToken]
-            )
-            ->send();
+        $this->messageBus->dispatch(new EmailVerificationMessage($email, $verifyToken));
+        $this->logger->info("Message dispatched for email: " . $email);
+        //$this->queue->push('sendVerificationEmail', ['email' => $email, 'token' => $verifyToken]);
     }
 
     public function login(string $email, string $password, bool $remember_me = false): void
