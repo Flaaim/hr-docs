@@ -6,11 +6,12 @@ use App\Http\Exception\Auth\InvalidCredentialsException;
 use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Exception\Auth\UserNotFoundException;
+use App\Http\Queue\Messages\Email\EmailResetMessage;
+use App\Http\Queue\Messages\Email\EmailVerificationMessage;
 use App\Http\Queue\Queue;
 use App\Http\Queue\Worker;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
-use App\Http\Services\Mail\EmailVerification\EmailVerificationMessage;
 use DateTimeImmutable;
 use Odan\Session\SessionInterface;
 use PHPUnit\Event\InvalidArgumentException;
@@ -52,8 +53,6 @@ class AuthService
             throw new RuntimeException('Ошибка при создании пользователя');
         }
         $this->messageBus->dispatch(new EmailVerificationMessage($email, $verifyToken));
-        $this->logger->info("Message dispatched for email: " . $email);
-        //$this->queue->push('sendVerificationEmail', ['email' => $email, 'token' => $verifyToken]);
     }
 
     public function login(string $email, string $password, bool $remember_me = false): void
@@ -120,14 +119,7 @@ class AuthService
         if($created === 0){
             throw new RuntimeException('Ошибка сброса пароля');
         }
-
-        $this->mailer->setTo($email)
-            ->setSubject('Сброс пароля')
-            ->setBodyFromTemplate(
-                'emails/reset.html.twig',
-                ['link' => $_ENV['APP_PATH'].'/auth/reset?token='.$token]
-            )
-            ->send();
+        $this->messageBus->dispatch(new EmailResetMessage($user['email'], $token));
     }
 
     public function logOut(): void
