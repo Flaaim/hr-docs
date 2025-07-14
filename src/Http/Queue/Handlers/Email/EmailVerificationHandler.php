@@ -1,13 +1,22 @@
 <?php
 
-namespace App\Http\Services\Mail\EmailVerification;
+namespace App\Http\Queue\Handlers\Email;
 
+use App\Http\Queue\Messages\Email\EmailVerificationMessage;
 use App\Http\Services\Mail\Mail;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class EmailVerificationHandler
 {
-    public function __construct(private readonly Mail $mail, private readonly LoggerInterface $logger){}
+    private Mail $mail;
+    private LoggerInterface $logger;
+
+    public function __construct(Mail $mail, LoggerInterface $logger){
+        $this->mail = $mail;
+        $this->logger = $logger;
+    }
 
     public function handle(EmailVerificationMessage $message): void
     {
@@ -17,12 +26,11 @@ class EmailVerificationHandler
                 ->setBodyFromTemplate('emails/welcome.html.twig',
                     [
                         'email' => $message->email,
-                        'token' => $message->verifyToken
+                        'link' => $_ENV['APP_PATH'].'/auth/verify?token='.$message->verifyToken,
                     ])
             ->send();
-            $this->logger->info("Email sent to {$message->email}");
         }catch (\Exception $e){
-            $this->logger->error("Failed to send email: " . $e->getMessage());
+            $this->logger->error("Failed to send verification email: " . $e->getMessage());
             throw $e;
         }
     }

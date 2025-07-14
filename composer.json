@@ -25,8 +25,10 @@
         "yoomoney/yookassa-sdk-php": "^3.8",
         "symfony/cache": "^6.4",
         "telegram-bot/api": "^2.5",
+        "enqueue/enqueue": "^0.10.26",
         "symfony/messenger": "^6.4",
-        "symfony/doctrine-messenger": "^6.4"
+        "symfony/doctrine-messenger": "^6.4",
+        "symfony/yaml": "^6.4"
     },
     "autoload": {
       "psr-4": {

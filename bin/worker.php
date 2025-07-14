@@ -1,35 +1,70 @@
 #!/usr/bin/env php
+
 <?php
 
-use App\Http\Services\Mail\EmailVerification\EmailVerificationHandler;
-use App\Http\Services\Mail\EmailVerification\EmailVerificationMessage;
-use App\Http\Services\Mail\Mail;
-use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
+use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 
-require __DIR__.'/../vendor/autoload.php';
+require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
+$container = require dirname(__DIR__, 1) . '/config/container.php';
+$connection = $container->get(Connection::class);
+$transport = $container->get('doctrine.messenger.transport');
+$handlers = $container->get('doctrine.messenger.handlers');
+$logger = $container->get(LoggerInterface::class);
 
-// 1. Подключаем контейнер с настройками
-$container = require __DIR__.'/../config/container.php';
+$startTime = time();
+$processedCount = 0;
+$config = [
+    'memory_limit' => 100 * 1024 * 1024, // 100MB
+    'max_runtime' => 3600, // 1 час
+    'batch_size' => 10, // Сообщений за итерацию
+    'empty_wait' => 5, // Секунд при пустой очереди
+    'error_wait' => 10, // Секунд при ошибке
+];
 
-$transport = $container->get(DoctrineTransport::class);
-$handler = $container->get(EmailVerificationHandler::class);
+while(time() - $startTime < $config['max_runtime']) {
+    try{
+        $envelopes = $transport->get($config['batch_size']);
+        if (empty($envelopes)) {
+            sleep($config['empty_wait']);
+            continue;
+        }
 
-
-while (true) {
-    $envelopes = $transport->get();
-    if(count($envelopes) > 0){
         foreach($envelopes as $envelope){
-            try{
-                $message = $envelope->getMessage();
 
-                if ($message instanceof EmailVerificationMessage) {
-                    $handler->handle($message);
-                }
+
+            if (memory_get_usage() > $config['memory_limit']) {
+                $logger->info("Memory limit reached, restarting");
+                break 2;
+            }
+
+            $message = $envelope->getMessage();
+            $messageClass = get_class($message);
+
+            if (!isset($handlers[$messageClass])) {
+                $logger->error('No handler found', ['message_class' => $messageClass]);
+                continue;
+            }
+
+            try{
+                $handlers[$messageClass]->handle($message);
                 $transport->ack($envelope);
-            }catch (\Exception $exception){
-                $transport->reject($envelope);
+                $processedCount++;
+            }catch(\Throwable $e){
+                $logger->error('Message processing failed', [
+                    'exception' => $e->getMessage(),
+                ]);
             }
 
         }
+    }catch (\Throwable $e){
+        $logger->critical('Worker error', [
+            'exception' => $e,
+            'processed_count' => $processedCount
+        ]);
+        sleep($config['error_wait']);
     }
 }
+
+
+

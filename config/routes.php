@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use App\Http\Controllers\HomeController;
 use App\Http\JsonResponse;
 use Odan\Session\SessionInterface;
@@ -20,7 +19,6 @@ return static function (App $app): void {
     }
 
     $app->get('/', [HomeController::class, 'index']);
-
     $app->group('/api/csrf', function (RouteCollectorProxy $group) use($app){
         $group->get('/get', function (Request $request, Response $response) {
             $session = $this->get(SessionInterface::class);
