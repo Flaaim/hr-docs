@@ -1,70 +1,113 @@
 #!/usr/bin/env php
-
 <?php
 
-use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
 require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
-$container = require dirname(__DIR__, 1) . '/config/container.php';
-$connection = $container->get(Connection::class);
-$transport = $container->get('doctrine.messenger.transport');
-$handlers = $container->get('doctrine.messenger.handlers');
-$logger = $container->get(LoggerInterface::class);
 
-$startTime = time();
-$processedCount = 0;
-$config = [
-    'memory_limit' => 100 * 1024 * 1024, // 100MB
-    'max_runtime' => 3600, // 1 час
-    'batch_size' => 10, // Сообщений за итерацию
-    'empty_wait' => 5, // Секунд при пустой очереди
-    'error_wait' => 10, // Секунд при ошибке
-];
+try {
+    $container = require dirname(__DIR__, 1) . '/config/container.php';
+    $logger = $container->get(LoggerInterface::class);
+    $transport = $container->get('doctrine.messenger.transport');
+    $handlers = $container->get('doctrine.messenger.handlers');
 
-while(time() - $startTime < $config['max_runtime']) {
-    try{
+    // Инициализация блокировки
+    $lockDir = dirname(__DIR__, 1) . '/var/lock';
+    $lockFile = $lockDir . '/messenger_worker.lock';
+
+    if (!is_dir($lockDir)) {
+        mkdir($lockDir, 0775, true);
+    }
+
+    $fp = fopen($lockFile, 'w+');
+    if (!flock($fp, LOCK_EX | LOCK_NB)) {
+        $logger->info('Worker already running');
+        exit(0);
+    }
+
+    // Health-статус
+    $healthFile = dirname(__DIR__, 1) . '/public/worker-status.json';
+    $updateHealthStatus = function() use ($healthFile, $logger) {
+        file_put_contents($healthFile, json_encode([
+            'status' => 'running',
+            'last_update' => date('c'),
+            'memory' => memory_get_usage(true) / 1024 / 1024 . ' MB'
+        ]));
+    };
+
+    // Конфигурация
+    $config = [
+        'max_messages' => 100,
+        'memory_limit' => 100 * 1024 * 1024, // 100MB
+        'batch_size' => 10,
+    ];
+
+    $logger->info('Worker started', [
+        'pid' => getmypid(),
+        'config' => $config
+    ]);
+
+    $processedCount = 0;
+    $lastHealthUpdate = 0;
+
+    while ($processedCount < $config['max_messages'] && memory_get_usage() < $config['memory_limit']) {
+        // Обновляем health-статус каждые 30 сек
+        if (time() - $lastHealthUpdate > 30) {
+            $updateHealthStatus();
+            $lastHealthUpdate = time();
+        }
+
         $envelopes = $transport->get($config['batch_size']);
         if (empty($envelopes)) {
-            sleep($config['empty_wait']);
+            sleep(1);
             continue;
         }
 
-        foreach($envelopes as $envelope){
-
-
-            if (memory_get_usage() > $config['memory_limit']) {
-                $logger->info("Memory limit reached, restarting");
-                break 2;
-            }
-
+        foreach ($envelopes as $envelope) {
             $message = $envelope->getMessage();
             $messageClass = get_class($message);
 
             if (!isset($handlers[$messageClass])) {
-                $logger->error('No handler found', ['message_class' => $messageClass]);
+                $logger->error('Handler not found', ['message_class' => $messageClass]);
                 continue;
             }
 
-            try{
+            try {
                 $handlers[$messageClass]->handle($message);
                 $transport->ack($envelope);
                 $processedCount++;
-            }catch(\Throwable $e){
+
+                $logger->debug('Message processed', [
+                    'message_class' => $messageClass,
+                    'processed_count' => $processedCount
+                ]);
+            } catch (\Throwable $e) {
                 $logger->error('Message processing failed', [
                     'exception' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ]);
             }
-
         }
-    }catch (\Throwable $e){
-        $logger->critical('Worker error', [
-            'exception' => $e,
-            'processed_count' => $processedCount
-        ]);
-        sleep($config['error_wait']);
     }
+
+    $logger->info('Worker finished', [
+        'processed' => $processedCount,
+        'memory_usage' => memory_get_usage(true) / 1024 / 1024 . ' MB'
+    ]);
+
+} catch (\Throwable $e) {
+    $logger->critical('Worker fatal error', [
+        'exception' => $e->getMessage(),
+        'trace' => $e->getTraceAsString()
+    ]);
+    exit(1);
+} finally {
+    if (isset($fp)) {
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        @unlink($lockFile);
+    }
+    $updateHealthStatus();
 }
 
-
-
+exit(0);

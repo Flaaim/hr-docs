@@ -24,4 +24,8 @@ RUN mkdir -p /app/var/logs && \
     chown -R www-data:www-data /app/var/logs && \
     chmod -R 755 /app/var/logs
 
+RUN mkdir -p /app/var/lock && \
+    chown -R www-data:www-data /app/var/lock && \
+    chmod -R 755 /app/var/lock \
+
 WORKDIR /app
