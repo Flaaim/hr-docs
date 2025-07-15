@@ -33,18 +33,18 @@ task('deploy:symlink', function () {
 // Настройки Slim
 set('shared_files', [
     'public/.htaccess',
-    'public/robots.txt'
+    'public/robots.txt',
 ]);
+
 set('shared_dirs', [
     'config/common/env',
     'public/uploads',
-    'var/logs',
-    'var/cache',
+    'var',
+
 ]);
 
 set('writable_dirs', [
-    'var/cache',
-    'var/log',
+    'var',
     'public/uploads',
 ]);
 
