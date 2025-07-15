@@ -56,6 +56,9 @@ export class DocumentManager {
   }
   resetFilters(elementId)
   {
-    document.getElementById(elementId).addEventListener('click', () => this.filters.reset());
+    document.getElementById(elementId).addEventListener('click', async () => {
+      this.filters.reset()
+      await this.loadData();
+    });
   }
 }
