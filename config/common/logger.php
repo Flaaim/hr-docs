@@ -23,7 +23,7 @@ return [
         );
         $fileHandler = new StreamHandler(
             dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'var'. DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'error.log',
-            Level::Warning // Логирует WARNING, ERROR, CRITICAL, ALERT, EMERGENCY
+            Level::Info // Логирует WARNING, ERROR, CRITICAL, ALERT, EMERGENCY
         );
         $fileHandler->setFormatter($formatter);
         $logger->pushHandler($fileHandler);
