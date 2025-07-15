@@ -18,6 +18,7 @@ use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
+use Spatie\SchemaOrg\Schema;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 class DocumentController
@@ -90,10 +91,12 @@ class DocumentController
             if(empty($document)){
                 throw new DocumentNotFoundException();
             }
+            $schema = $this->service->getDocumentSchema($document);
             $documents = $this->document->getAll([], 6);
             return Twig::fromRequest($request)->render($response, 'pages/documents/document.twig', [
                 'document' => $document,
-                'documents' => $documents
+                'documents' => $documents,
+                'schema' => $schema
             ]);
         }catch (\Exception $e){
             throw new \Exception($e->getMessage(), 500);

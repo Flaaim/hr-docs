@@ -28,7 +28,8 @@
         "enqueue/enqueue": "^0.10.26",
         "symfony/messenger": "^6.4",
         "symfony/doctrine-messenger": "^6.4",
-        "symfony/yaml": "^6.4"
+        "symfony/yaml": "^6.4",
+        "spatie/schema-org": "^3.23"
     },
     "autoload": {
       "psr-4": {
