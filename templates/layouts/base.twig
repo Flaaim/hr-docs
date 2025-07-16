@@ -2,7 +2,7 @@
 {% set session = session %}
 {% set csrf_token = csrf_token %}
 
-    {% include 'partials/head.twig' with{ title: block('title'), description: block('description') } %}
+    {% include 'partials/head.twig' with{ title: block('title'), description: block('description'), keywords: block('keywords') } %}
 
     {% include 'partials/webmaster/metrika.twig' %}
     {% include 'partials/webmaster/analytics.google.twig' %}

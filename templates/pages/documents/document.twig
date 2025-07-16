@@ -8,7 +8,9 @@
 {% block description %}
     Документ: {{ document.title }}, формат: {{ document.mime_type }}, обновлен {{ document.updated|date('d.m.Y') }}
 {% endblock %}
-
+{% block keywords %}
+    {{ keywords }}
+{% endblock %}
 {% block content %}
     <script type="application/ld+json">
        {{ schema.toScript()|raw }}

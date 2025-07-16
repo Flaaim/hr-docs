@@ -9,6 +9,7 @@ use App\Http\Models\Direction;
 use App\Http\Models\Section;
 use App\Http\Models\Type;
 use App\Http\Paginator;
+use App\Http\Services\Seo;
 use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -93,10 +94,12 @@ class DocumentController
             }
             $schema = $this->service->getDocumentSchema($document);
             $documents = $this->document->getAll([], 6);
+            $keywords = implode(', ', Seo::createKeywordsFromTitle($document['title']));
             return Twig::fromRequest($request)->render($response, 'pages/documents/document.twig', [
                 'document' => $document,
                 'documents' => $documents,
-                'schema' => $schema
+                'schema' => $schema,
+                'keywords' => $keywords
             ]);
         }catch (\Exception $e){
             throw new \Exception($e->getMessage(), 500);
