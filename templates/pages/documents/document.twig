@@ -6,15 +6,13 @@
     {{ document.title }}
 {% endblock %}
 {% block description %}
-    Документ: {{ document.title }}, формат: {{ document.mime_type }}, обновлен {{ document.updated|date('d.m.Y') }}
+    Документ: {{ document.title }}, формат: {{ document.mime_type }}, обновлен {{ document.updated|date('d.m.Y') }}. Скачать бесплатно в Word
 {% endblock %}
 {% block keywords %}
     {{ keywords }}
 {% endblock %}
 {% block content %}
-    <script type="application/ld+json">
        {{ schema.toScript()|raw }}
-    </script>
     <div class="dashboard-content document-dashboard px-3 pt-4 col-md-12" data-page="document-page">
         <div class="document-header mb-4">
             <h1 class="document-title fs-3 mb-3">{{ document.title }}</h1>
@@ -23,16 +21,16 @@
                     <svg width="16" height="16" fill="currentColor">
                         <use xlink:href="#icon-file"></use>
                     </svg>
-                    <span>Тип:
+                    <span class="file-format">Тип:
                         {% if  document.mime_type is same as('docx') or document.mime_type is same as('doc') %}
-                            Документ Word
+                            DOCX, DOC
                         {% else %}
                             Неизвестный тип
                         {% endif %}
                 </div>
                 <div class="document-size ">
 
-                    <span><svg width="16" height="16" fill="currentColor">
+                    <span class="file-size"><svg width="16" height="16" fill="currentColor">
                         <use xlink:href="#icon-download"></use>
                     </svg> Размер: {{ (document.size / 1024)|number_format(2, ',', ' ') }} KB</span>
                 </div>
