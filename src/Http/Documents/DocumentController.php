@@ -157,9 +157,19 @@ class DocumentController
     }
     public function findLostFiles(Request $request, Response $response, array $args): Response
     {
-        $lostFilesNames = $this->service->findLostFilesNames();
-        $documents = $this->document->getByInValues('stored_name', $lostFilesNames);
-        return new JsonResponse($documents, 200);
+        try{
+            $lostFilesNames = $this->service->findLostFilesNames();
+            $documents = $this->document->getByInValues('stored_name', $lostFilesNames);
+            return new JsonResponse($documents, 200);
+        }catch (DocumentNotFoundException|DirectoryNotFoundException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
+        }catch (RuntimeException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
+        }catch (\Exception $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+
+
     }
 
 
