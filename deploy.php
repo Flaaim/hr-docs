@@ -3,7 +3,7 @@ namespace Deployer;
 
 require 'recipe/symfony.php';
 
-set('application', 'kadr-doc');
+set('application', 'kd-docs');
 set('git_ssh_command', 'ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa');
 // Или используйте ssh-agent
 //set('forward_agent', true);
@@ -17,7 +17,7 @@ host('production')
     ->set('port', 22)
     ->set('remote_user', 'u1656040')
     ->set('password', 'OHFvqDac7O8g3RB1')
-    ->set('deploy_path', '~/www/kadr-doc.ru')
+    ->set('deploy_path', '~/www/kd-docs.ru')
     ->set('public_path', '{{deploy_path}}/public')
     ->set('branch', 'master');
 

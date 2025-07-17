@@ -1,7 +1,27 @@
 RewriteEngine On
+RewriteBase /
+# Блокировка WP-сканеров (админка, xmlrpc, setup-config.php)
+RewriteCond %{REQUEST_URI} wp-(admin|includes|login|content) [NC,OR]
+RewriteCond %{REQUEST_URI} wp-(comments-post|trackback|feed|xmlrpc)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} setup-config\.php [NC]
+RewriteRule ^ - [R=404,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} ^(.*)?wp-(.*)\.php [NC,OR]
-RewriteCond %{REQUEST_URI} ^(.*)?wlwmanifest\.xml [NC,OR]
-RewriteCond %{REQUEST_URI} ^(.*)?xmlrpc\.php [NC]
 RewriteRule ^ index.php [QSA,L]
+
+# Блокируем доступ к служебным файлам
+<FilesMatch "\.(env|git|htaccess|log|sql)$">
+    Require all denied
+</FilesMatch>
+
+# Запрещаем листинг директорий
+Options -Indexes
+
+# Защита от XSS и MIME-спуфинга
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+

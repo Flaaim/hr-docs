@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Twig\SeoExtension;
 use Odan\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Slim\Views\Twig;
 
@@ -16,10 +18,12 @@ return [
             'debug' => getenv('APP_ENV') !== 'prod',
             'auto_reload' => getenv('APP_ENV') !== 'prod',
         ]);
+
         // Добавление расширений (опционально)
         if (getenv('APP_ENV') !== 'prod') {
-            $twig->addExtension(new \Twig\Extension\DebugExtension());
+            $twig->addExtension(new DebugExtension());
         }
+        $twig->addExtension($container->get(SeoExtension::class));
 
         // Добавление глобальных переменных (опционально)
         $twig->getEnvironment()->addGlobal('app', $container->get('config'));

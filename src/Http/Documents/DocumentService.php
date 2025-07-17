@@ -5,11 +5,8 @@ namespace App\Http\Documents;
 use App\Http\Exception\Document\DirectionNotFoundException;
 use App\Http\Exception\Document\DocumentNotFoundException;
 use App\Http\Models\Direction;
-use App\Http\Services\Seo;
 use InvalidArgumentException;
 use RuntimeException;
-use Spatie\SchemaOrg\DigitalDocument;
-use Spatie\SchemaOrg\Schema;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 class DocumentService
@@ -106,17 +103,5 @@ class DocumentService
             'fsFiles' => $fsFiles,
             'documentsFileNames' => $documentsFileNames,
         ];
-    }
-
-    public function getDocumentSchema(array $document):  DigitalDocument
-    {
-        return Schema::digitalDocument()
-            ->name($document['title'])
-            ->description('Шаблон документа '.$document['title'])
-            ->fileFormat($document['mime_type'])
-            ->url($_ENV['APP_PATH'].'/document/'.$document['id'])
-            ->author(Schema::organization()->name('kadr-doc'))
-            ->datePublished(\DateTimeImmutable::createFromFormat('U', $document['updated']))
-            ->keywords(Seo::createKeywordsFromTitle($document['title']));
     }
 }

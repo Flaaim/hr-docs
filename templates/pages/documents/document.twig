@@ -3,10 +3,10 @@
 
 
 {% block title %}
-    {{ document.title }}
+    {{ seo_title() }}
 {% endblock %}
 {% block description %}
-    Документ: {{ document.title }}, формат: {{ document.mime_type }}, обновлен {{ document.updated|date('d.m.Y') }}. Скачать бесплатно в Word
+    {{ seo_description() }}
 {% endblock %}
 {% block keywords %}
     {{ keywords }}

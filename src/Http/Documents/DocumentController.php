@@ -5,11 +5,9 @@ namespace App\Http\Documents;
 use App\Http\Exception\Document\DirectionNotFoundException;
 use App\Http\Exception\Document\DocumentNotFoundException;
 use App\Http\JsonResponse;
-use App\Http\Models\Direction;
-use App\Http\Models\Section;
-use App\Http\Models\Type;
 use App\Http\Paginator;
-use App\Http\Services\Seo;
+use App\Http\Seo\Helper;
+use App\Http\Seo\SeoManager;
 use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,24 +17,19 @@ use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
-use Spatie\SchemaOrg\Schema;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 class DocumentController
 {
-    private Section $section;
-    private Type $type;
     private Document $document;
-    private Direction $direction;
     private DocumentService $service;
+    private SeoManager $seo;
 
-    public function __construct(Direction $direction, Section $section, Type $type, Document $document, DocumentService $service)
+    public function __construct(Document $document, DocumentService $service, SeoManager $seo)
     {
-        $this->section = $section;
-        $this->type = $type;
         $this->document = $document;
-        $this->direction = $direction;
         $this->service = $service;
+        $this->seo = $seo;
     }
 
 
@@ -92,14 +85,16 @@ class DocumentController
             if(empty($document)){
                 throw new DocumentNotFoundException();
             }
-            $schema = $this->service->getDocumentSchema($document);
+
             $documents = $this->document->getAll([], 6);
-            $keywords = implode(', ', Seo::createKeywordsFromTitle($document['title']));
+            $this->seo->set([
+                'title' => $document['title'],
+                'description' => $description = 'Документ: '.$document['title']. ', формат:' . $document['mime_type'].', обновлен '. date('d.m.Y', $document['updated']). '. Скачать бесплатно в Word',
+                'keywords' => Helper::createKeywordsFromTitle($description)
+            ]);
             return Twig::fromRequest($request)->render($response, 'pages/documents/document.twig', [
                 'document' => $document,
                 'documents' => $documents,
-                'schema' => $schema,
-                'keywords' => $keywords
             ]);
         }catch (\Exception $e){
             throw new \Exception($e->getMessage(), 500);
@@ -122,6 +117,10 @@ class DocumentController
                 $paginator->getItemsPerPage(),
                 $paginator->getOffset()
             );
+            $this->seo->set([
+                'title' => 'Список шаблонов документов по разделу ' . $result['direction']['name'],
+                'description' => 'На странице приведены формы (образцы) в виде таблицы (интерактивной, статичной) документов по управлению персоналом (HR-менеджмент) по разделу: '. $result['direction']['name'],
+            ]);
 
             return Twig::fromRequest($request)->render(
                 $response,
