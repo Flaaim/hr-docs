@@ -48,7 +48,7 @@ set('writable_dirs', [
     'public/uploads',
 ]);
 
-set('bin/composer', '{{bin/php}} /var/www/u1656040/data/www/kadr-doc.ru/composer.phar');
+set('bin/composer', '{{bin/php}} /var/www/u1656040/data/www/kd-doc.ru/composer.phar');
 
 set('composer_options', '--no-dev --optimize-autoloader --no-progress --no-interaction --no-scripts');
 
