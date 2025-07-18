@@ -8,6 +8,7 @@ RewriteRule ^ - [R=404,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^sitemap\.xml$ index.php [L]
 RewriteRule ^ index.php [QSA,L]
 
 # Блокируем доступ к служебным файлам

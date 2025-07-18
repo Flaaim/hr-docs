@@ -157,4 +157,9 @@ class Document extends BaseModel
         $result = $this->database->fetchFirstColumn('SELECT stored_name FROM ' . self::TABLE_NAME);
         return $result ?: [];
     }
+    public function getDocumentsIds(): array
+    {
+        $result = $this->database->fetchFirstColumn('SELECT id FROM ' . self::TABLE_NAME);
+        return $result ?: [];
+    }
 }

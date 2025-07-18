@@ -19,6 +19,9 @@ return static function (App $app): void {
     }
 
     $app->get('/', [HomeController::class, 'index']);
+    $app->get('/sitemap.xml', [HomeController::class, 'sitemap']);
+
+
     $app->group('/api/csrf', function (RouteCollectorProxy $group) use($app){
         $group->get('/get', function (Request $request, Response $response) {
             $session = $this->get(SessionInterface::class);
