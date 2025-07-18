@@ -7,7 +7,6 @@ use InvalidArgumentException;
 
 class Sitemap
 {
-    const CACHE_PERIOD = 1;
     private Documents $documents;
     private Pages $pages;
     public function __construct(Pages $pages, Documents $documents)
@@ -29,16 +28,21 @@ class Sitemap
     {
         $path = dirname(__DIR__, 4) . '/public/sitemap.xml';
 
-        if(!$this->checkSitemap($path)) {
-            $content = file_get_contents($path);
-            if ($content !== false) {
-                return $content;
+        $now = new \DateTimeImmutable('now');
+
+        if (file_exists($path)) {
+            $fileTime = \DateTimeImmutable::createFromFormat('U', filemtime($path));
+            if ($now->diff($fileTime)->days < 1) {
+                $content = file_get_contents($path);
+                if ($content !== false) {
+                    return $content;
+                }
             }
         }
 
         $tempPath = $path . '.tmp';
 
-        try{
+        try {
             $sitemap = new \samdark\sitemap\Sitemap($tempPath);
 
             $sitemap->addItem(Domain::url(), time(), Domain::changeFreq(), Domain::priority());
@@ -65,20 +69,10 @@ class Sitemap
             }
 
             return $xmlContent;
-        }finally {
+        } finally {
             if (file_exists($tempPath)) {
                 unlink($tempPath);
             }
         }
     }
-
-    private function checkSitemap($path): bool
-    {
-        if(!file_exists($path)) {
-            return false;
-        }
-        $fileTime = \DateTimeImmutable::createFromFormat('U', filemtime($path));
-        return $fileTime->diff(new \DateTimeImmutable('now'))->days > self::CACHE_PERIOD;
-    }
-
 }
