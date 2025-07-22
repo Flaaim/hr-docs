@@ -28,18 +28,6 @@ class Sitemap
     {
         $path = dirname(__DIR__, 4) . '/public/sitemap.xml';
 
-        $now = new \DateTimeImmutable('now');
-
-        if (file_exists($path)) {
-            $fileTime = \DateTimeImmutable::createFromFormat('U', filemtime($path));
-            if ($now->diff($fileTime)->days < 1) {
-                $content = file_get_contents($path);
-                if ($content !== false) {
-                    return $content;
-                }
-            }
-        }
-
         $tempPath = $path . '.tmp';
 
         try {
