@@ -88,7 +88,7 @@ class DocumentController
 
             $documents = $this->document->getAll([], 6);
             $this->seo->set([
-                'title' => $document['title'],
+                'title' => 'Скачать '.$document['title'],
                 'description' => $description = 'Документ: '.$document['title']. ', формат:' . $document['mime_type'].', обновлен '. date('d.m.Y', $document['updated']). '. Скачать бесплатно в Word',
                 'keywords' => Helper::createKeywordsFromTitle($description)
             ]);
