@@ -2,6 +2,7 @@ vendor
 composer.lock
 config/common/env
 public/uploads
+public/sitemap.xml
 .idea
 .phpunit.cache
 
