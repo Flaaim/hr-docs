@@ -28,7 +28,7 @@ class Auth extends BaseModel
     public function findByEmail(string $email): array
     {
         $result = $this->database->fetchAssociative(
-            "SELECT id, email, role, password_hash, created_at FROM ". self::TABLE_NAME. " WHERE email = :email", ['email' => $email]
+            "SELECT id, email, role, password_hash, created_at FROM ". self::TABLE_NAME. " WHERE email = :email AND verified = 1", ['email' => $email]
         );
         return $result ?: [];
     }
