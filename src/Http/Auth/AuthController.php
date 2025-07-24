@@ -26,7 +26,7 @@ class AuthController
     {
         try{
             $data = $request->getParsedBody();
-            $this->authService->login($data['email'], $data['password'], $data['remember_me'] ?? false);
+            $this->authService->login(mb_strtolower($data['email']), $data['password'], $data['remember_me'] ?? false);
             return new JsonResponse(['status' => 'success', 'message' => '🔓 Вы успешно вошли в систему!'], 200);
         }catch (InvalidCredentialsException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 401);
@@ -44,7 +44,7 @@ class AuthController
             if ($data['password'] !== $data['confirm_password']) {
                 throw new InvalidCredentialsException('Пароли не совпадают');
             }
-            $this->authService->register($data['email'], $data['password']);
+            $this->authService->register(mb_strtolower($data['email']), $data['password']);
             return new JsonResponse(['status' => 'success', 'message' => 'Регистрация завершена. На ваш email направлено письмо с подтверждением.']);
         }
         catch (MailNotSendException $e){
@@ -106,7 +106,7 @@ class AuthController
 
     public function requestResetPassword(Request $request, Response $response, array $args): Response
     {
-        $email = $request->getParsedBody()['email'];
+        $email = mb_strtolower($request->getParsedBody()['email']);
         try{
             $this->authService->reset($email);
             return new JsonResponse(['status' => 'success', 'message' => 'На ваш email направлено письмо с инструкциями по сбросу пароля.']);
