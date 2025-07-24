@@ -34,10 +34,10 @@
                             case 'register':
                                 if (res.status === 'success') {
                                     $.magnificPopup.close();
-                                    window.FlashMessage.success(res.message, {progress: true, timeout: 1000});
+                                    window.FlashMessage.success(res.message, {progress: true, timeout: 2000});
                                     setTimeout(() => {
                                         window.location.reload();
-                                    }, 1100);
+                                    }, 2100);
                                 }
                             return;
                           case 'reset':
