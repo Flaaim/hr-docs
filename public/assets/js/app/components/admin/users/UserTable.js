@@ -1,3 +1,5 @@
+import {Helper} from "../../../utils/Helper.js";
+
 export class UserTable {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -47,7 +49,7 @@ export class UserTable {
       {
         id: "downloads_remaining",
         name: "Осталось",
-        formatter: (cell, row) => {
+        formatter: (cell) => {
           if(null === cell){
             return '-'
           }else {
@@ -55,17 +57,19 @@ export class UserTable {
           }
         }
       },
-      {id: "created_at", name: "Создан"},
+      {
+        id: "created_at",
+        name: "Создан",
+        formatter: (cell) => {
+          return Helper.formatDate(cell)
+        }
+      },
       {
         id: "ends_at",
         name: "Окончание подписки",
         formatter: (cell) => {
           if(cell === null) return 'Бесплатный'
-          const date = new Date(cell);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const year = date.getFullYear();
-          return `${day}.${month}.${year}`;
+          return Helper.formatDate(cell)
         }
       },
       {
