@@ -44,6 +44,17 @@ export class UserTable {
         }
       },
       {id: "name", name: "План подписки"},
+      {
+        id: "downloads_remaining",
+        name: "Осталось",
+        formatter: (cell, row) => {
+          if(null === cell){
+            return '-'
+          }else {
+            return cell;
+          }
+        }
+      },
       {id: "created_at", name: "Создан"},
       {
         id: "ends_at",
