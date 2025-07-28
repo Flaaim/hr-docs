@@ -58,7 +58,7 @@ $app->group('/api/auth', function (RouteCollectorProxy $group) {
 
     $group->post('/logout', [AuthController::class, 'doLogout']);
 
-
+    $group->get('/checkRememberMe', [AuthController::class, 'checkRememberMe']);
 });
 
 $app->group('/auth', function (RouteCollectorProxy $group) {

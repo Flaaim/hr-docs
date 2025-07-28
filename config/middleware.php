@@ -24,13 +24,6 @@ use Slim\Views\TwigMiddleware;
 return static function (App $app, ContainerInterface $container): void {
 
     $app->addMiddleware(new SessionMiddleware($container->get(SessionInterface::class)));
-    $app->addMiddleware(new RememberMeMiddleware(
-        $container->get(AuthService::class),
-        $container->get(Auth::class),
-        $container->get(SessionInterface::class),
-        $container->get(CookieManager::class)
-        )
-    );
     $twig = $container->get('Slim\Views\Twig');
 
     $app->addMiddleware(new CsrfMiddleware($container->get(SessionInterface::class)));

@@ -6,6 +6,7 @@ use App\Http\Exception\Auth\InvalidCredentialsException;
 use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Exception\Auth\UserNotFoundException;
+use App\Http\JsonResponse;
 use App\Http\Queue\Messages\Email\EmailResetMessage;
 use App\Http\Queue\Messages\Email\EmailVerificationMessage;
 use App\Http\Queue\Queue;
@@ -162,5 +163,36 @@ class AuthService
         $user_id = $this->userModel->createUserBySocial($email);
         $this->userModel->addSocialAccount($user_id, $provider, $socialId);
         return $this->userModel->findById($user_id);
+    }
+    public function checkRememberMe(array $cookies): bool
+    {
+        if($this->session->has('user')){
+            return true;
+        }
+
+        if(!isset($cookies['remember_token'])){
+            return false;
+        }
+
+        $user = $this->userModel->findByToken($cookies['remember_token']);
+
+        if(empty($user)){
+            $this->cookieManager->delete('remember_token');
+            $this->logger->warning('Invalid remember_token:', ['token' => $cookies['remember_token']]);
+            throw new TokenNotFoundException('Токен пользователя не найден');
+        }
+
+        if(isset($user['expires_at']) && strtotime($user['expires_at']) < time()){
+            $this->cookieManager->delete('remember_token');
+            throw new TokenNotFoundException('Срок действия токена истек');
+        }
+
+        $this->session->set('user', [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'role' => $user['role'],
+            'created_at' => $user['created_at'],
+        ]);
+        return true;
     }
 }

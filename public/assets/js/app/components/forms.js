@@ -40,20 +40,20 @@
                                     }, 2100);
                                 }
                             return;
-                          case 'reset':
-                            if(res.status === 'success'){
-                              $.magnificPopup.close();
-                              window.FlashMessage.success(res.message, {progress: true});
-                            }
-                          return;
-                          case 'updatePassword':
-                            if(res.status === 'success'){
-                              window.FlashMessage.success(res.message, {progress: true, timeout: 1000});
-                              setTimeout(() => {
-                                window.location.href = '/';
-                              }, 1100);
-                            }
-                          return;
+                            case 'reset':
+                              if(res.status === 'success'){
+                                $.magnificPopup.close();
+                                window.FlashMessage.success(res.message, {progress: true});
+                              }
+                            return;
+                            case 'updatePassword':
+                              if(res.status === 'success'){
+                                window.FlashMessage.success(res.message, {progress: true, timeout: 1000});
+                                setTimeout(() => {
+                                  window.location.href = '/';
+                                }, 1100);
+                              }
+                            return;
                         }
                     },
                     complete: function () {

@@ -1,3 +1,5 @@
+import {RememberMe} from "./RememberMe.js";
+
 export class Auth {
 
   constructor() {
@@ -7,10 +9,14 @@ export class Auth {
 
     this.logout = document.getElementById('doLogout');
     this.toggleButtons = document.querySelectorAll('.toggle-password');
+
+    this.rememberMe = new RememberMe()
   }
 
   async init() {
     this.handleEvents()
+    await this.rememberMe.getRememberMe();
+
   }
 
   handleEvents(){
