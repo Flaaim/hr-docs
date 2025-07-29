@@ -173,7 +173,7 @@ class AuthController
             if($isAuth){
                 return new JsonResponse(['status' => 'success', 'message' => 'Авторизован.'], 200);
             }
-            return new JsonResponse(['status' => 'error', 'message' => 'User is not logged in.'], 401);
+            return new JsonResponse(['status' => 'error', 'message' => 'User is not logged in.'], 200);
         }catch (TokenNotFoundException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 401);
         }catch (\Exception $e) {
