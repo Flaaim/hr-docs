@@ -12,30 +12,46 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
+use Psr\SimpleCache\CacheInterface;
 
 class DocumentController
 {
     private Document $document;
     private DocumentService $service;
     private SeoManager $seo;
+    private CacheInterface $cache;
+    private LoggerInterface $logger;
 
-    public function __construct(Document $document, DocumentService $service, SeoManager $seo)
+    public function __construct(Document $document, DocumentService $service, SeoManager $seo, CacheInterface $cache, LoggerInterface $logger)
     {
         $this->document = $document;
         $this->service = $service;
         $this->seo = $seo;
+        $this->cache = $cache;
+        $this->logger = $logger;
     }
 
 
     public function all(Request $request, Response $response, array $args): Response
     {
         try{
+            $documents = $this->cache->get('documents_'.md5('all'), function(){
+                return $this->document->getAll();
+            });
+            return new JsonResponse($documents, 200);
+        }catch (\Psr\SimpleCache\InvalidArgumentException $e){
+            $this->logger->error('Cache error: ', [
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+            ]);
             $documents = $this->document->getAll();
             return new JsonResponse($documents, 200);
         }catch(\Exception $e){

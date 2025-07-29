@@ -8,12 +8,12 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 
 return [
-    CacheInterface::class => (function () {
+    CacheInterface::class => function () {
         $cacheDir = dirname(__DIR__, 2). '/var/cache';
         if (!file_exists($cacheDir)) {
             mkdir($cacheDir, 0777, true);
         }
-        $adapter = new FilesystemAdapter('', 0, $cacheDir);
+        $adapter = new FilesystemAdapter('', 3600, $cacheDir);
         return new Psr16Cache($adapter);
-    })()
+    }
 ];
