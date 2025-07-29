@@ -8,6 +8,7 @@ use App\Http\JsonResponse;
 use App\Http\Paginator;
 use App\Http\Seo\Helper;
 use App\Http\Seo\SeoManager;
+use App\Http\Services\Cache;
 use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,17 +20,16 @@ use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
-use Psr\SimpleCache\CacheInterface;
 
 class DocumentController
 {
     private Document $document;
     private DocumentService $service;
     private SeoManager $seo;
-    private CacheInterface $cache;
+    private Cache $cache;
     private LoggerInterface $logger;
 
-    public function __construct(Document $document, DocumentService $service, SeoManager $seo, CacheInterface $cache, LoggerInterface $logger)
+    public function __construct(Document $document, DocumentService $service, SeoManager $seo, Cache $cache, LoggerInterface $logger)
     {
         $this->document = $document;
         $this->service = $service;
@@ -42,9 +42,9 @@ class DocumentController
     public function all(Request $request, Response $response, array $args): Response
     {
         try{
-            $documents = $this->cache->get('documents_'.md5('all'), function(){
+            $documents = $this->cache->cachedGet('documents_', function (){
                 return $this->document->getAll();
-            });
+            }, 3600);
             return new JsonResponse($documents, 200);
         }catch (\Psr\SimpleCache\InvalidArgumentException $e){
             $this->logger->error('Cache error: ', [

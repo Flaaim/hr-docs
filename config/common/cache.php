@@ -13,7 +13,7 @@ return [
         if (!file_exists($cacheDir)) {
             mkdir($cacheDir, 0777, true);
         }
-        $adapter = new FilesystemAdapter('', 3600, $cacheDir);
+        $adapter = new FilesystemAdapter('documents_cache', 3600, $cacheDir);
         return new Psr16Cache($adapter);
     }
 ];
