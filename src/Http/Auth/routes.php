@@ -24,7 +24,6 @@ $app->group('/api/auth', function (RouteCollectorProxy $group) {
         ]))
         ->add(VerifyCsrfTokenMiddleware::class);
 
-
     $group->post('/register', [AuthController::class, 'doRegister'])
         ->add(ValidationMiddlewareFactory::create([
         'email' => v::email()->notEmpty(),
@@ -65,7 +64,6 @@ $app->group('/auth', function (RouteCollectorProxy $group) {
     $group->get('/verify', [AuthController::class, 'doVerify']);
 
     $group->get('/reset', [AuthController::class, 'resetPassword']);
-
 
 
     $group->get('/{provider}', [SocialAuthController::class, 'redirectToProvider']);

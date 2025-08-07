@@ -75,7 +75,7 @@ class Auth extends BaseModel
             return true;
         }catch (\Exception $e) {
             $this->database->rollBack();
-            $this->logger->warning('Ошибка создания пользователя', [
+            $this->logger->error('Ошибка создания пользователя', [
                 'email' => $email,
                 'error' => $e->getMessage()
             ]);
@@ -192,17 +192,5 @@ class Auth extends BaseModel
     public function deleteVerifyToken(string $token): void
     {
         $this->database->delete(self::USERS_CONFIRMATION_TABLE, ['token' => $token]);
-    }
-    public function getExpiredRegisterTokens(): array
-    {
-        $date = (new DateTimeImmutable())->modify('-1 day')->getTimestamp();
-        $this->database->fetchAllAssociative(
-            'SELECT token, id FROM ' . self::TABLE_NAME . ' WHERE verified = 0 AND expires < :date',
-            ['date' => $date]
-        );
-    }
-    public function deleteUserWithExpiredVerifyToken(string $token): void
-    {
-        $this->database->delete(self::TABLE_NAME, ['token' => $token]);
     }
 }

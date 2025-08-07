@@ -18,7 +18,7 @@ $app->group('/api/users', function (RouteCollectorProxy $group) {
     $group->get('/get', [UserController::class, 'get']);
     $group->post('/confirm', [UserController::class, 'confirm']);
     $group->post('/edit', [UserController::class, 'doEdit']);
-
+    $group->post('/delete-with-expired', [UserController::class, 'deleteWithExpired']);
 })->add(AdminMiddleware::class);
 
 $app->group('/user', function (RouteCollectorProxy $group) {

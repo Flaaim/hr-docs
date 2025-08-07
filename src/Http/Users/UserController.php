@@ -3,6 +3,7 @@
 namespace App\Http\Users;
 
 use App\Http\Auth\Auth;
+use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Exception\Subcription\SubscriptionPlanAlreadyUpgradedException;
 use App\Http\Exception\Subcription\SubscriptionPlanNotFoundException;
 use App\Http\JsonResponse;
@@ -125,5 +126,22 @@ class UserController
         }catch (\Exception $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function deleteWithExpired(Request $request, Response $response, array $args): Response
+    {
+        try{
+            $deleted = $this->service->clearUserExpiredRegistrations();
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'Users deleted successfully. Count: ' . $deleted
+            ], 200);
+        }catch (UserNotFoundException $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 404);
+        }catch (\RuntimeException|\Exception $e){
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+
+
     }
 }
