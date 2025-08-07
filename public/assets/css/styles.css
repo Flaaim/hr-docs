@@ -215,3 +215,16 @@ hr.h-color{
 /*.mfp-bg {*/
 /*  opacity: 0.1 !important;*/
 /*}*/
+
+
+/* Базовые стили */
+.auth-only { display: none; }
+.guest-only { display: block; }
+
+/* Состояние авторизации */
+.authenticated .auth-only { display: block; }
+.authenticated .guest-only { display: none; }
+
+/* Состояние неавторизации (опционально) */
+.unauthenticated .auth-only { display: none; }
+.unauthenticated .guest-only { display: block; }
