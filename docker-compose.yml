@@ -16,11 +16,11 @@ services:
     volumes:
       - ./:/app
     environment:
-      USER_ID: ${UID:-1000}
+#      USER_ID: ${UID:-1000}
       APP_DEBUG: 1
       APP_ENV: dev
       PHP_IDE_CONFIG: serverName=docs
-    user: "${UID:-1000}:${UID:-1000}"
+#    user: "${UID:-1000}:${UID:-1000}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
 

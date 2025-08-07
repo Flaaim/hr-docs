@@ -195,4 +195,13 @@ class AuthService
         ]);
         return true;
     }
+    public function clearExpiredRegistrations(): void
+    {
+        $expiredTokens = $this->userModel->getExpiredRegisterTokens();
+
+        foreach ($expiredTokens as $token) {
+            $this->userModel->deleteUserWithExpiredVerifyToken($token);
+            $this->userModel->deleteVerifyToken($token);
+        }
+    }
 }

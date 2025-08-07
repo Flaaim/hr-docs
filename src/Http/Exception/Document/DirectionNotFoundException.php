@@ -2,7 +2,8 @@
 
 namespace App\Http\Exception\Document;
 
-use App\Http\Exception\Throwable;
+
+use Throwable;
 
 class DirectionNotFoundException extends \LogicException
 {

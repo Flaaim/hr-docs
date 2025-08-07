@@ -5,6 +5,8 @@ export class RememberMe {
     if(!response){
       throw new Error('Ошибка загрузка RememberMe токена')
     }
+
+    return response || { status: 'error' };
   }
 
 }

@@ -32,6 +32,8 @@ $(document).ready(async function (){
           }
 
           const results = idx.search(query);
+          const limitedResults = results.slice(0, 20);
+
           const resultContainer = $("#search-result");
           if (results.length === 0) {
             window.FlashMessage.error('Ничего не найдено...')
@@ -39,7 +41,7 @@ $(document).ready(async function (){
 
           } else {
             let html = '<ul class="list-group list-group-numbered">';
-            results.forEach(result => {
+            limitedResults.forEach(result => {
               const doc = window.searchDocuments.find(d => d.id == result.ref);
               if (doc?.title) {
                 html += `

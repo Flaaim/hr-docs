@@ -2,6 +2,9 @@ import {RememberMe} from "./RememberMe.js";
 
 export class Auth {
 
+  static AUTHORIZED = true
+  static UNAUTHORIZED = false;
+
   constructor() {
     this.login = '#small-dialog-login'
     this.register = '#small-dialog-register'
@@ -9,11 +12,45 @@ export class Auth {
 
     this.logout = document.getElementById('doLogout');
     this.toggleButtons = document.querySelectorAll('.toggle-password');
+
+    this.rememberMe = new RememberMe()
+
+    this.userPanel = document.getElementById('user-panel')
+    this.isAuthenticated = this.userPanel.dataset.authenticated === 'true'
+
   }
 
   async init() {
     this.handleEvents()
+
+    if(!this.isAuthenticated){
+      const result = await this.rememberMe.getRememberMe();
+      if(result?.status === 'success') {
+        this.toggleAuthState(Auth.AUTHORIZED);
+      }else {
+        this.toggleAuthState(Auth.UNAUTHORIZED)
+      }
+    }else {
+      this.toggleAuthState(Auth.AUTHORIZED);
+    }
+
+
+
+    }
+
+  toggleAuthState(isAuthenticated) {
+    this.isAuthenticated = isAuthenticated;
+    if (isAuthenticated) {
+      this.userPanel.classList.add('authenticated');
+      this.userPanel.classList.remove('unauthenticated');
+    } else {
+      this.userPanel.classList.add('unauthenticated');
+      this.userPanel.classList.remove('authenticated');
+    }
   }
+
+
+
 
   handleEvents(){
     document.querySelectorAll('.login-link').forEach(link => {
@@ -58,7 +95,11 @@ export class Auth {
       });
     });
   }
-
+  changeUserPanel(){
+    document.getElementById('user-panel').
+      innerHTML = `<li class="nav-item"><a class="nav-link" href="/user/dashboard">Профиль</a></li>
+                            <li class="nav-item"><button class="btn btn-link nav-link" id="doLogout">Выход</button></li>`
+  }
 
   handleLogin(){
     $.magnificPopup.close();
