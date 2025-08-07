@@ -1,5 +1,6 @@
 import {UserTable} from "./UserTable.js";
 import {UserEditor} from "./UserEditor.js";
+import {Helper} from "../../../utils/Helper.js";
 
 export class UserManager {
   constructor() {
@@ -34,8 +35,23 @@ export class UserManager {
         await this.handleEdit(e)
       }
     })
+    document.getElementById('delete-users-with-expired-token').addEventListener('click', async (e) =>{
+      await this.handeDeleteUsersWithExpiredToken()
+    });
   }
+  async handeDeleteUsersWithExpiredToken()
+  {
+    if(confirm("Удалить пользователь с истекшим токеном подтверждения?")){
+      try {
+        await API.post('users/delete-with-expired')
+        window.FlashMessage.success('Пользователи удалены');
 
+        await this.loadData();
+      }catch (error){
+        Helper.handleError(error)
+      }
+    }
+  }
   async handleConfirm(e) {
     const button = e.target.closest('.confirm-user-btn');
     const userId = button.dataset.id
@@ -48,7 +64,7 @@ export class UserManager {
         await this.loadData();
       }catch (error){
         console.warn(error);
-        window.FlashMessage.error("Ошибка при подтверждении пользователя");
+        Helper.handleError(error)
       }
     }
   }
