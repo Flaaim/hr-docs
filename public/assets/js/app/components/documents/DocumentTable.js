@@ -29,7 +29,7 @@ export class DocumentTable {
         name: "Наименование",
         formatter: (cell, row) => {
           const documentId = row._cells[0].data;
-          return gridjs.html(`<a href="/document/${documentId}">${cell}</a>`);
+          return gridjs.html(`<a href="/document/${documentId}" target="_blank">${cell}</a>`);
         }
       },
       {id: "section_name", name: "Раздел"},

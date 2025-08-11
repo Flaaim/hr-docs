@@ -10,7 +10,7 @@
     <tbody >
     {% for document in documents %}
         <tr>
-            <td><a href="/document/{{ document.id }}">{{ document.title }}</a></td>
+            <td><a href="/document/{{ document.id }}" target="_blank">{{ document.title }}</a></td>
             <td> {{ document.section_name }}</td>
             <td> {{ document.type_name }}</td>
             <td> {{ document.updated| date('d.m.Y') }}</td>
