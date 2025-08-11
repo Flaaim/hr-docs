@@ -104,8 +104,24 @@ hr.h-color{
 .main-content{
     margin: 2rem;
 }
+.social-auth .btn{
+	border: 1px solid;
+}
+.social-auth .btn:hover {
+	border: 1px solid;
+	background-color: rgb(248 249 250);
+}
 /* Styles for dialog window */
-#small-dialog-login,
+#small-dialog-login{
+	background: white;
+	padding: 10px 15px;
+	text-align: left;
+	max-width: 500px;
+	margin: 10px auto;
+	position: relative;
+	border: 1px solid #ced4da;
+	border-radius: 7px;
+}
 #small-dialog-register,
 #small-dialog-reset,
 #small-dialog-upload-document,

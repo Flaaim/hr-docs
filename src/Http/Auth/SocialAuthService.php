@@ -2,13 +2,10 @@
 
 namespace App\Http\Auth;
 
-use Aego\OAuth2\Client\Provider\Yandex;
+use App\Http\Exception\Auth\InvalidStateException;
 use App\Http\Exception\Auth\SocialAuthException;
-use App\Http\Exception\Auth\SocialProviderNotFoundException;
-use DI\Attribute\Inject;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Provider\Google;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Odan\Session\SessionInterface;
 
