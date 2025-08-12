@@ -46,7 +46,7 @@ class DocumentPreviewController
         catch (\Exception $e){
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Внутреняя ошибка сервера'
+                'message' => $e->getMessage()
             ], 500);
         }
 

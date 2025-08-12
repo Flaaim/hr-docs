@@ -12,7 +12,7 @@ use PhpOffice\PhpWord\IOFactory;
 class DocumentPreviewService
 {
     private FileSystemService $fileSystem;
-    private Document $document;
+
     private DownloadDocumentService $downloadService;
     public function __construct(Document $document, FileSystemService $fileSystemService, DownloadDocumentService $downloadService)
     {
