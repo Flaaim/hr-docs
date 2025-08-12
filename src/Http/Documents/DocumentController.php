@@ -2,6 +2,7 @@
 
 namespace App\Http\Documents;
 
+use App\Http\Documents\Preview\DocumentPreviewService;
 use App\Http\Exception\Document\DirectionNotFoundException;
 use App\Http\Exception\Document\DocumentNotFoundException;
 use App\Http\JsonResponse;
@@ -105,7 +106,7 @@ class DocumentController
             $documents = $this->document->getAll([], 6);
             $this->seo->set([
                 'title' => 'Скачать '.$document['title'],
-                'description' => $description = 'Документ: '.$document['title']. ', формат:' . $document['mime_type'].', обновлен '. date('d.m.Y', $document['updated']). '. Скачать бесплатно в Word',
+                'description' => $description = 'Образец документа '.$document['title']. ', формат:' . $document['mime_type'].', обновлен '. date('d.m.Y', $document['updated']). '. Скачать бесплатно в формате Word',
                 'keywords' => Helper::createKeywordsFromTitle($description)
             ]);
             return Twig::fromRequest($request)->render($response, 'pages/documents/document.twig', [
