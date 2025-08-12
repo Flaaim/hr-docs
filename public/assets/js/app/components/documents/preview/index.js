@@ -7,13 +7,19 @@ $(document).ready(async function (){
   }
 
   try{
-    const documentId = document.getElementById('doPreview')?.dataset.id;
-    if(!documentId?.trim()){
-      throw new Error('Ошибка: ID документа отсутствует или пустой')
+    const documentType = document.getElementById('previewContainer')?.dataset.type;
+    const documentId = document.getElementById('previewContainer')?.dataset.id;
+
+    if(documentType !== 'pdf'){
+      if(!documentId?.trim()){
+        Helper.handleError('Ошибка: ID документа отсутствует или пустой')
+      }
+      const preview = new PreviewDocument(documentId);
+      await preview.preview();
+      preview.blockSelectionAndCopy();
     }
-    const preview = new PreviewDocument(documentId);
-    await preview.preview();
-    preview.blockSelectionAndCopy();
+
+
   }catch (error){
     Helper.handleError(error)
   }
