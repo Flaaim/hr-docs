@@ -24,6 +24,8 @@
                     <span class="file-format">Тип:
                         {% if  document.mime_type is same as('docx') or document.mime_type is same as('doc') %}
                             DOCX, DOC
+                        {% elseif document.mime_type is same as('pdf')%}
+                            PDF
                         {% else %}
                             Неизвестный тип
                         {% endif %}
@@ -62,7 +64,7 @@
                 <div class="document-placeholder text-center py-5" id="previewContainer">
                     <i class="fas fa-file-word text-primary mb-3" style="font-size: 3rem;"></i>
                     <p class="text-muted">
-                        <a href="#" id="doPreview" data-id="{{ document.id }}">Предпросмотр документа. Нажмите чтобы посмотреть</a>
+                        <a href="#" id="doPreview" data-id="{{ document.id }}" data-type="{{ document.mime_type }}">{{ preview }}
                     </p>
                 </div>
             </div>

@@ -17,7 +17,8 @@ class HandleFileMiddleware implements MiddlewareInterface
     public function __construct(
         private readonly FileNameHelper $fileNameHelper,
         private readonly HandleFileData $handleFileData,
-        private readonly FileSystemService $fileSystemService
+        private readonly FileSystemService $fileSystemService,
+        private readonly MimeTypeMapper $mimeTypeMapper,
     )
     {}
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -34,6 +35,9 @@ class HandleFileMiddleware implements MiddlewareInterface
         }
 
         if(!empty($files)){
+            if(!$this->mimeTypeMapper->checkUploadedFiles($files)){
+                return $this->createErrorResponse(400, 'File types not supports');
+            };
             foreach ($files as $file) {
                 switch ($file->getError()){
                     case UPLOAD_ERR_OK:
