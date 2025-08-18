@@ -9,8 +9,6 @@ use App\Http\Handlers\HttpInternalErrorHandler;
 use App\Http\Handlers\HttpMethodNotAllowedHandler;
 use App\Http\Handlers\HttpNotFoundHandler;
 use App\Http\Middleware\CsrfMiddleware;
-use App\Http\Middleware\RememberMeMiddleware;
-use App\Http\Services\CookieManager;
 use Odan\Session\Middleware\SessionMiddleware;
 use Odan\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
