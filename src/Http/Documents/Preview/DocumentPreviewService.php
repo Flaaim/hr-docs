@@ -16,7 +16,6 @@ class DocumentPreviewService
     private DownloadDocumentService $downloadService;
     public function __construct(Document $document, FileSystemService $fileSystemService, DownloadDocumentService $downloadService)
     {
-        $this->document = $document;
         $this->fileSystem = $fileSystemService;
         $this->downloadService = $downloadService;
     }
