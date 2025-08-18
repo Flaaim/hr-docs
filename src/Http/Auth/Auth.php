@@ -2,6 +2,7 @@
 
 namespace App\Http\Auth;
 
+use App\Http\Mailing\Mailing;
 use App\Http\Models\BaseModel;
 use App\Http\Subscription\Subscription;
 use DateTimeImmutable;
@@ -20,7 +21,8 @@ class Auth extends BaseModel
     public function __construct(
         Connection $database,
         private readonly Subscription $subscription,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly Mailing $mailing
     )
     {
         parent::__construct($database);
@@ -70,6 +72,7 @@ class Auth extends BaseModel
             ]);
             $userId = $this->database->lastInsertId();
             $this->subscription->setFreePlan($userId);
+            $this->mailing->setUserMailingList($userId);
             $this->createUserConfirmation($userId, $token);
             $this->database->commit();
             return true;
