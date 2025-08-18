@@ -15,11 +15,10 @@ class Mailing extends BaseModel
     public function getUsersMailingList(): array
     {
         $queryBuilder = $this->database->createQueryBuilder()
-            ->select('mul.user_id, u.email')
+            ->select('mul.user_id, u.email, mul.is_unsubscribed, mul.subscription_date')
             ->from(self::TABLE_NAME, 'mul')
-            ->leftJoin('mul', 'users', 'u', 'mul.user_id = u.id')
-            ->where('mul.is_unsubscribed = 0');
+            ->leftJoin('mul', 'users', 'u', 'mul.user_id = u.id');
 
-        return $queryBuilder->fetchAssociative() ?: [];
+        return $queryBuilder->fetchAllAssociative() ?: [];
     }
 }
