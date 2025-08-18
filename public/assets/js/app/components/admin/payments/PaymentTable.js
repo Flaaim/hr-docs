@@ -1,3 +1,5 @@
+import {Helper} from "../../../utils/Helper.js";
+
 export class PaymentTable {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -29,11 +31,7 @@ export class PaymentTable {
         id: "created_at",
         name: "Создан",
         formatter: (cell) => {
-          const date = new Date(cell);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const year = date.getFullYear();
-          return `${day}.${month}.${year}`;
+          return Helper.formatDate(cell)
         }
       },
       {
