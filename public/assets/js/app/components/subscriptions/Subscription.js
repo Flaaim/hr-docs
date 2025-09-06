@@ -1,8 +1,10 @@
 import {SubscriptionCard} from './SubscriptionCard.js'
+import {Payment} from "./Payment.js";
 export class Subscription {
 
   constructor() {
     this.cards = new SubscriptionCard()
+    this.payment = new Payment()
 
   }
   initHandlers(){
@@ -19,12 +21,21 @@ export class Subscription {
       },callbacks: {
         open: async  () => {
           await this.loadPlans()
+          document.querySelectorAll('.doUpgrade')
+            .forEach(el => el.addEventListener('click', async (e) => {
+              const button = e.target;
+              await this.payment.create(button.dataset.slug);
+            }))
         }
       }
     })
+
+
   }
 
+  handlePayment(){
 
+  }
 
   async loadPlans(){
     try{

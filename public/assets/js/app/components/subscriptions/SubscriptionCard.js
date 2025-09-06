@@ -28,7 +28,7 @@ export class SubscriptionCard {
         plan.htmlButton = '';
       }else{
         plan.htmlButton = `<div class="d-flex justify-content-between align-items-center mt-3">
-      <button id="doUpgrade" data-slug="${plan.slug}" class="btn btn-sm btn-outline-primary ${plan.id === this.currentPlan?.plan_id ? 'disabled' : ''}">Приобрести</button></div>`
+      <button data-slug="${plan.slug}" class="btn btn-sm btn-outline-primary doUpgrade ${plan.id === this.currentPlan?.plan_id ? 'disabled' : ''}">Приобрести</button></div>`
       }
     })
     return this;

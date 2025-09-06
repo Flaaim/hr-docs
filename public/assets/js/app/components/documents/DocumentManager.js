@@ -44,7 +44,7 @@ export class DocumentManager {
   async fetchDocuments(){
     const response = await API.get('documents/byDirection', {direction_id:this.direction_id})
     if(!Array.isArray(response)){
-      throw new Error("Некоректный формат ответа от сервера")
+      throw new Error("Некорректный формат ответа от сервера")
     }
     return response
   }
