@@ -34,10 +34,17 @@
                             case 'register':
                                 if (res.status === 'success') {
                                     $.magnificPopup.close();
-                                    window.FlashMessage.success(res.message, {progress: true, timeout: 2000});
-                                    setTimeout(() => {
-                                        window.location.reload();
-                                    }, 2100);
+                                    $.magnificPopup.open({
+                                      items: {
+                                        src: '#small-dialog-afterRegister',
+                                        type: 'inline'
+                                      },
+                                      callbacks: {
+                                        close: function (){
+                                          location.reload();
+                                        }
+                                      }
+                                    })
                                 }
                             return;
                             case 'reset':

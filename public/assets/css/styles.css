@@ -129,7 +129,9 @@ hr.h-color{
 #small-dialog-subscription,
 #small-dialog-edit-document,
 #small-dialog-edit-user,
-#small-dialog-orphaned-files{
+#small-dialog-orphaned-files,
+#small-dialog-afterRegister
+{
     background: white;
     padding: 20px 30px;
     text-align: left;
