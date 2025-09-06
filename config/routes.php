@@ -20,7 +20,7 @@ return static function (App $app): void {
 
     $app->get('/', [HomeController::class, 'index']);
     $app->get('/sitemap.xml', [HomeController::class, 'sitemap']);
-
+    $app->get('/terms', [HomeController::class, 'terms']);
 
     $app->group('/api/csrf', function (RouteCollectorProxy $group) use($app){
         $group->get('/get', function (Request $request, Response $response) {
