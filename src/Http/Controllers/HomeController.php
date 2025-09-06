@@ -54,4 +54,14 @@ class HomeController
             throw new HttpInternalServerErrorException($request, "Sitemap generation failed");
         }
     }
+
+    public function terms(Request $request, Response $response, array $args): Response
+    {
+        try{
+            return Twig::fromRequest($request)->render($response, 'pages/terms.twig')
+                ->withHeader('Content-Type', 'text/html');
+        }catch (\Throwable $e){
+            throw new HttpInternalServerErrorException($request, $e->getMessage());
+        }
+    }
 }
