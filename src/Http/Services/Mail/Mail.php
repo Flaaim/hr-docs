@@ -62,7 +62,7 @@ class Mail implements MailInterface
     /**
      * @inheritDoc
      */
-    public function send(): bool
+    public function send(): void
     {
         if(empty($this->to)){
             throw new MailNotSendException('Не указан получатель письма');
@@ -73,6 +73,6 @@ class Mail implements MailInterface
         if(empty($this->body)){
             throw new MailNotSendException('Не указано содержимое письма');
         }
-        return $this->sender->send($this->to, $this->subject, $this->body);
+        $this->sender->send($this->to, $this->subject, $this->body);
     }
 }

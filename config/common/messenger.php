@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use App\Http\Queue\Handlers\Email\EmailResetHandler;
 use App\Http\Queue\Handlers\Email\EmailVerificationHandler;
+use App\Http\Queue\Handlers\Email\SendUpdateHandler;
 use App\Http\Queue\Messages\Email\EmailResetMessage;
 use App\Http\Queue\Messages\Email\EmailVerificationMessage;
+use App\Http\Queue\Messages\Email\SendUpdateMessage;
 use App\Http\Services\Mail\Mail;
 use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
@@ -24,21 +26,22 @@ return [
     'doctrine.messenger.transport' => function (ContainerInterface $c) {
         return new DoctrineTransport(
             new DoctrineConnection([], $c->get(Connection::class)),
-           new PhpSerializer()
+            new PhpSerializer()
         );
     },
 
     'doctrine.messenger.handlers' => function (ContainerInterface $c) {
         return [
             EmailVerificationMessage::class  => new EmailVerificationHandler($c->get(Mail::class), $c->get(LoggerInterface::class)),
-            EmailResetMessage::class  => new EmailResetHandler($c->get(Mail::class), $c->get(LoggerInterface::class))
+            EmailResetMessage::class  => new EmailResetHandler($c->get(Mail::class), $c->get(LoggerInterface::class)),
+            SendUpdateMessage::class => new SendUpdateHandler($c->get(Mail::class), $c->get(LoggerInterface::class)),
         ];
     },
 
     MessageBus::class => function (ContainerInterface $c) {
         return new MessageBus([
             $c->get(SendMessageMiddleware::class),
-            $c->get(HandleMessageMiddleware::class)
+            $c->get(HandleMessageMiddleware::class),
         ]);
     },
 
@@ -48,6 +51,7 @@ return [
                 [
                     EmailVerificationMessage::class => ['doctrine.messenger.transport'],
                     EmailResetMessage::class => ['doctrine.messenger.transport'],
+                    SendUpdateMessage::class => ['doctrine.messenger.transport'],
                 ],
                 $c
             )

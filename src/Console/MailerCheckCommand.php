@@ -3,11 +3,13 @@
 namespace App\Console;
 
 
-use App\Http\Services\Mail\PhpMailSender;
-use PHPMailer\PHPMailer\DSNConfigurator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Message;
 
 class MailerCheckCommand extends Command
 {
@@ -20,22 +22,20 @@ class MailerCheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Checking mailer...</info>");
-        $dsnString = 'smtp://mailer:1025';
-        $mailer = DSNConfigurator::mailer($dsnString);
-        $mailer->setFrom('admin@kd-docs.ru');
-        $mailer->Body = 'Some text';
-        $mailer->addAddress('user@app.test');
-        try {
-            // Отправка письма
-            if ($mailer->send()) {
-                $output->writeln("<info>Email sent successfully to MailHog!</info>");
-                $output->writeln("<info>Check MailHog UI: http://localhost:8082</info>");
-            } else {
-                $output->writeln("<error>Failed to send email: " . $mailer->ErrorInfo . "</error>");
-            }
-        } catch (\Exception $e) {
-            $output->writeln("<error>Error: " . $e->getMessage() . "</error>");
-        }
+        $transport = new EsmtpTransport(
+            'mailer',
+                1025
+        );
+        $mailer = new Mailer($transport);
+        $message = (new Email())
+            ->subject('Test email')
+            ->from('mail@app.test')
+            ->to('user@app.test')
+            ->text('Test email');
+
+
+        $mailer->send($message);
+
         $output->writeln("<info>Done..</info>");
 
         return Command::SUCCESS;

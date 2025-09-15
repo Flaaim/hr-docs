@@ -6,11 +6,8 @@ use App\Http\Exception\Auth\InvalidCredentialsException;
 use App\Http\Exception\Auth\TokenNotFoundException;
 use App\Http\Exception\Auth\UserAlreadyExistsException;
 use App\Http\Exception\Auth\UserNotFoundException;
-use App\Http\JsonResponse;
 use App\Http\Queue\Messages\Email\EmailResetMessage;
 use App\Http\Queue\Messages\Email\EmailVerificationMessage;
-use App\Http\Queue\Queue;
-use App\Http\Queue\Worker;
 use App\Http\Services\CookieManager;
 use App\Http\Services\Mail\Mail;
 use DateTimeImmutable;
@@ -24,16 +21,14 @@ use Symfony\Component\Messenger\MessageBus;
 class AuthService
 {
     private Auth $userModel;
-    private Mail $mailer;
     private SessionInterface $session;
     private CookieManager $cookieManager;
     private MessageBus $messageBus;
     private LoggerInterface $logger;
 
-    public function __construct(Auth $userModel, Mail $mailer, SessionInterface $session, CookieManager $cookieManager, MessageBus $messageBus, LoggerInterface $logger)
+    public function __construct(Auth $userModel, SessionInterface $session, CookieManager $cookieManager, MessageBus $messageBus, LoggerInterface $logger)
     {
         $this->userModel = $userModel;
-        $this->mailer = $mailer;
         $this->session = $session;
         $this->cookieManager = $cookieManager;
         $this->messageBus = $messageBus;
@@ -120,7 +115,7 @@ class AuthService
         if($created === 0){
             throw new RuntimeException('Ошибка сброса пароля');
         }
-        $this->messageBus->dispatch(new EmailResetMessage($user['email'], $token));
+       $this->messageBus->dispatch(new EmailResetMessage($user['email'], $token));
     }
 
     public function logOut(): void

@@ -33,7 +33,7 @@ interface MailInterface
     public function setBodyFromTemplate(string $templateName, array $data): self;
 
     /**
-     * @return bool
+     * @return void
      */
-    public function send(): bool;
+    public function send(): void;
 }

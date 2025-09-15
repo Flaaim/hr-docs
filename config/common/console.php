@@ -9,6 +9,7 @@ return [
         'console' => [
             'commands' => [
                 Console\HelloCommand::class,
+                Console\MailerCheckCommand::class,
             ]
         ]
     ]

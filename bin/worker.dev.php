@@ -2,7 +2,6 @@
 
 <?php
 
-use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
 require_once dirname(__DIR__, 1) . '/vendor/autoload.php';

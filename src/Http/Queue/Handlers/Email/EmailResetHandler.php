@@ -26,7 +26,7 @@ class EmailResetHandler
                 )
                 ->send();
         }catch (\Exception $e){
-            $this->logger->error("Failed to send reset password email: " . $e->getMessage());
+            $this->logger->error("Failed to send reset password email: " . $e->getMessage() . "\n" . $e->getLine() . "\n" . $e->getFile());
             throw $e;
         }
 
