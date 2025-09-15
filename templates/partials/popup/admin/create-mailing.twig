@@ -1,0 +1,23 @@
+<div id="small-dialog-create-mailing" class="zoom-anim-dialog mfp-hide">
+    <div class="main-content d-flex flex-column">
+        <h4 >Новая рассылка</h4>
+        <div class="col-md-12">
+            <div class="dashboard-content px-3 pt-4">
+                <form action="/api/mailing/send" method="POST" id="admin-create-mailing-form" data-form-type="create-mailing">
+                    <div class="mb-3">
+                        <label for="subject">Название рассылки</label>
+                        <input type="text" name="subject" id="subject" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text">Введите сообщение...</label>
+                        <textarea id="text" class="form-control" name="text" cols="20" rows="10"></textarea>
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="submit" id="doSendUpdate" class="btn btn-primary mb-3">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

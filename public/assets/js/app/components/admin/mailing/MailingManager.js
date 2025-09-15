@@ -9,7 +9,7 @@ export class MailingManager{
 
   async init(){
     await this.loadData();
-    //this.initEventHandlers();
+    this.initEventHandlers();
   }
 
   async loadData() {
@@ -23,5 +23,26 @@ export class MailingManager{
       throw new Error('Некорректный формат ответа от сервера');
     }
     return response;
+  }
+
+  initEventHandlers() {
+    document.getElementById('new-mailing-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      this.handleCreate()
+    })
+
+  }
+
+  handleCreate() {
+    $.magnificPopup.open({
+      items: {
+        src: '#small-dialog-create-mailing',
+        type: 'inline'
+      }
+    })
+  }
+
+  sendMail(){
+
   }
 }

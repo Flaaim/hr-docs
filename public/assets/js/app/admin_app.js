@@ -4,4 +4,5 @@ $(document).ready(function () {
   $("#admin-reload-form").initAdminForms()
   $("#admin-edit-document-form").initAdminForms()
   $("#admin-edit-user-form").initAdminForms()
+  $("#admin-create-mailing-form").initAdminForms();
 })

@@ -130,7 +130,8 @@ hr.h-color{
 #small-dialog-edit-document,
 #small-dialog-edit-user,
 #small-dialog-orphaned-files,
-#small-dialog-afterRegister
+#small-dialog-afterRegister,
+#small-dialog-create-mailing
 {
     background: white;
     padding: 20px 30px;
