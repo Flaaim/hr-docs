@@ -18,7 +18,7 @@ docker-pull:
 docker-build-pull:
 	docker-compose build --pull
 
-app-init: composer-install app-permissions
+app-init: composer-install app-permissions app-worker
 
 app-lint:
 	docker-compose run --rm php-cli composer lint
@@ -48,4 +48,6 @@ app-permissions:
 composer-update:
 	docker-compose run --rm php-cli composer update
 
+app-worker:
+	docker-compose run -d php-cli composer worker-run
 

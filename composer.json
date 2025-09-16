@@ -48,7 +48,8 @@
       "cs-check": "phpcs",
       "cs-fix": "phpcbf",
       "psalm": "psalm",
-      "test": "phpunit --colors=always --display-warnings"
+      "test": "phpunit --colors=always --display-warnings",
+      "worker-run": "php ./bin/worker.dev.php"
     },
     "require-dev": {
         "overtrue/phplint": "^9.6",
