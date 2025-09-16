@@ -1,7 +1,18 @@
-{{ text|raw }}
-<p>
-    <sub class="text-muted">kd-docs.ru | Шаблоны документов по кадрам © 2025</sub>
-</p>
-<p>
-    <small><a href="">Отписаться от рассылки</a></small>
-</p>
+{% extends '/layouts/email.twig' %}
+
+{% block content %}
+    <div class="header">
+        <h1>{{ site_name }}</h1>
+    </div>
+
+    <div class="content">
+        <h2>{{ subject }}</h2>
+
+        <div class="main-content">
+                {# Основное содержимое письма #}
+                {{ text|raw }}
+        </div>
+    </div>
+
+{% endblock %}
+
