@@ -30,7 +30,8 @@
         "symfony/yaml": "^6.4",
         "spatie/schema-org": "^3.23",
         "samdark/sitemap": "^2.4",
-        "symfony/mailer": "^6.4"
+        "symfony/mailer": "^6.4",
+        "laminas/laminas-config-aggregator": "^1.18"
     },
     "autoload": {
       "psr-4": {

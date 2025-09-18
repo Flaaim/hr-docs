@@ -17,8 +17,7 @@ services:
       - ./:/app
     environment:
 #      USER_ID: ${UID:-1000}
-      APP_DEBUG: 1
-      APP_ENV: dev
+      ENV_FILE: dev.env
       PHP_IDE_CONFIG: serverName=docs
 #    user: "${UID:-1000}:${UID:-1000}"
     extra_hosts:
