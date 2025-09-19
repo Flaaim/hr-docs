@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
+use App\Http\Frontend\FrontendUrlGenerator;
 use App\Http\Queue\Handlers\Email\EmailResetHandler;
 use App\Http\Queue\Handlers\Email\EmailVerificationHandler;
 use App\Http\Queue\Handlers\Email\SendUpdateHandler;
 use App\Http\Queue\Messages\Email\EmailResetMessage;
 use App\Http\Queue\Messages\Email\EmailVerificationMessage;
 use App\Http\Queue\Messages\Email\SendUpdateMessage;
-use App\Http\Services\Mail\Mail;
 use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection as DoctrineConnection;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
@@ -20,6 +21,7 @@ use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
+use Twig\Environment;
 
 
 return [
@@ -32,9 +34,20 @@ return [
 
     'doctrine.messenger.handlers' => function (ContainerInterface $c) {
         return [
-            EmailVerificationMessage::class  => new EmailVerificationHandler($c->get(Mail::class), $c->get(LoggerInterface::class)),
-            EmailResetMessage::class  => new EmailResetHandler($c->get(Mail::class), $c->get(LoggerInterface::class)),
-            SendUpdateMessage::class => new SendUpdateHandler($c->get(Mail::class), $c->get(LoggerInterface::class)),
+            EmailVerificationMessage::class  => new EmailVerificationHandler(
+                $c->get(MailerInterface::class),
+                $c->get(LoggerInterface::class)
+            ),
+            EmailResetMessage::class  => new EmailResetHandler(
+                $c->get(MailerInterface::class),
+                $c->get(LoggerInterface::class),
+                $c->get(Environment::class),
+                $c->get(FrontendUrlGenerator::class)
+            ),
+            SendUpdateMessage::class => new SendUpdateHandler(
+                $c->get(MailerInterface::class),
+                $c->get(LoggerInterface::class)
+            ),
         ];
     },
 

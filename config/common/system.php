@@ -9,7 +9,7 @@ use Slim\Psr7\Factory\ResponseFactory;
 
 return [
     'config' => [
-        'debug' => true, //filter_var($_ENV['APP_DEBUG'], FILTER_VALIDATE_BOOLEAN),
+        'debug' => filter_var($_ENV['APP_DEBUG'], FILTER_VALIDATE_BOOLEAN),
         'path' => $_ENV['APP_PATH'],
         'mimeTypes' => [
             'application/msword' => 'doc',

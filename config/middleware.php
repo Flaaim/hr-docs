@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Auth\Auth;
-use App\Http\Auth\AuthService;
 use App\Http\Handlers\HttpForbiddenHandler;
 use App\Http\Handlers\HttpInternalErrorHandler;
 use App\Http\Handlers\HttpMethodNotAllowedHandler;
