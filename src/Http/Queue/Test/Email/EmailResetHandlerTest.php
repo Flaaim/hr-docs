@@ -19,8 +19,8 @@ class EmailResetHandlerTest extends TestCase
         $mailer = $this->createMock(MailerInterface::class);
         $message =  new EmailResetMessage(
             'some@email.ru',
-            'Сброс пароля',
-            '123456',
+            $subject = 'Сброс пароля',
+            $token = '123456',
         );
         $url = 'http://localhost/reset?token=123456';
         $emailResetHandler = new EmailResetHandler(
@@ -32,7 +32,7 @@ class EmailResetHandlerTest extends TestCase
 
         $twig->expects($this->once())->method('render')->with(
             $this->equalTo('emails/reset.html.twig'),
-            $this->equalTo(['token' => '123456'])
+            $this->equalTo(['token' => $token, 'subject' => $subject])
         )->willReturn($url);
 
         $mailer->expects($this->once())->method('send')
