@@ -3,7 +3,6 @@
 namespace Document\Download;
 
 use App\Http\Documents\Document;
-use App\Http\Documents\Download\DocumentValidationMiddleware;
 use App\Http\Documents\Download\DownloadDocumentService;
 use App\Http\Documents\FileSystemService;
 use App\Http\Exception\Document\DocumentNotFoundException;
