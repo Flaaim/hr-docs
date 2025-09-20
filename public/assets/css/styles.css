@@ -190,12 +190,14 @@ hr.h-color{
 	padding-right: 40px;
 }
 
-.payment-result-container {
+.payment-result-container,
+.unsubscribe-result-container
+{
 	max-width: 600px;
 	margin: 2rem auto;
 	padding: 0 1rem;
 }
-.payment-result-card {
+.payment-result-card, .unsubscribe-result-card {
 	background: white;
 	border-radius: 8px;
 	padding: 2rem;

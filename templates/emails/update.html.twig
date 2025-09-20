@@ -1,18 +1,21 @@
 {% extends '/layouts/email.twig' %}
-
+{% block title %} {{ subject }}{% endblock %}
 {% block content %}
     <div class="header">
-        <h1>{{ site_name }}</h1>
+        <h1>KD-DOCS.RU</h1>
     </div>
 
     <div class="content">
         <h2>{{ subject }}</h2>
 
         <div class="main-content">
-                {# Основное содержимое письма #}
                 {{ text|raw }}
         </div>
+        <p>
+            {% set unsubscribe_link = frontend_url('mailing/unsubscribe', {'token': token }) %}
+            Если вы больше не хотите получать от нас письма,
+            <a href="{{ unsubscribe_link }}" class="unsubscribe">отпишитесь от рассылки</a>
+        </p>
     </div>
-
 {% endblock %}
 

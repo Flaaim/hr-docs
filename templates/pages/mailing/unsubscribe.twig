@@ -1,0 +1,26 @@
+{% extends '/layouts/base.twig' %}
+{% block title %}
+    {{ seo_title() }}
+{% endblock %}
+{% block description %}
+    {{ seo_description() }}
+{% endblock %}
+{% block keywords %}
+{% endblock %}
+{% block content %}
+    <div class="unsubscribe-result-container">
+        <div class="unsubscribe-result-card">
+            <h1>Отписка от рассылки</h1>
+            {% if success %}
+                <div class="alert alert-success">
+                    <p>Email <strong>{{ email }}</strong> успешно отписан от рассылок.</p>
+                    <p>Вы больше не будете получать уведомления от нашего сайта.</p>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <p>{{ error }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
