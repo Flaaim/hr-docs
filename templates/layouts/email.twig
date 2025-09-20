@@ -1,10 +1,9 @@
-{% set app = app %}
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ subject }}</title>
+    <title>{% block title %} Шаблоны документов по кадрам {% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,13 +49,8 @@
         {% block content %}
 
         {% endblock %}
-
     <div class="footer">
         <p>Это письмо отправлено с сайта <strong><a href="https://kd-docs.ru" target="_blank">kd-docs.ru</a></strong></p>
-        <p>
-            Если вы больше не хотите получать от нас письма,
-            <a href="{{ app }}/unsubscribe?email={{ email }}" class="unsubscribe">отпишитесь от рассылки</a>
-        </p>
         <p>© {{ "now"|date("Y") }} kd-docs.ru. Шаблоны документов по кадрам. Все права защищены.</p>
     </div>
 </div>
