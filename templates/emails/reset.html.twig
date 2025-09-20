@@ -1,7 +1,14 @@
-<h1>Восстановление пароля</h1>
+{% extends '/layouts/email.twig' %}
+
+{% block title %}{{ subject }}{% endblock %}
+
+{% block content %}
+<h1>{{ subject }}</h1>
 <p>
     Вы запросили сброс пароля.
 </p>
 <p>
-    Для продолжения используйте, пожалуйста, данную ссылку {{ link }}
+    {% set link = frontend_url('reset', {'token': token }) %}
+    Для продолжения используйте, пожалуйста, данную ссылку <a href="{{ link }}">{{ link }}</a>
 </p>
+{% endblock %}
