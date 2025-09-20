@@ -9,7 +9,6 @@ use App\Http\Exception\Auth\UserNotFoundException;
 use App\Http\Queue\Messages\Email\EmailResetMessage;
 use App\Http\Queue\Messages\Email\EmailVerificationMessage;
 use App\Http\Services\CookieManager;
-use App\Http\Services\Mail\Mail;
 use DateTimeImmutable;
 use Odan\Session\SessionInterface;
 use PHPUnit\Event\InvalidArgumentException;
@@ -115,7 +114,7 @@ class AuthService
         if($created === 0){
             throw new RuntimeException('Ошибка сброса пароля');
         }
-       $this->messageBus->dispatch(new EmailResetMessage($user['email'], $token));
+       $this->messageBus->dispatch(new EmailResetMessage($user['email'], 'Сброс пароля', $token));
     }
 
     public function logOut(): void
