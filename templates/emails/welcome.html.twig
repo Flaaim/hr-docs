@@ -1,7 +1,14 @@
-<h1>Добро пожаловать!</h1>
-<p>
-    Вы зарегистрировались на сайте.
-</p>
-<p>
-    Для продолжения, используйте пожалуйста данную ссылку: {{ link }}
-</p>
+{% extends '/layouts/email.twig' %}
+
+{% block title %} {{ subject }} {% endblock %}
+{% block content %}
+    <h1>{{ subject }}</h1>
+    <p>
+        Вы зарегистрировались на сайте.
+    </p>
+    <p>
+        {% set link = frontend_url('auth/verify', {'token': verifyToken }) %}
+        Для продолжения, используйте, пожалуйста, данную ссылку: <a href="{{ link }}">{{ link }}</a>
+    </p>
+{% endblock %}
+
