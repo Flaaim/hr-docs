@@ -53,4 +53,9 @@ class Mailing extends BaseModel
         $queryBuilder->executeStatement();
 
     }
+
+    public function unsubscribe(int $user_id): int
+    {
+        return $this->database->update(self::TABLE_NAME, ['is_unsubscribed' => 1], ['user_id' => $user_id, 'is_unsubscribed' => 0]);
+    }
 }
