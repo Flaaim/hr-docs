@@ -1,3 +1,4 @@
+{% set app = app %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -50,7 +51,7 @@
 
         {% endblock %}
     <div class="footer">
-        <p>Это письмо отправлено с сайта <strong><a href="https://kd-docs.ru" target="_blank">kd-docs.ru</a></strong></p>
+        <p>Это письмо отправлено с сайта <strong><a href="{{ app.path }}" target="_blank">kd-docs.ru</a></strong></p>
         <p>© {{ "now"|date("Y") }} kd-docs.ru. Шаблоны документов по кадрам. Все права защищены.</p>
     </div>
 </div>

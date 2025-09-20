@@ -47,7 +47,7 @@ class AuthService
         if(!$created){
             throw new RuntimeException('Ошибка при создании пользователя');
         }
-        $this->messageBus->dispatch(new EmailVerificationMessage($email, $verifyToken));
+        $this->messageBus->dispatch(new EmailVerificationMessage($email, 'Подтверждение регистрации', $verifyToken));
     }
 
     public function login(string $email, string $password, bool $remember_me = false): void
