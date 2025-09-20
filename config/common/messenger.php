@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Frontend\FrontendUrlGenerator;
 use App\Http\Queue\Handlers\Email\EmailResetHandler;
 use App\Http\Queue\Handlers\Email\EmailVerificationHandler;
 use App\Http\Queue\Handlers\Email\SendUpdateHandler;
@@ -36,17 +35,18 @@ return [
         return [
             EmailVerificationMessage::class  => new EmailVerificationHandler(
                 $c->get(MailerInterface::class),
-                $c->get(LoggerInterface::class)
+                $c->get(LoggerInterface::class),
+                $c->get(Environment::class),
             ),
             EmailResetMessage::class  => new EmailResetHandler(
                 $c->get(MailerInterface::class),
                 $c->get(LoggerInterface::class),
                 $c->get(Environment::class),
-                $c->get(FrontendUrlGenerator::class)
             ),
             SendUpdateMessage::class => new SendUpdateHandler(
                 $c->get(MailerInterface::class),
-                $c->get(LoggerInterface::class)
+                $c->get(LoggerInterface::class),
+                $c->get(Environment::class)
             ),
         ];
     },
