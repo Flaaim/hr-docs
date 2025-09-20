@@ -2,21 +2,17 @@
 
 declare(strict_types=1);
 
-use App\Http\Services\Mail\Mail;
-use App\Http\Services\Mail\PhpMailSender;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Mailer\EventListener\EnvelopeListener;
 use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
-use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Mime\Address;
-use Twig\Environment;
 
 return [
-    Mailer::class => function (ContainerInterface $container) {
-        $config = $container->get('mailer')['dsn'];
+    MailerInterface::class => function (ContainerInterface $container) {
+        $config = $container->get('config')['mailer'];
         $dispatcher = new EventDispatcher();
 
         $dispatcher->addSubscriber(
@@ -27,7 +23,6 @@ return [
                 ),
             ),
         );
-
         $transport = (new EsmtpTransport(
             $config['host'],
             (int)$config['port'],
@@ -42,20 +37,8 @@ return [
             $transport
         );
     },
-    PhpMailSender::class => function (ContainerInterface $container) {
-        return new PhpMailSender(
-            $container->get(Mailer::class),
-            $container->get(LoggerInterface::class)
-        );
-    },
-    Mail::class => function (ContainerInterface $container) {
-        return new Mail(
-            $container->get(PhpMailSender::class),
-            $container->get(Environment::class)
-        );
-    },
-    'mailer' => [
-        'dsn' => [
+    'config' => [
+        'mailer' => [
             'host' => $_ENV['MAIL_HOST'],
             'port' => $_ENV['MAIL_PORT'],
             'encryption' => $_ENV['MAIL_ENCRYPTION'],
