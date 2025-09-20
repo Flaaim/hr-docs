@@ -134,9 +134,4 @@ class MailingService
 
         return $data['email'];
     }
-//    public function getUnsubscribeLink(string $email): string
-//    {
-//        $token = $this->generateUnsubscribeToken($email);
-//        return '/mailing/unsubscribe?token=' . urlencode($token);
-//    }
 }
