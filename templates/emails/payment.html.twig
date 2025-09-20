@@ -1,4 +1,9 @@
-<h1>Оплата подписки</h1>
+{% extends '/layouts/email.twig' %}
+
+
+{% block title %} {{ subject }} {% endblock %}
+{% block content %}
+<h1>{{ subject }}</h1>
 <p>
     Платеж успешно проведен. Ваш план подписки обновлен.
 </p>
@@ -7,7 +12,7 @@
     {% set period = (slug == 'monthly') ? 30 : 365 %}
     План подписки:
     {{ (slug == 'monthly') ? 'Ежемесячный' : 'Годовой' }}.
-    Действует до {{ 'now'|date_modify('+' ~ period ~ ' days')|date('d.m.Y') }}.
+    Действует до {{ 'now' | date_modify('+' ~ period ~ ' days')|date('d.m.Y') }}.
     Неограниченный доступ к документам сайта.
 </p>
-
+{%  endblock %}

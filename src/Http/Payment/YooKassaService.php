@@ -8,12 +8,14 @@ use App\Http\Exception\Payment\PaymentEventException;
 use App\Http\Exception\Payment\PaymentNotFoundException;
 use App\Http\Exception\Payment\PaymentWebhookException;
 use App\Http\Exception\Subcription\SubscriptionPlanAlreadyUpgradedException;
-use App\Http\Services\Mail\Mail;
+use App\Http\Queue\Messages\Email\EmailPaymentMessage;
 use App\Http\Subscription\SubscriptionService;
 use JsonException;
+use Symfony\Component\Messenger\MessageBus;
 use Odan\Session\SessionInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
 use YooKassa\Client;
 use YooKassa\Common\Exceptions\ApiException;
@@ -36,7 +38,7 @@ class YooKassaService
         private readonly Payment $payment,
         private readonly SubscriptionService $subscriptionService,
         private readonly SessionInterface $session,
-        private readonly Mail $mail
+        private readonly MessageBus $messageBus,
     )
     {}
     public function createPayment(array $plan): PaymentInterface
@@ -201,17 +203,12 @@ class YooKassaService
             $this->payment->updatePaymentStatus($payment->getId(),
                 self::PAYMENT_STATUS_SUCCESS
             );
-
-            $this->mail
-                ->setTo($metadata['email'])
-                ->setSubject('Оплата подписки')
-                ->setBodyFromTemplate('emails/payment.html.twig',
-                    [
-                        'amount' => $payment->getAmount()->getValue(),
-                        'slug' => $metadata['plan_slug'],
-                    ])
-                ->send();
-
+            $this->messageBus->dispatch(new EmailPaymentMessage(
+                $metadata['email'],
+                'Оплата подписки',
+                $payment->getAmount()->getValue(),
+                $metadata['plan_slug']
+            ));
 
             $this->logger->info('Subscription upgraded successfully', [
                 'payment_id' => $payment->getId(),
