@@ -15,7 +15,6 @@ class SeoManager
             'keywords' => '',
             'canonical' => '',
             'robots' => 'index,follow',
-            'schema' => ''
         ], $defaults);
     }
     public function set(array $data): self

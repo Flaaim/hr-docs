@@ -11,6 +11,7 @@ class SubscriptionPlan extends BaseModel
     const FREE_PLAN_SLUG = 'free';
     const MONTHLY_PLAN_SLUG = 'monthly';
     const YEARLY_PLAN_SLUG = 'annual';
+    const ETERNAL_PLAN_SLUG = 'eternal';
     public function getFreePlan(): array
     {
         return $this->getPlanBySlug(self::FREE_PLAN_SLUG);
@@ -21,6 +22,11 @@ class SubscriptionPlan extends BaseModel
 
     public function getYearlyPlan(): array {
         return $this->getPlanBySlug(self::YEARLY_PLAN_SLUG);
+    }
+
+    public function getEternalPlan(): array {
+        $eternal = $this->getPlanBySlug(self::ETERNAL_PLAN_SLUG);
+        return [$eternal];
     }
 
     public function all(): array

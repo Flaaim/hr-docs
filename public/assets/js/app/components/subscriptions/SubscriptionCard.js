@@ -28,7 +28,7 @@ export class SubscriptionCard {
         plan.htmlButton = '';
       }else{
         plan.htmlButton = `<div class="d-flex justify-content-between align-items-center mt-3">
-      <button data-slug="${plan.slug}" class="btn btn-sm btn-outline-primary doUpgrade ${plan.id === this.currentPlan?.plan_id ? 'disabled' : ''}">Приобрести</button></div>`
+      <button data-slug="${plan.slug}" class="btn btn-outline-primary doUpgrade ${plan.id === this.currentPlan?.plan_id ? 'disabled' : ''}">Приобрести</button></div>`
       }
     })
     return this;
@@ -42,6 +42,8 @@ export class SubscriptionCard {
         plan.priceText = `${plan.price} рублей в месяц`;
       }else if(plan.slug === 'annual'){
         plan.priceText = `${plan.price} рублей в год`
+      }else if(plan.slug === 'eternal'){
+        plan.priceText = `${plan.price} рублей`
       }
     })
     return this;
@@ -50,7 +52,7 @@ export class SubscriptionCard {
   buildCards(){
     let currentPlan = this.currentPlan;
     return this.plans.map((item) => ((currentPlan) => {
-        return `<div class="card m-2 shadow-sm ${item.id === currentPlan?.plan_id ? 'active-plan' : ''}" style="width: 14rem; border-radius: 8px; transition: transform 0.2s;">
+        return `<div class="card m-2 shadow-sm ${item.id === currentPlan?.plan_id ? 'active-plan' : ''}" style="width: 16rem; border-radius: 8px; transition: transform 0.2s;">
             <div class="card-body">
                 <h5 class="card-title">${item.name}</h5>
                 <p>${item.description}</p>
@@ -63,6 +65,5 @@ export class SubscriptionCard {
         </div>`;
     })(currentPlan)).join('')
   }
-
 
 }

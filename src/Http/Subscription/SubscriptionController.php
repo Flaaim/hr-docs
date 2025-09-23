@@ -76,4 +76,22 @@ class SubscriptionController
             return new JsonResponse(['status' => 'error', 'message' => 'Внутренняя ошибка сервера'], 500);
         }
     }
+
+    public function getEternalSubscription(Request $request, Response $response, array $args): Response
+    {
+        try{
+            $user = $this->session->get('user');
+            if(empty($user)){
+                return $response->withHeader('Location', '/login')->withStatus(302);
+            }
+            $plans = $this->plan->getEternalPlan();
+            $current_plan = $this->subscription->getCurrentPlan($user['id']);
+            return new JsonResponse(['plans' => $plans, 'current_plan' => $current_plan]);
+        }catch (\Exception $e){
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

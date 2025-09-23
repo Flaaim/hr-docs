@@ -49,16 +49,16 @@
                 </span>
             </div>
 
-            <div class="info-row mb-0">
-                <span class="info-label">Окончание подписки:</span>
-                <span class="info-value">
-                    {% if plan.ends_at is null %}
-                        Бессрочно
-                    {% else %}
-                        {{ plan.ends_at|date('d.m.Y') }}
-                    {% endif %}
-                </span>
-            </div>
+{#            <div class="info-row mb-0">#}
+{#                <span class="info-label">Окончание подписки:</span>#}
+{#                <span class="info-value">#}
+{#                    {% if plan.ends_at is null %}#}
+{#                        Бессрочно#}
+{#                    {% else %}#}
+{#                        {{ plan.ends_at|date('d.m.Y') }}#}
+{#                    {% endif %}#}
+{#                </span>#}
+{#            </div>#}
 
             <button class="btn btn-primary btn-change-plan subscription-form" id="change-plan-btn">
                 <i class="bi bi-arrow-repeat me-2"></i>Изменить подписку

@@ -43,8 +43,10 @@ export class Subscription {
       if (!Array.isArray(plans)) {
         throw new Error('Некорректный формат ответа от сервера');
       }
+
       this.cards.build(plans, current_plan);
     }catch (error){
+      console.error(error)
       window.FlashMessage.error('Не удалось загрузить данные формы');
     }
   }

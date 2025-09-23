@@ -1,7 +1,5 @@
 {% extends 'layouts/base.twig' %}
 
-
-
 {% block title %}
     {{ seo_title() }}
 {% endblock %}
@@ -9,10 +7,9 @@
     {{ seo_description() }}
 {% endblock %}
 {% block keywords %}
-    {{ keywords }}
+    {{ seo_keywords() }}
 {% endblock %}
 {% block content %}
-       {{ schema.toScript()|raw }}
     <div class="dashboard-content document-dashboard px-3 pt-4 col-md-12" data-page="document-page">
         <div class="document-header mb-4">
             <h1 class="document-title fs-3 mb-3">Скачать {{ document.title }}</h1>

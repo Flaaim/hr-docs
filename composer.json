@@ -49,7 +49,7 @@
       "cs-check": "phpcs",
       "cs-fix": "phpcbf",
       "psalm": "psalm",
-      "test": "phpunit --colors=always --display-warnings",
+      "test": "phpunit --colors=always",
       "worker-run": "php ./bin/worker.dev.php"
     },
     "require-dev": {
