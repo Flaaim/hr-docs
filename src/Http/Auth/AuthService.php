@@ -121,14 +121,14 @@ class AuthService
         if($created === 0){
             throw new RuntimeException('Ошибка сброса пароля');
         }
-//       $this->messageBus->dispatch(new EmailResetMessage($user['email'], 'Сброс пароля', $token));
-        $email = (new Email())
-            ->to($email)
-            ->subject('Сброс пароля')
-            ->html(
-                $this->twig->render('emails/reset.html.twig', ['token' => $token, 'subject' => 'Сброс пароля'])
-            );
-        $this->mailer->send($email);
+       $this->messageBus->dispatch(new EmailResetMessage($user['email'], 'Сброс пароля', $token));
+//        $email = (new Email())
+//            ->to($email)
+//            ->subject('Сброс пароля')
+//            ->html(
+//                $this->twig->render('emails/reset.html.twig', ['token' => $token, 'subject' => 'Сброс пароля'])
+//            );
+//        $this->mailer->send($email);
     }
 
     public function logOut(): void
