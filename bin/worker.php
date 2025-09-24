@@ -37,7 +37,8 @@ try {
 
     // Конфигурация
     $config = [
-        'max_messages' => 100,
+        'max_messages' => 50,
+        'max_lifetime' => 240,
         'memory_limit' => 100 * 1024 * 1024, // 100MB
         'batch_size' => 10,
     ];
@@ -49,8 +50,11 @@ try {
 
     $processedCount = 0;
     $lastHealthUpdate = 0;
+    $startTime = time();
 
-    while ($processedCount < $config['max_messages'] && memory_get_usage() < $config['memory_limit']) {
+    while ($processedCount < $config['max_messages']
+        && memory_get_usage() < $config['memory_limit']
+        && (time() - $startTime) < $config['max_lifetime']) {
         // Обновляем health-статус каждые 30 сек
         if (time() - $lastHealthUpdate > 30) {
             $updateHealthStatus();
