@@ -62,9 +62,9 @@ return [
         return new SendMessageMiddleware(
             new SendersLocator(
                 [
-//                    EmailVerificationMessage::class => ['doctrine.messenger.transport'],
-//                    EmailResetMessage::class => ['doctrine.messenger.transport'],
-//                    SendUpdateMessage::class => ['doctrine.messenger.transport'],
+                    EmailVerificationMessage::class => ['doctrine.messenger.transport'],
+                    EmailResetMessage::class => ['doctrine.messenger.transport'],
+                    SendUpdateMessage::class => ['doctrine.messenger.transport'],
                 ],
                 $c
             )
