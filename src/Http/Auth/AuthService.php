@@ -14,7 +14,10 @@ use Odan\Session\SessionInterface;
 use PHPUnit\Event\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
 
 
 class AuthService
@@ -24,14 +27,18 @@ class AuthService
     private CookieManager $cookieManager;
     private MessageBus $messageBus;
     private LoggerInterface $logger;
+    private Environment $twig;
+    private MailerInterface $mailer;
 
-    public function __construct(Auth $userModel, SessionInterface $session, CookieManager $cookieManager, MessageBus $messageBus, LoggerInterface $logger)
+    public function __construct(Auth $userModel, SessionInterface $session, CookieManager $cookieManager, MessageBus $messageBus, LoggerInterface $logger, Environment $twig, MailerInterface $mailer)
     {
         $this->userModel = $userModel;
         $this->session = $session;
         $this->cookieManager = $cookieManager;
         $this->messageBus = $messageBus;
         $this->logger = $logger;
+        $this->twig = $twig;
+        $this->mailer = $mailer;
     }
 
     public function register(string $email, string $password): void
@@ -114,7 +121,14 @@ class AuthService
         if($created === 0){
             throw new RuntimeException('Ошибка сброса пароля');
         }
-       $this->messageBus->dispatch(new EmailResetMessage($user['email'], 'Сброс пароля', $token));
+//       $this->messageBus->dispatch(new EmailResetMessage($user['email'], 'Сброс пароля', $token));
+        $email = (new Email())
+            ->to($email)
+            ->subject('Сброс пароля')
+            ->html(
+                $this->twig->render('emails/reset.html.twig', ['token' => $token, 'subject' => 'Сброс пароля'])
+            );
+        $this->mailer->send($email);
     }
 
     public function logOut(): void

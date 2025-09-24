@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Frontend\FrontendUrlGenerator;
 use App\Http\Frontend\FrontendUrlTwigExtension;
-use App\Http\Seo\SeoManager;
 use App\Http\Twig\SeoExtension;
 use Odan\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
@@ -24,7 +22,7 @@ return [
         }
 
         $twig = new Twig($loader, [
-            'cache' => ($config['debug']) ? false : $config['cache_dir'],
+            'cache' => false, //$config['debug']) ? false : $config['cache_dir'],
             'debug' => $config['debug'],
             'strict_variables' => $config['debug'],
             'auto_reload' => $config['debug'],
