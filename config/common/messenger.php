@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Http\Queue\Handlers\Email\EmailPaymentHandler;
 use App\Http\Queue\Handlers\Email\EmailResetHandler;
 use App\Http\Queue\Handlers\Email\EmailVerificationHandler;
 use App\Http\Queue\Handlers\Email\SendUpdateHandler;
+use App\Http\Queue\Messages\Email\EmailPaymentMessage;
 use App\Http\Queue\Messages\Email\EmailResetMessage;
 use App\Http\Queue\Messages\Email\EmailVerificationMessage;
 use App\Http\Queue\Messages\Email\SendUpdateMessage;
@@ -48,6 +50,11 @@ return [
                 $c->get(LoggerInterface::class),
                 $c->get(Environment::class)
             ),
+            EmailPaymentMessage::class => new EmailPaymentHandler(
+                $c->get(MailerInterface::class),
+                $c->get(LoggerInterface::class),
+                $c->get(Environment::class)
+            )
         ];
     },
 
@@ -65,6 +72,7 @@ return [
                     EmailVerificationMessage::class => ['doctrine.messenger.transport'],
                     EmailResetMessage::class => ['doctrine.messenger.transport'],
                     SendUpdateMessage::class => ['doctrine.messenger.transport'],
+                    EmailPaymentMessage::class => ['doctrine.messenger.transport'],
                 ],
                 $c
             )
