@@ -35,8 +35,26 @@ class SubscriptionService
             case "free":
                 $this->downgradeToFreePlan($user_id);
             break;
+            case "eternal":
+                $this->upgradeToEternalPlan($user_id);
+            break;
             default:
                 throw new SubscriptionPlanNotFoundException('Subscription plan not found');
+        }
+    }
+
+    public function upgradeToEternalPlan(int $user_id): void
+    {
+        try{
+            $plan = $this->plan->getEternalPlan();
+            if(empty($plan)){
+                throw new SubscriptionPlanNotFoundException('Plan not found');
+            }
+            $this->subscription->updatePlan($user_id, $plan);
+        }catch (\RuntimeException $e){
+            throw new RuntimeException(
+                "Failed to upgrade user {$user_id} to eternal plan: " . $e->getMessage()
+            );
         }
     }
     public function upgradeToMonthlyPlan(int $user_id): void
