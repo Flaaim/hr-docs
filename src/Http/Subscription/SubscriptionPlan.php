@@ -25,8 +25,7 @@ class SubscriptionPlan extends BaseModel
     }
 
     public function getEternalPlan(): array {
-        $eternal = $this->getPlanBySlug(self::ETERNAL_PLAN_SLUG);
-        return [$eternal];
+        return$this->getPlanBySlug(self::ETERNAL_PLAN_SLUG);
     }
 
     public function all(): array

@@ -116,7 +116,7 @@ class UserController
         $data = $request->getParsedBody() ?? [];
         try{
             $this->service->editUser($data);
-            return new JsonResponse(['status' => 'success', 'message' => 'Данные пользователя изменнены'], 200);
+            return new JsonResponse(['status' => 'success', 'message' => 'Данные пользователя изменены'], 200);
         }catch(SubscriptionPlanAlreadyUpgradedException $e){
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()], 409);
         }catch(SubscriptionPlanNotFoundException $e){
