@@ -15,6 +15,7 @@ if (file_exists(__DIR__ . '/common/env/' . $file)) {
 
 $aggregator = new ConfigAggregator([
     new PhpFileProvider(__DIR__ . '/common/*.php'),
+    new PhpFileProvider(__DIR__ . '/' . ($_ENV['APP_ENV'] ?: 'prod') . '/*.php'),
 ]);
 
 return $aggregator->getMergedConfig();
