@@ -38,7 +38,7 @@ return [
     'config' => [
         'logger' => [
             'debug' => $_ENV['APP_DEBUG'],
-            'file' => null,
+            'file' => __DIR__ . '/../../var/log/' . PHP_SAPI . '/application.log',
             'stderr' => true,
             'telegram_bot' => true
         ]

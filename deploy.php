@@ -30,7 +30,8 @@ set('shared_dirs', [
 ]);
 
 set('writable_dirs', [
-    'var',
+    'var/log',
+    'var/cache',
     'public/uploads',
 ]);
 
