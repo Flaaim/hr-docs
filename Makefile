@@ -43,7 +43,7 @@ composer-install:
 	docker-compose run --rm php-cli composer install
 
 app-permissions:
-	docker run --rm -v ${PWD}:/app -w /app alpine chmod 777 bin -R
+	docker run --rm -v ${PWD}:/app -w /app alpine chmod 777 bin var/cache var/log var/lock
 
 composer-update:
 	docker-compose run --rm php-cli composer update

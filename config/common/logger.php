@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\TelegramBotHandler;
 use Monolog\Level;
@@ -13,25 +12,31 @@ use Psr\Log\LoggerInterface;
 
 return [
     LoggerInterface::class => function (ContainerInterface $container) {
-        $logger = new Logger('app');
+        $config = $container->get('config')['logger'];
 
-        $formatter = new LineFormatter(
-            "[%datetime%] %level_name%: %message% %context%\n",
-            "Y-m-d H:i:s",
-            true, // allowInlineLineBreaks
-            true  // ignoreEmptyContextAndExtra
-        );
-        $fileHandler = new StreamHandler(
-            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'var'. DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'error.log',
-            Level::Warning // Логирует WARNING, ERROR, CRITICAL, ALERT, EMERGENCY
-        );
-        $fileHandler->setFormatter($formatter);
-        $logger->pushHandler($fileHandler);
+        $level = $config['debug'] ? Level::Debug : Level::Info;
+        $logger = new Logger('hr-docs');
 
-        $telegramHandler = $container->get(TelegramBotHandler::class);
-        $telegramHandler->setFormatter($formatter);
-        $logger->pushHandler($telegramHandler);;
+        if($config['stderr']){
+            $logger->pushHandler(new StreamHandler('php://stderr', $level));
+        }
+
+        if(!empty($config['file'])){
+            $logger->pushHandler(new StreamHandler($config['file'], $level));
+        }
+
+        if(!empty($config['telegram_bot'])){
+            $logger->pushHandler($container->get(TelegramBotHandler::class));
+        }
 
         return $logger;
     },
+    'config' => [
+        'logger' => [
+            'debug' => $_ENV['APP_DEBUG'],
+            'file' => null,
+            'stderr' => true,
+            'telegram_bot' => true
+        ]
+    ]
 ];

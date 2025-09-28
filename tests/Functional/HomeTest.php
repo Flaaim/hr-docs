@@ -3,6 +3,7 @@
 namespace Tests\Functional;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\Exception;
 
 class HomeTest extends WebTestCase
 {

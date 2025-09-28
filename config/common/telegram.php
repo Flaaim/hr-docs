@@ -10,7 +10,7 @@ return [
     return new TelegramBotHandler(
         $_ENV['TELEGRAM_TOKEN'],
         $_ENV['TELEGRAM_CHANNEL'],
-        Level::Info,
+        Level::Error,
         true,
         'HTML'
     );

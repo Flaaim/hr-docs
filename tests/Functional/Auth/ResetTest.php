@@ -3,7 +3,6 @@
 namespace Tests\Functional\Auth;
 
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\TestCase;
 use Tests\Functional\WebTestCase;
 
 class ResetTest extends WebTestCase
@@ -18,6 +17,7 @@ class ResetTest extends WebTestCase
     }
     public function testRequestPasswordReset()
     {
+        throw new \RuntimeException('Error');
         $response = $this->app()->handle(self::json('POST', '/api/auth/requestReset'));
         $this->assertEquals(403, $response->getStatusCode());
     }

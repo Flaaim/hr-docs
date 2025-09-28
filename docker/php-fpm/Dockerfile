@@ -16,7 +16,7 @@ RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 COPY ./php/conf.d /usr/local/etc/php/conf.d
 COPY ./php-fpm/conf.d /usr/local/etc/php/conf.d
 
-RUN mkdir -p /app/var/{cache,logs,lock} && \
+RUN mkdir -p /app/var/{cache,log,lock} && \
     chown -R www-data:www-data /app/var && \
     chmod -R 755 /app/var
 
