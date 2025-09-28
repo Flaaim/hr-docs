@@ -22,6 +22,10 @@ return [
         }
 
         if(!empty($config['file'])){
+            $dir = dirname($config['file']);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
             $logger->pushHandler(new StreamHandler($config['file'], $level));
         }
 
