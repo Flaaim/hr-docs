@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Log\LogFile;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\TelegramBotHandler;
 use Monolog\Level;
@@ -15,7 +16,7 @@ return [
         $config = $container->get('config')['logger'];
 
         $level = $config['debug'] ? Level::Debug : Level::Info;
-        $logger = new Logger('hr-docs');
+        $logger = new Logger($config['name']);
 
         if($config['stderr']){
             $logger->pushHandler(new StreamHandler('php://stderr', $level));
@@ -40,7 +41,11 @@ return [
             'debug' => $_ENV['APP_DEBUG'],
             'file' => __DIR__ . '/../../var/log/' . PHP_SAPI . '/application.log',
             'stderr' => true,
-            'telegram_bot' => true
+            'telegram_bot' => true,
+            'name' => $_ENV['APP_HOST'],
         ]
-    ]
+    ],
+    LogFile::class => function (ContainerInterface $container) {
+        return new LogFile($container->get('config')['logger']['file']);
+    }
 ];

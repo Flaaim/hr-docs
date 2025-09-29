@@ -40,4 +40,10 @@ class AdminController
         $view = Twig::fromRequest($request);
         return $view->render($response, 'pages/admin/mailing.twig');
     }
+
+    public function logs(Request $request, Response $response, array $args): Response
+    {
+        $view = Twig::fromRequest($request);
+        return $view->render($response, 'pages/admin/logs.twig');
+    }
 }

@@ -16,4 +16,5 @@ $app->group('/admin', function (RouteCollectorProxy $group) {
     $group->get('/users', [AdminController::class, 'users']);
     $group->get('/payments', [AdminController::class, 'payments']);
     $group->get('/mailing', [AdminController::class, 'mailing']);
+    $group->get('/logs', [AdminController::class, 'logs']);
 })->add(AdminMiddleware::class);
