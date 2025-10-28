@@ -8,6 +8,7 @@ use App\Http\Exception\Document\DocumentNotFoundException;
 use App\Http\Exception\Document\DownloadLimitExceededException;
 use App\Http\Exception\Document\FileNotFoundInStorageException;
 use App\Http\Subscription\Subscription;
+use App\Http\Subscription\SubscriptionService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Factory\ResponseFactory;
@@ -20,16 +21,20 @@ class DownloadDocumentService
     private Document $document;
     private FileSystemService $fileSystemService;
     private LoggerInterface $logger;
-    public function __construct(Subscription $subscription,
-                                Document $document,
-                                FileSystemService $fileSystemService,
-                                LoggerInterface $logger
+    private SubscriptionService $subscriptionService;
+    public function __construct(
+        Subscription $subscription,
+        Document $document,
+        FileSystemService $fileSystemService,
+        LoggerInterface $logger,
+        SubscriptionService $subscriptionService
     )
     {
         $this->subscription = $subscription;
         $this->document = $document;
         $this->fileSystemService = $fileSystemService;
         $this->logger = $logger;
+        $this->subscriptionService = $subscriptionService;
     }
 
     public function getDocument(int $document_id): array
@@ -89,6 +94,7 @@ class DownloadDocumentService
         $current_plan = $this->subscription->getCurrentPlan($user_id);
 
         if($this->hasDownloadLimitExceeded($current_plan)){
+            $this->subscriptionService->downgradeToFreePlan($user_id);
             throw new DownloadLimitExceededException('Лимит скачиваний исчерпан');
         }
 

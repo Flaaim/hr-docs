@@ -29,7 +29,7 @@ class Subscription extends BaseModel
             self::TABLE_NAME,
         [
             'plan_id' => $plan['id'],
-            'downloads_remaining' => $plan['is_default'] ? $plan['downloads_limit'] : null,
+            'downloads_remaining' => $plan['downloads_limit'],
             'starts_at' => date('Y-m-d H:i:s'),
             'ends_at' => $plan['duration_days'] ? date('Y-m-d H:i:s', strtotime("+{$plan['duration_days']} days")) : null,
         ],

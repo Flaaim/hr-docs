@@ -34,7 +34,7 @@ class DownloadDocumentTest extends TestCase
             $this->mockSubscribe,
             $this->mockDocument,
             $this->mockFileSystemService,
-            $this->mockLogger
+            $this->mockLogger,
         );
     }
 
