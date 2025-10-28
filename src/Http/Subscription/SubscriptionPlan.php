@@ -12,6 +12,7 @@ class SubscriptionPlan extends BaseModel
     const MONTHLY_PLAN_SLUG = 'monthly';
     const YEARLY_PLAN_SLUG = 'annual';
     const ETERNAL_PLAN_SLUG = 'eternal';
+    const ONE_TIME_PLAN_SLUG = 'one-time';
     public function getFreePlan(): array
     {
         return $this->getPlanBySlug(self::FREE_PLAN_SLUG);
@@ -25,12 +26,14 @@ class SubscriptionPlan extends BaseModel
     }
 
     public function getEternalPlan(): array {
-        return$this->getPlanBySlug(self::ETERNAL_PLAN_SLUG);
+        return $this->getPlanBySlug(self::ETERNAL_PLAN_SLUG);
     }
-
+    public function getOneTimePlan(): array {
+        return $this->getPlanBySlug(self::ONE_TIME_PLAN_SLUG);
+    }
     public function all(): array
     {
-        $result = $this->database->fetchAllAssociative("SELECT * FROM " . self::TABLE_NAME);
+        $result = $this->database->fetchAllAssociative("SELECT * FROM " . self::TABLE_NAME . " ORDER BY price ASC");
         return $result ?: [];
     }
     public function getPlanBySlug(string $slug): array

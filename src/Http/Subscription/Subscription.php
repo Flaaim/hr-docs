@@ -9,7 +9,7 @@ class Subscription extends BaseModel
 {
     const TABLE_NAME = 'subscriptions';
     const UNLIMITED_DOWNLOADS = null;
-    const DOWNLOAD_LIMIT = 3;
+    const DOWNLOAD_LIMIT = 0;
     const FREE_PLAN_ID = 1;
     public function setFreePlan(int $user_id): void
     {

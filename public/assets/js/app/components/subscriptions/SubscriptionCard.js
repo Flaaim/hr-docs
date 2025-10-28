@@ -44,6 +44,8 @@ export class SubscriptionCard {
         plan.priceText = `${plan.price} рублей в год`
       }else if(plan.slug === 'eternal'){
         plan.priceText = `${plan.price} рублей`
+      }else if(plan.slug === 'one-time'){
+        plan.priceText = `${plan.price} рублей`
       }
     })
     return this;
