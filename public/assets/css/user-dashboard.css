@@ -52,3 +52,171 @@
 	border-radius: 4px;
 	font-size: 0.8rem;
 }
+
+/* ── Карточки планов подписки ── */
+#subscription-content {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	justify-content: center;
+	padding: 0.5rem 0;
+}
+
+.plan-card {
+	position: relative;
+	background: #fff;
+	border: 2px solid #e9ecef;
+	border-radius: 14px;
+	padding: 1.5rem 1.25rem;
+	width: 195px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+	box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+.plan-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 8px 24px rgba(0,0,0,.10);
+}
+
+.plan-card--active {
+	border-color: #0d6efd;
+	background: #f0f6ff;
+}
+
+.plan-card--best {
+	border-color: #fd7e14;
+}
+
+.plan-card--best:hover {
+	box-shadow: 0 8px 24px rgba(253,126,20,.18);
+}
+
+.plan-best-badge {
+	position: absolute;
+	top: -13px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #fd7e14;
+	color: #fff;
+	font-size: 0.72rem;
+	font-weight: 700;
+	padding: 3px 14px;
+	border-radius: 20px;
+	letter-spacing: 0.03em;
+	white-space: nowrap;
+}
+
+.plan-card__icon {
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+	line-height: 1;
+}
+
+.plan-card__name {
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: #343a40;
+	margin-bottom: 0.75rem;
+}
+
+.plan-card__price {
+	display: flex;
+	align-items: baseline;
+	gap: 2px;
+	margin-bottom: 0.5rem;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.plan-card__amount {
+	font-size: 2rem;
+	font-weight: 800;
+	color: #0d6efd;
+	line-height: 1;
+}
+
+.plan-card--best .plan-card__amount {
+	color: #fd7e14;
+}
+
+.plan-card__currency {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #0d6efd;
+	align-self: flex-start;
+	margin-top: 4px;
+}
+
+.plan-card--best .plan-card__currency {
+	color: #fd7e14;
+}
+
+.plan-card__unit {
+	font-size: 0.78rem;
+	color: #6c757d;
+	width: 100%;
+	text-align: center;
+	margin-top: -2px;
+}
+
+.plan-card__desc {
+	font-size: 0.8rem;
+	color: #6c757d;
+	margin: 0.5rem 0 1rem;
+	line-height: 1.4;
+	flex-grow: 1;
+}
+
+.plan-active-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	font-size: 0.78rem;
+	color: #198754;
+	background: #d1fae5;
+	border-radius: 20px;
+	padding: 4px 12px;
+	margin-bottom: 0.75rem;
+	font-weight: 600;
+}
+
+.plan-buy-btn {
+	width: 100%;
+	padding: 0.5rem 0;
+	border-radius: 8px;
+	border: 2px solid #0d6efd;
+	background: #0d6efd;
+	color: #fff;
+	font-size: 0.85rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.18s, color 0.18s, opacity 0.18s;
+	margin-top: auto;
+}
+
+.plan-buy-btn:hover:not(.disabled) {
+	background: #0b5ed7;
+	border-color: #0b5ed7;
+}
+
+.plan-card--best .plan-buy-btn {
+	background: #fd7e14;
+	border-color: #fd7e14;
+}
+
+.plan-card--best .plan-buy-btn:hover:not(.disabled) {
+	background: #e8690b;
+	border-color: #e8690b;
+}
+
+.plan-buy-btn.disabled {
+	background: #198754;
+	border-color: #198754;
+	cursor: default;
+	opacity: 0.85;
+}

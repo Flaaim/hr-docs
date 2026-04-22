@@ -56,10 +56,15 @@ task('deploy:symlink', function () {
     run("cd {{deploy_path}} && ln -sfn current/public public_html");
 });
 
+task('deploy:migrate', function () {
+    run('cd {{release_path}} && {{bin/php}} bin/app.php migrate');
+})->desc('Run database migrations');
+
 task('deploy', [
     'deploy:info',
     'deploy:prepare',
     'deploy:vendors',
+    'deploy:migrate',
     'deploy:publish'
 ]);
 

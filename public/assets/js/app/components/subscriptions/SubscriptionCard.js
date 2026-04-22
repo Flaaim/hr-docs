@@ -27,8 +27,15 @@ export class SubscriptionCard {
       if(plan.slug === "free"){
         plan.htmlButton = '';
       }else{
-        plan.htmlButton = `<div class="d-flex justify-content-between align-items-center mt-3">
-      <button data-slug="${plan.slug}" class="btn btn-outline-primary doUpgrade ${plan.id === this.currentPlan?.plan_id ? 'disabled' : ''}">Приобрести</button></div>`
+        const isActive = plan.id === this.currentPlan?.plan_id;
+        plan.htmlButton = `
+          <button
+            data-slug="${plan.slug}"
+            class="plan-buy-btn doUpgrade ${isActive ? 'disabled' : ''}"
+            ${isActive ? 'disabled' : ''}
+          >
+            ${isActive ? '<i class="fas fa-check me-1"></i>Активен' : '<i class="fas fa-bolt me-1"></i>Выбрать'}
+          </button>`;
       }
     })
     return this;
@@ -38,14 +45,34 @@ export class SubscriptionCard {
     this.plans.forEach(plan => {
       if(plan.slug === 'free'){
         plan.priceText = `Бесплатно`;
+        plan.priceAmount = '0';
+        plan.priceUnit = '';
+        plan.icon = '🎁';
+        plan.isBestValue = false;
       }else if(plan.slug === 'monthly'){
-        plan.priceText = `${plan.price} рублей в месяц`;
+        plan.priceText = `${plan.price} ₽ / месяц`;
+        plan.priceAmount = plan.price;
+        plan.priceUnit = '/ мес';
+        plan.icon = '📅';
+        plan.isBestValue = false;
       }else if(plan.slug === 'annual'){
-        plan.priceText = `${plan.price} рублей в год`
+        plan.priceText = `${plan.price} ₽ / год`;
+        plan.priceAmount = plan.price;
+        plan.priceUnit = '/ год';
+        plan.icon = '🗓️';
+        plan.isBestValue = false;
       }else if(plan.slug === 'eternal'){
-        plan.priceText = `${plan.price} рублей`
+        plan.priceText = `${plan.price} ₽ навсегда`;
+        plan.priceAmount = plan.price;
+        plan.priceUnit = 'навсегда';
+        plan.icon = '♾️';
+        plan.isBestValue = true;
       }else if(plan.slug === 'one-time'){
-        plan.priceText = `${plan.price} рублей`
+        plan.priceText = `${plan.price} ₽`;
+        plan.priceAmount = plan.price;
+        plan.priceUnit = '';
+        plan.icon = '⚡';
+        plan.isBestValue = false;
       }
     })
     return this;
@@ -53,19 +80,34 @@ export class SubscriptionCard {
 
   buildCards(){
     let currentPlan = this.currentPlan;
-    return this.plans.map((item) => ((currentPlan) => {
-        return `<div class="card m-2 shadow-sm ${item.id === currentPlan?.plan_id ? 'active-plan' : ''}" style="width: 16rem; border-radius: 8px; transition: transform 0.2s;">
-            <div class="card-body">
-                <h5 class="card-title">${item.name}</h5>
-                <p>${item.description}</p>
-                <p>${item.id === currentPlan?.plan_id ? `
-                <div class="current-badge">
-                <i class="fas fa-check-circle"></i>${(currentPlan.ends_at === null) ? 'Активен' : 'Активен до ' + Helper.formatDate(currentPlan.ends_at)}</div>` : ''}</p>
-                <span class="badge bg-light text-dark mb-2" style="font-size: 0.8rem;">${item.priceText}</span>
-                ${item.htmlButton}
-            </div>
-        </div>`;
-    })(currentPlan)).join('')
-  }
+    return this.plans
+      .filter(item => item.slug !== 'free' && item.slug !== 'one-time')
+      .map((item) => ((currentPlan) => {
+        const isActive = item.id === currentPlan?.plan_id;
+        const activeInfo = isActive
+          ? `<div class="plan-active-badge">
+               <i class="fas fa-check-circle me-1"></i>
+               ${currentPlan.ends_at === null ? 'Активен' : 'Активен до ' + Helper.formatDate(currentPlan.ends_at)}
+             </div>`
+          : '';
+        const bestBadge = item.isBestValue
+          ? `<div class="plan-best-badge">Выгодно</div>`
+          : '';
 
+        return `
+          <div class="plan-card ${isActive ? 'plan-card--active' : ''} ${item.isBestValue ? 'plan-card--best' : ''}">
+            ${bestBadge}
+            <div class="plan-card__icon">${item.icon}</div>
+            <div class="plan-card__name">${item.name}</div>
+            <div class="plan-card__price">
+              <span class="plan-card__amount">${item.priceAmount}</span>
+              <span class="plan-card__currency">₽</span>
+              <span class="plan-card__unit">${item.priceUnit}</span>
+            </div>
+            <p class="plan-card__desc">${item.description}</p>
+            ${activeInfo}
+            ${item.htmlButton}
+          </div>`;
+      })(currentPlan)).join('')
+  }
 }

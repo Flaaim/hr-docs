@@ -10,6 +10,7 @@ return [
             'commands' => [
                 Console\HelloCommand::class,
                 Console\MailerCheckCommand::class,
+                Console\MigrateCommand::class,
             ]
         ]
     ]
