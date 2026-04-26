@@ -162,6 +162,10 @@
       <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
       <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/brick/varexporter" />
+      <path value="$PROJECT_DIR$/vendor/webimpress/safe-writer" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-config-aggregator" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-stdlib" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
